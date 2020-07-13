@@ -1,6 +1,6 @@
 ---
 title: "Cachable OSCORE"
-docname: draft-amsuess-core-cachable-oscore
+docname: draft-amsuess-core-cachable-oscore-latest
 ipr: trust200902
 stand_alone: true
 cat: exp
