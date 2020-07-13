@@ -1,0 +1,13 @@
+image: debian:bullseye
+pages:
+  script:
+    - "echo 'deb http://ftp.debian.org/debian/ bullseye non-free ' >> /etc/apt/sources.list"
+    - apt-get update && apt-get -y install xml2rfc ruby-kramdown-rfc2629 make git python3
+    - make draft-amsuess-core-cachable-oscore.html
+    - mkdir -p public
+    - cp draft-amsuess-core-cachable-oscore.html public/index.html
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
