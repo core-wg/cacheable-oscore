@@ -1,0 +1,148 @@
+\documentclass[aspectratio=169]{beamer}
+
+% generic packages
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+
+% about the presentation
+\title{Cachable OSCORE}
+\subtitle{\texttt{draft-amsuess-core-cachable-oscore}}
+\author{\textit{Christian~Amsüss}, Marco Tiloca}
+\date{2020-07-31}
+
+% used commands
+
+\usepackage{verbatim}
+\usepackage{soul}
+
+% attach self
+
+\usepackage{embedfile}
+\embedfile{\jobname.tex}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{Background}
+	\texttt{multicast-notifications}
+
+	Comparison with ICNs
+
+	OSCON
+\end{frame}
+
+\begin{frame}{Caching and OSCORE}\Large
+	\begin{eqnarray*}
+	\left.
+	\begin{array}{l}
+		\mbox{POST / 2.01} \\ 
+		\mbox{KID and PIV in request}
+	\end{array}
+	\right\}
+	&& \mbox{uncachable}
+	\end{eqnarray*}
+
+	\bigskip
+
+	… and it's only one client anyway
+\end{frame}
+
+\begin{frame}{For every complex problem, there is a solution…}\Large
+	\framesubtitle{that is simple, neat and \st{wrong} insufficient}
+	\begin{eqnarray*}
+	\left.
+	\begin{array}{l}
+		\mbox{Group OSCORE} \\
+		\mbox{FETCH / 2.05} \\ 
+		\mbox{magically hit cache}
+	\end{array}
+	\right\}
+	&& \mbox{verification fails}
+	\end{eqnarray*}
+\end{frame}
+
+\begin{frame}{Consensus request}\Large
+	\begin{itemize}
+		\item Pick request sender KID and PIV
+		\item Trust in the request\footnote{It'd be a pity if someone requested {\texttt{/whom-i-know}}, and gave you the response claiming they requested {\texttt{/whom-to-trust}}}
+	\end{itemize}
+
+	\bigskip
+
+	The ideal candidate to generate a Consensus Request is the server: “Ticket Requests”
+\end{frame}
+
+\begin{frame}[fragile]{Ticket Request example}\Large
+
+\begin{verbatim}
+Client                Proxy            Server
+
+ enc(GET /a, C:1) ------------------------->
+ <--------- enc(Try enc(GET /a, S:1), S/C:1)
+
+ enc(GET /a, S:1) ------>
+                    (cache hit)
+ <--- enc(2.05 data, S:2)
+\end{verbatim}
+
+\bigskip
+
+\footnotesize Assuming pre-existing multicast setup
+\end{frame}
+
+\begin{frame}{\texttt{multicast-notifications}'s Phantom Requests are Ticket Requests}\Large
+	\begin{enumerate}
+		\item Great for observations
+		\item Great for large representations\footnote{Unless outer-block mode is used. Which you want. In which case see 3.}
+		\item Not so great for everything else
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Magically hitting the cache key}\Large
+
+\begin{verbatim}
+Client                                 Proxy
+
+ enc(GET /a, C:1), H(/a) ------------------>
+ <- enc(2.05 data, S:2) Resp-For enc(GET /a, S:1)
+\end{verbatim}
+
+\bigskip
+
+… provided \texttt{H(/a)} is derived the same for every request
+
+\bigskip
+
+(actually it's rather hashing the complete plaintext$|$AAD)
+
+\end{frame}
+
+\begin{frame}[fragile]{Now that we all agree…}\Large
+\begin{verbatim}
+Client                                 Proxy
+
+ enc(GET /a, C:H(/a)) ------------------->
+ <-------------------- enc(2.05 data, S:1)
+\end{verbatim}
+
+\pause
+
+\begin{itemize}
+	\item Hash over all input to encryption (incl. AAD)
+	\item PartIV too short for sufficient hash -- ID-Detail\footnote{Also very nice for B.2 mode}
+	\item In group it's encrypt-and-sign -- deterministic client with private key known to group members
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Questions}\Large
+	\begin{itemize}
+		\item Practicality
+		\item Cryptography
+		\item Interest in CoRE
+	\end{itemize}
+\end{frame}
+
+\end{document}
