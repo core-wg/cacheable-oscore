@@ -226,3 +226,57 @@ the server makes the request usable for the proxy cache.
 
 Since -00:
 -->
+
+# Padding
+
+In order to hide information that can be leaked by the length of a response (or, in different contexts, a request),
+the following padding option is defined to allow adding to a message's length without changing its meaning.
+
+It can be used with any CoAP transport,
+but is especially useful with OSCORE as that does provide any padding of its own.
+
+Before chosing to pad a message by the Padding option,
+application designers should consider whether they can arrange for common message variants to have the same length
+by picking a suitable content representation;
+the canonical example here is expressing "yes" and "no" with "y" and "n", respectively.
+
+## Definition of the Padding option
+
+~~~
+   +------+---+---+---+---+----------------+--------+--------+---------+
+   | No.  | C | U | N | R | Name           | Format | Length | Default |
+   +------+---+---+---+---+----------------+--------+--------+---------+
+   | TBDH |   |   | x | x | Padding        | opaque | any    | (none)  |
+   +------+---+---+---+---+----------------+--------+--------+---------+
+~~~
+
+The Padding option is elective, safe to forward and not part of the cache key;
+these follow from the usage instructions.
+
+It may be repeated, as repeated option may be the only way to get certain lengths.
+
+The option number is picked to be the highest number in the Experts Review range;
+the high option number allows it to follow practically all other options,
+and thus to be set when the final unpadded message length including all options
+is known.
+
+\[ Therefore, the number suggested to IANA is 64988. TBD: move this into IANA considerations. \]
+
+Applications that make use of the "Experimental use" range and want to preserve that property
+are invited to pick the largest suitable experimental number (65532)
+
+Note that unless other high options are used, this means that padding a message adds an overhead of at least 3 bytes
+(option delta/length byte and two bytes of extended option length).
+This is considered acceptable overhead,
+given that the application already chose to prefer the privacy gains of padding over wire transfer length.
+
+## Using and processing the Padding option
+
+Any client may set the Padding option, at any length, with any content.
+
+A server MUST ignore the option.
+
+Proxies are free to keep the Padding option on a message,
+to remove it or to add own padding.
+
+\[ TBD:  reference back in text as mitigation for size leak \]
