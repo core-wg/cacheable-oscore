@@ -73,6 +73,9 @@ Consensus Request
 : A Group OSCORE request that can be used repeatedly to access a particular resource.
 : It has all the properties relevant to caching, but its transport dependent properties (e.g. Token or Message ID) are not defined.
 : Thus, different requests on the wire can both be said to "be the Consensus Request" even if they have different tokens or client addresses.
+:
+: As the consensus request is the reference for request-response binding,
+: the client always needs to be able to read and verify any Consensus Request it receives before using it to verify a response.
 
 Ticket Request
 
