@@ -223,3 +223,10 @@ the server makes the request usable for the proxy cache.
 
 Since -00:
 -->
+
+# Acknowledgments # {#acknowldegment}
+{: numbered="no"}
+
+The authors sincerely thank Jim Schaad for his comments and feedback.
+
+The work on this document has been partly supported by VINNOVA and the Celtic-Next project CRITISEC; and by the H2020 project SIFIS-Home (Grant agreement 952652).
