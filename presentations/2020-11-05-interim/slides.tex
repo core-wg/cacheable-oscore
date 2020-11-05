@@ -1,0 +1,130 @@
+\documentclass[aspectratio=169]{beamer}
+
+% generic packages
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+
+% about the presentation
+\title{Cachable OSCORE}
+\subtitle{\texttt{draft-amsuess-core-cachable-oscore}}
+\author{\textit{Christian~Amsüss}, Marco Tiloca}
+\date{2020-11-05}
+
+% used commands
+
+\usepackage{verbatim}
+\usepackage{soul}
+
+% attach self
+
+\usepackage{embedfile}
+\embedfile{\jobname.tex}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{Background}\Large
+	\texttt{multicast-notifications}
+	
+	\bigskip
+
+	Comparison with ICNs
+
+	\bigskip
+
+	OSCON
+\end{frame}
+
+\begin{frame}{Focus today}
+	\center
+
+	{\Huge deterministic requests}
+
+	\bigskip
+
+	(Token requests are really just motivation and history)
+\end{frame}
+
+\begin{frame}[fragile]{Concrete Example}\Large
+	\begin{verbatim}
+	FETCH /
+	OSCORE:
+	  kid=client
+	  Partial IV=0
+	  KID Detail={Hash of CoAP encoding of plaintext,
+	              AAD and symmetric key}
+	Payload: Ciphertext plus tag of
+	  GET /temperature
+	  Accept: 112
+	\end{verbatim}
+\end{frame}
+
+\begin{frame}{Prerequisites}\Large
+	\begin{itemize}
+		\item Group set up with two members (server and client).
+			\bigskip
+
+			Client a bit special (next slide)
+			\bigskip
+
+		\item AEAD algorithm is deterministic (Flag in COSE registry).
+			\bigskip
+
+		\item The key is only ever used to encrypt this very message.
+			\bigskip
+
+			KID details goes in there, no variability in AEAD left.
+			\bigskip
+
+		\item All clients generate same request (“Accept”?)
+			\bigskip
+
+			Out of scope.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{What's actually new?}\Large
+	\begin{itemize}
+		\item “KID Detail”
+			\bigskip
+
+			Like KID Context; also goes into the salt, new extension bit.
+			\bigskip
+
+		\item “Look Ma, no signature.”
+			\bigskip
+
+			Yes, this has no source authentication.
+			\bigskip
+
+			Precise discussion that led to that requirement?
+			\bigskip
+
+			Shipping a public key would just be avoiding the argument, better talk it out now than in a year.
+			\bigskip
+
+			Technically, this one participant uses the signature algorithm 0.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Afterthought: Possible further optimization}\Large
+	OSCORE is cache-key
+
+	\bigskip
+
+	OSCORE option with this flag set could be used as {\em standalone} short-hand into cache:
+
+	\begin{verbatim}
+	    FETCH / OSCORE={...}
+
+	    4.00 Bad Request "too short to even have a tag"
+
+	    FETCH / OSCORE={...} Payload=ciphertext
+
+	    2.05 Content and data
+	\end{verbatim}
+\end{frame}
+
+\end{document}
