@@ -280,3 +280,10 @@ Proxies are free to keep the Padding option on a message,
 to remove it or to add own padding.
 
 \[ TBD:  reference back in text as mitigation for size leak \]
+
+# Acknowledgments # {#acknowldegment}
+{: numbered="no"}
+
+The authors sincerely thank Jim Schaad for his comments and feedback.
+
+The work on this document has been partly supported by VINNOVA and the Celtic-Next project CRITISEC; and by the H2020 project SIFIS-Home (Grant agreement 952652).
