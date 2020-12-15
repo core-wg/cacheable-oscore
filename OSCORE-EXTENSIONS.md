@@ -37,3 +37,7 @@ Potential unified mechanism
     This needs to go into the group part in order to a) allow for request-to-group and b) to get the cryptographic binding between request and reponse.
     So *when* a request has the id-detail, its master salt becomes `[master_salt, id_detail]`.
     (On top of that, the later pairwise derivation may do its own sketched b2, but that's in the pairwise derivation then).
+* No two of these mechanisms collide -- but if any further extension wants to go into a spot.
+  * This is all assuming that Sketched B.2 could just be applied like that by any pairwise context without involvement of the KDC; for interoperability devices might prefer to only do that if the KDC said that this is A Thing here -- in which case it may be better to use the array version all the time.
+  (It's not like regular OSCORE devices can expect to start this and just work without prior agreement either)
+  * Added extensions that may conflict with any of this need to state where they are added in.
