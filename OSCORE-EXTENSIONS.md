@@ -16,12 +16,17 @@ Quick overview over OSCORE extensions that exist or are planned
   * Modifies `master_salt` into a structured one
 
 * Sketched B.2:
+  * Section 2 of https://hackmd.io/XzBeg0NjSH-mhNBpY471Fw?both
   * Builds a structured `id_context`
 
 * cachable-oscore:
   * depends on Group
   * Appends itself to `id_context` (currently; to be changed to do whatever becomes consensus)
 
+  * Sketched B.2 for rekeying the pairwise mode of Group OSCORE:
+  * Section 3 of https://hackmd.io/XzBeg0NjSH-mhNBpY471Fw?both
+  * Builds a structured `id_context`
+  
 Potential unified mechanism
 ---------------------------
 
@@ -32,11 +37,13 @@ Potential unified mechanism
 * Applied to the above:
   * ace-oscore-profile already does that (by design); it picks that the `master_salt` is always `[original_salt, n1, n2]` and never degrades into bare-salt mode
   * Sketched B.2 (which would be runnable even for contexts that initially start out good):
-    it's initially `original_salt`, but becomes `[original_salt, r2, r3]` during an exchange and stays that way.
+    it's initially `original_salt`, but becomes `[original_salt, r2, r3]` during an exchange and stays that way. Compared to original B.2, the goal shifts from establishing a new ID Context to establishing a new Master Salt.
   * Deterministic requests:
     This needs to go into the group part in order to a) allow for request-to-group and b) to get the cryptographic binding between request and reponse.
     So *when* a request has the id-detail, its master salt becomes `[master_salt, id_detail]`.
     (On top of that, the later pairwise derivation may do its own sketched b2, but that's in the pairwise derivation then).
+  * Sketched B.2 for rekeying the pairwise mode of Group OSCORE:
+    Here the goal is to derive new pairwise keys for the two peers, keeping the same Group Security Context as is. In the HKDF to derive Pairwise Sender/Recipient Key, the first argument is currently Sender/Recipient Key. Instead, it can become the CBOR byte encoding of `[X, Y]`, where X is the Sender/Recipient Key, while Y is the additional pairwise information exchanged in the message, and included in the 'kid_context' field of the OSCORE option as concatenated to the ID Context.
 * No two of these mechanisms collide -- but if any further extension wants to go into a spot.
   * This is all assuming that Sketched B.2 could just be applied like that by any pairwise context without involvement of the KDC; for interoperability devices might prefer to only do that if the KDC said that this is A Thing here -- in which case it may be better to use the array version all the time.
   (It's not like regular OSCORE devices can expect to start this and just work without prior agreement either)
