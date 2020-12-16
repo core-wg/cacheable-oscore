@@ -42,6 +42,14 @@ Potential unified mechanism
     This needs to go into the group part in order to a) allow for request-to-group and b) to get the cryptographic binding between request and reponse.
     So *when* a request has the id-detail, its master salt becomes `[master_salt, id_detail]`.
     (On top of that, the later pairwise derivation may do its own sketched b2, but that's in the pairwise derivation then).
+
+    **However**, this would completely different from what's been sketched so far -- previously, we've been describing that the request gets its own kid_context, and that the response can come in on the regular group mode without any deterministic info except for the hash being catted onto the kid_context which ensures request/response binding.
+    What's written above *would* work, in a way, but it'd require awkward things from the server
+    (which'd need to have a semi-shared sender context over all its deterministic server sender contexts to avoid keeping individual sequence numbers, yikes).
+    On the other hand, request/response binding would not be given any more if we moved the hash from the `kid_context` into the `master_secret`.
+    Maybe the generalization is just "we're putting things into one of master secret or the KID context" …
+    and then describe why an extension would put something either here or there.
+
   * Sketched B.2 for rekeying the pairwise mode of Group OSCORE:
     Here the goal is to derive new pairwise keys for the two peers, keeping the same Group Security Context as is. In the HKDF to derive Pairwise Sender/Recipient Key, the first argument is currently Sender/Recipient Key. Instead, it can become the CBOR byte encoding of `[X, Y]`, where X is the Sender/Recipient Key, while Y is the additional pairwise information exchanged in the message, and included in the 'kid_context' field of the OSCORE option as concatenated to the ID Context.
 * No two of these mechanisms collide -- but if any further extension wants to go into a spot.
