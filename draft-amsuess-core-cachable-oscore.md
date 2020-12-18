@@ -210,7 +210,7 @@ with the following alterations:
 
 * The Partial IV is set to 0 for all requests; it does not need to be set in the OSCORE option.
 * The key derivation for the sender key is postponed to the point where the plaintext and AAD are ready.
-* The hash function indicated for the deterministic client is applied to the concatenation of AAD and plaintext.
+* The hash function indicated for the deterministic client is applied to the concatenation of the deterministic client's sender key, the AAD and plaintext.
   Note that the payload is not self-delimiting, and thus hash functions are limited to non-malleable ones.
 * In the key derivation for the pairwise sender key, the shared secret
   (which can not be obtained as there is no public key associated with the deterministic client)
