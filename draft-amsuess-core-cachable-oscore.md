@@ -202,7 +202,7 @@ e.g. to allow freshness indications without rekeying the whole group;
 a query for "the" deterministic client would typically return the latest).
 This needs to be a feature implemented by the group manager protocol,
 and the response differs from regular responses from the GM in that there is no public key associated with that member,
-but a hash function instead.
+but a hash function (and possibly a creation timestamp to give better freshness statements) instead.
 
 The client creates its request in pairwise mode,
 indicating the deterministic client's sender ID as its own sender ID,
