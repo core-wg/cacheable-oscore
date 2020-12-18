@@ -154,81 +154,118 @@ but won't have more severe a consequence than two requests for the same resource
 The hard part is arriving at a consensus nonce,
 while avoiding nonce reuse.
 
-A suitable nonce can be produced by applying a cryptographic hash function to the complete input of the encryption operation,
-which is the plaintrext of the COSE object and the AAD (with the partial IV set to 0).
+A suitable nonce can conceptually be produced by applying a cryptographic hash function to the complete input of the encryption operation,
+which is the plaintrext of the COSE object and the AAD.
 
-(The precise hashing mechanism is yet to be defined, but any non-malleable cryptographically secure hash should do,
-and malleable hashes can be permitted if the input material is adaequately encapsulated before hashing).
+No particular hashing mechanism is recommended so far,
+but any non-malleable cryptographically secure hash should do,
+and malleable hashes could be permitted if the input material were adaequately encapsulated before hashing.
 
 As the 40 bit available in the nonce are by far insufficient to ensure that the deterministic client's nonce is not reused,
-(and even with some trickery based on the deterministic client never responding to other members' requests with their nonces, the common algorithms' nonces would still be too short),
+(even if the full nonce and not only partial IV could be set, the common algorithms' nonces would still be too short),
 the hash has to be fed into the key generation rather than the encyption's nonce
 in a new mechanism.
 
-## ID-Detail
+A positive side effect of not transporting that information in the OSCORE nonce crops up with versions of oscore-groupcomm starting at -11:
+With the full encoded OSCORE option becoming part of the AAD,
+there would be a circular dependency from feeding the AAD into the hash,
+which needs crude workarounds like building the full AAD twice,
+or zeroing out the hash-to-be.
 
-A new field in the OSCORE object is defined, named ID-Detail.
+## Request-Hash
 
-It is in every way analogous to ID-Context, is concatenated onto ID-Context when deriving keys in the info input to the KDF, and is only distinct from ID-Context to allow using both ID-Context and ID-Detail at the same time.
+A new CoAP option is defined called Request-Hash.
 
-It goes into the "unprotected" bucket, and is serialized in the compressed OSCORE option using an indicator flag in the 8-63 range.
+It is identical in all its properties to Request-Tag, except that
 
-\[ Once that is specified, it would be much easier to execute OSCORE B.2 mode on that field rather than on the ID-Context – the effect is the same, but it does not collide with namespacing of ID-Context any more. \]
+* It may be arbitrarily long.
+* A proxy MAY use any fresh cached response from the selected server to respond to a request with the same Request-Hash
+  (or possibly even if the new request's Request-Hash is a prefix of the cached one).
+
+  This is a potential future optimization that is not mentioned anywhere else yet,
+  and allows clients to elide all other options and payload if it has reason to believe that it can produce a cache hit
+  with the abbreviated request alone.
+
+* With OSCORE, as the option is created at message protection time (and used before unprotection), it is treated as Class U
+  when used with a deterministic client.
+
+  Other uses can put it into different categories.
+
+The suggested option number for this option is 548.
 
 ## Use of Deterministic Requests
 
 A client that sends a request for which it hopes to get a cached response
 can ask the group manager for the key details of the Deterministic Client.
+(Conceptionally, there can be multiple deterministic clients in a group,
+e.g. to allow freshness indications without rekeying the whole group;
+a query for "the" deterministic client would typically return the latest).
 This needs to be a feature implemented by the group manager protocol,
 and the response differs from regular responses from the GM in that there is no public key associated with that member,
 but a hash function instead.
 
-The client creates an `id_context` value from the KID Context (the current Group ID) and a zero memory area the size of the chosen hash function's output.
-It builds the request up to the point of encryption,
-then hashes the concatenation of the AAD and the plaintext.
-Then it puts the hash in the previously zeroed part of the `request_kid_context` (after KID Context).
-[ Open question: Or can it just leave that as the `kid_context`? it's not like we really need that in the request,
-  but then again, neither do we need `request_kid` and it's still there. ]
+The client creates its request in pairwise mode,
+indicating the deterministic client's sender ID as its own sender ID,
+with the following alterations:
 
-It derives a pairwise sender key following the instructions of {{!I-D.ietf-core-oscore-groupcomm}},
-with the shared secret being the empty string (for lack of a static-static secret to derive without a private key).
-Note that the `id_context` comes in there via the `info` argument.
-The Common IV used with that key is the group's common IV (as is with regular pairwise mode),
-and the Partial IV is always 0.
-
-The client then encrypts the message with that sender context,
-and places the hash in the ID-Detail field.
-It uses FETCH as the outer code to make it cachable, even if no observation is requested.
+* The Partial IV is set to 0 for all requests; it does not need to be set in the OSCORE option.
+* The key derivation for the sender key is postponed to the point where the plaintext and AAD are ready.
+* The hash function indicated for the deterministic client is applied to the concatenation of AAD and plaintext.
+  Note that the payload is not self-delimiting, and thus hash functions are limited to non-malleable ones.
+* In the key derivation for the pairwise sender key, the shared secret
+  (which can not be obtained as there is no public key associated with the deterministic client)
+  is replaced with the obtained hash.
+* The hash is put in an Request-Hash option of the protected request.
+* It uses FETCH as the outer code to make it cachable, even if no observation is requested.
 
 As the key is derived using material from the whole request, this key/nonce pair is only used for this very message
 and deterministically encrypted
 unless there is a hash collision between two deterministic requests.
+The deterministic encryption requires that the used AEAD scheme be deterministic in itself.
+Those currently registered with COSE are; for future ones, a flag in the registry is to be added.
 
-It then sends the request through the proxy to the server.
+Note that while being based on the pairwise mechanism, no information about the server has become part of the key derivation or AAD;
+this is intentional (as it opens up the path to deterministic requests to multicast addresses),
+and necessitates the later check at response unprotection.
 
-When the server processes the request,
+When the server processes such a request,
 it obtains the client's pairwise data from the GM,
 seeing there is no actual public key and that it's a deterministic client.
-It puts the same empty byte string into the shared secret,
-and constructs the `id_context` from KID Context and ID-Detail like the client.
+(If it does not support deterministic encryption,
+it can not process that information, will fail to crete a recipient context, and fail the request).
 
-If the message is unprotected correctly,
-it being sent from the deterministic client adds additional requirements to the server:
-* It MUST perform the same hashing as the client (with the zeroed-out ID detail part), and MUST treat the request as invalid if the hash does not match the ID-Detail.
+It then derives a recipient context based on the hash in the Request-Hash option,
+and unprotects the message using that context.
+
+If unprotection passed, there are additional processing requirements on the server:
+* It MUST perform the same hashing as the client, and MUST treat the request as invalid if the hash does not match the Request-Hash.
+  Failure to do so would enable an attacker that guessed a good authentication tag for a given Request-Hash
+  to poison caches with incorrect responses.
 * If MUST verify that the unprotected message is safe to be processed in the REST sense (i.e. it has no side effects).
   Note that on CoAP implementations that can not prevent that an application produces side effects from a safe request,
   this may incur checking whether the particular handler is marked as side-effect free.
   An implementation may also have a configured list of requests that are known to be side effect free,
   and reject any other request.
   Failure at this stage SHOULD result in a protected 4.01 Unauthorized response.
-* The server MUST respond in group mode, and send an own Partial IV.
+* The server MUST respond in group mode
+  (for otherwise the client can not get source authentication, given the "pairwise" key is actually shared among all the group),
+  and send an own Partial IV
+  (for it does not perform replay protection, see below).
 
 These checks replace the otherwise present requirement that the server needs to check the recipient context's replay window,
-which is inapplicable with the recipient context it derived based on the ID-Detail.
+which is inapplicable with the recipient context it derived based on the Request-Hash.
 The reasoning is analogous to the one in {{?I-D.amsuess-lwig-oscore}} to treat the potential replay as answerable
 if the request is side effect free.
 
-Note that the response is bound to the request by the `request_kid_context` value present in the request's `external_aad`.
+Both in protecting and unprotecting the response,
+the `request_kid` field of the external AAD is replaced with the Request-Hash value.
+This creates the request-response binding that ensures no mismatched responses can be successfully unprotected.
+
+[ Mismatching this with the request's `request_kid` (that stays the deterministic client's ID) is ugly,
+  but also the only way to avoid any zeroing / rebuilding.
+  I suggest for any OSCORE v2 that request details be not present in the request's AAD,
+  and that rather than kid, piv and (in group mode) kid-context being separate fields,
+  they be something more pluggable. ]
 
 By setting a non-zero Max-Age option,
 the server makes the request usable for the proxy cache.
@@ -237,11 +274,15 @@ The client, receiving the response,
 verifies the signature based on the KID of the server it sent the request to,
 and unprotects the message.
 
+The client MUST verify that the KID the server sent is the intended one,
+unless it expects responses from multiple servers.
+
 ### Deterministic Requests Used With Groups
 
 A Deterministic Request *can* be sent to a CoAP group;
 it is still created the same way as a pairwise request to simplify key derivation.
-(If it were a group request, the ID-Detail would need to be fed into the group key derivation just for this corner case).
+(If it were a group request, the hash would need to be fed into the group key derivation just for this corner case;
+furthermore, there'd need to be a signature from the absent public key).
 
 When a server receives a request from the Deterministic Client that was addressed to a CoAP group,
 it MUST send its KID with the response (even though that is usually not a requirement when responding to a pairwise request).
@@ -253,6 +294,17 @@ it MUST send its KID with the response (even though that is usually not a requir
   Otherwise, how would a proxy forwarding the Ticket Request to a multicast-notification network learn the relevant token?
 
   (The client shouldn't really trust the server's statement about the requests' equivalence anyway).
+
+* Is "deterministic encryption" something worthwhile to consider in COSE?
+
+  COSE would probably specify something more elaborate for the KDF
+  (the current KDF round is the pairwise mode's;
+  COSE would probably run through KDF with a KDF context structure).
+
+  COSE would give a header parameter name to the Request-Hash
+  (which for the purpose of OSCORE deterministic requests would put back into Request-Hash by extending the option compression function across the two options).
+
+  Conceptually, they should align well, and the implementation changes are likely limited to how the KDF is run.
 
 # Unsorted further ideas
 
