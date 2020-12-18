@@ -306,6 +306,11 @@ it MUST send its KID with the response (even though that is usually not a requir
 
   Conceptually, they should align well, and the implementation changes are likely limited to how the KDF is run.
 
+* An unprotection failure from a mismatched hash will not be part of the ideally constant-time code paths that otherwise lead to AEAD unprotect failues. Is that a problem?
+
+  After all, it does tell the attacker that they did succeed in producing a valid MAC
+  (it's just not doing it any good, because this key is only used for deterministic requests and thus also needs to pass the Request-Hash check).
+
 # Unsorted further ideas
 
 * All or none of the deterministic requests should have an inner observe option.
