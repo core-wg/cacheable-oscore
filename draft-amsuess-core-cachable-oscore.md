@@ -4,7 +4,7 @@ docname: draft-amsuess-core-cachable-oscore-latest
 ipr: trust200902
 stand_alone: true
 cat: exp
-wg: CoRE
+wg: CoRE Working Group
 kw: CoAP, OSCORE, multicast, caching, proxy
 author:
 - ins: C. Amsüss
@@ -25,32 +25,25 @@ informative:
 
 --- abstract
 
-OSCORE group communication can secure CoAP group communication across untrusted proxies,
-but in doing so sidesteps the proxies' caching abilities.
-This restores cachability of requests by introducing consensus requests which any client in a group can send.
+Group communication with the Constrained Application Protocol (CoAP) can be secured end-to-end using Group OSCORE, also across untrusted intermediary proxies. However, this sidesteps the proxies' abilities to cache responses from the origin server(s). This specification restores cachability of protected responses at proxies, by introducing consensus requests which any client in a group can send to one server or multiple servers in the same group.
 
 --- middle
 
 # Introduction {#introduction}
 
-With OSCORE group communication,
-requests and responses can be read by other group members can be read by any group member as long as pairwise mode is not used.
-While this can populate a proxy's cache if the proxy is a member of the group,
-and the proxy can use the cache to respond if is recognized by the client as an eligible server,
-untrusted proxies only see opaque uncachable ciphertext.
+The Constrained Application Protocol (CoAP) {{!RFC7252}} supports also group communication, for instance over UDP and IP multicast {{!I-D.ietf-core-groupcomm-bis}}. In a group communication environment, exchanged messages can be secured end-to-end by using Group Object Security for Constrained RESTful Environment (Group OSCORE) {{I-D.ietf-core-oscore-groupcomm}}.
 
-This document introduces cachability in responses in two stages,
-initially building on concepts developed in {{!I-D.tiloca-core-observe-multicast-notifications}}.
-Caching is thus enabled for proxies that are not members of the OSCORE group,
-and are unaware of OSCORE in general.
-Allowing them to cache requests is traded against some request privacy:
-For clients that participate in this scheme,
-the proxy (and any other party that can read the network traffic)
-can see which clients request the same resource,
-and how the resource's representation changes in size over time.
+Requests and responses protected with the group mode of Group OSCORE can be read by all group members, i.e. not only by the intended recipient(s), thus achieving group-level confidentiality.
 
-As in {{!I-D.tiloca-core-observe-multicast-notifications}},
-clients and servers are assumed to already be members of a suitable OSCORE group.
+This allows a trusted intermediary proxy which is also a member of the OSCORE group to populate its cache with responses from origin servers. Later on, the proxy can possibly reply to a request in the group with a response from its cache, if recognized as an eligible server by the client.
+
+However, an untrusted proxy which is not member of the OSCORE group only sees protected responses as opaque, uncachable ciphertext. In particular, different clients in the group that originate a same plain CoAP request would send different protected requests, as a result of their Group OSCORE processing. Such protected requests cannot yield a cache hit at the proxy, which makes the whole caching of protected responses pointless.
+
+This document addresses this complication and introduces cachability of protected responses, which is thus enabled also for proxies that are not members of the OSCORE group, and are unaware of OSCORE in general. In particular, it builds on the concept of "consensus request" initially considered in {{!I-D.tiloca-core-observe-multicast-notifications}}, and defines one convenient incarnation of such concept, namely "deterministic request".
+
+Intuitively, given a GET or FETCH plain request, all clients wishing to send such request are able to deterministically compute the same protected request, using the pairwise mode of Group OSCORE. It follows that cache hits become possible at the proxy, which can thus serve clients in the group from its cache. Like in {{!I-D.tiloca-core-observe-multicast-notifications}}, this approach requires that clients and servers are already members of a suitable OSCORE group.
+
+Note that enabling untrusted proxies to cache protected responses through this method is traded against some request privacy. In fact, proxies and any other party that can read the network traffic can see which clients request the same resource, and how the resource's representation changes in size over time. The server can mitigate the latter downside, by padding its responses as defined in {{sec-padding}}.
 
 ## Procedural Status
 
@@ -326,7 +319,7 @@ it MUST send its KID with the response (even though that is usually not a requir
 Since -00:
 -->
 
-# Padding
+# Padding {#sec-padding}
 
 In order to hide information that can be leaked by the length of a response (or, in different contexts, a request),
 the following padding option is defined to allow adding to a message's length without changing its meaning.
