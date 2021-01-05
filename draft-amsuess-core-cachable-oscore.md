@@ -65,6 +65,8 @@ This document addresses this complication and enables cachability of protected r
 
 Intuitively, given a GET or FETCH plain CoAP request, all clients wishing to send that request are able to deterministically compute the same protected request, using the pairwise mode of Group OSCORE. It follows that cache hits become possible at the proxy, which can thus serve clients in the group from its cache. Like in {{I-D.tiloca-core-observe-multicast-notifications}}, this requires that clients and servers are already members of a suitable OSCORE group.
 
+Cachability of protected responses is useful also in applications where several clients wish to frequently retrieve the same object, while it does not matter if an external party can determine that they are all requesting the same content. Note that the server can still update the ETag value and generate a new (possibly padded) response, whenever the resource representation changes or has aged.
+
 ## Procedural Status
 
 \[
