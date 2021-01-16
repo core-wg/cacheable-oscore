@@ -65,7 +65,7 @@ This document addresses this complication and enables cachability of protected r
 
 Intuitively, given a GET or FETCH plain CoAP request, all clients wishing to send that request are able to deterministically compute the same protected request, using the pairwise mode of Group OSCORE. It follows that cache hits become possible at the proxy, which can thus serve clients in the group from its cache. Like in {{I-D.tiloca-core-observe-multicast-notifications}}, this requires that clients and servers are already members of a suitable OSCORE group.
 
-Cachability of protected responses is useful also in applications where several clients wish to frequently retrieve the same object, while it does not matter if an external party can determine that they are all requesting the same content. Note that the server can still update the ETag value and generate a new (possibly padded) response, whenever the resource representation changes or has aged.
+Cachability of protected responses is useful also in applications where several clients wish to frequently retrieve the same object, while it does not matter if an external party can determine that they are all requesting the same content. Note that the server can still update the ETag value for a resource, and generate a new (padded) response whenever the resource representation changes or has aged.
 
 ## Procedural Status
 
@@ -87,9 +87,9 @@ This document introduces the following new terms.
 
 * Consensus Request: a Group OSCORE request that can be used repeatedly to access a particular resource, hosted at one or more servers in the OSCORE group.
 
-   A consensus request has all the properties relevant to caching, but its transport dependent properties (e.g. Token or Message ID) are not defined. Thus, different requests on the wire can both be said to "be the same Consensus Request" even if they have different Tokens or client addresses.
+   A Consensus Request has all the properties relevant to caching, but its transport dependent properties (e.g. Token or Message ID) are not defined. Thus, different requests on the wire can both be said to "be the same Consensus Request" even if they have different Tokens or client addresses.
 
-   The consensus request is the reference for request-response binding. Hence, unless it generates a consensus request by itself, the client has to be able to read and verify any obtained Consensus Request, before using it to verify a bound response.
+   The Consensus Request is the reference for request-response binding. Hence, if it does not generate a Consensus Request by itself, the client has still to be able to read and verify any obtained Consensus Request, before using it to verify a bound response.
 
 * Deterministic Client: a fictitious member of an OSCORE group, having no Sender Sequence Number, no asymmetric key pair, and no Recipient Context.
 
@@ -109,15 +109,15 @@ Clients build the Deterministic Request in a way which is as much reproducible a
 
 ## Design Considerations ## {#ssec-deterministic-requests-design}
 
-The hard part is arriving at a consensus pair (key, nonce) to be used for the encrypting the Deterministic Request, while avoiding reuse of the same (key, nonce) pair across different requests.
+The hard part is arriving at a consensus pair (key, nonce) to be used with the AEAD cipher for encrypting the Deterministic Request, while also avoiding reuse of the same (key, nonce) pair across different requests.
 
 Diversity can conceptually be enforced by applying a cryptographic hash function to the complete input of the encryption operation over the plain CoAP request (i.e., the AAD and the plaintext of the COSE object), and then using the result as source of freshness.
 
 No particular hashing mechanism is recommended so far, but any non-malleable cryptographically secure hash should be suitable. Furthermore, malleable hashes could also be permitted, if the input material was adequately encapsulated before hashing.
 
-One possibility would be to fix a deterministic key, and use the source of freshness to build a deterministic AEAD nonce for each Deterministic Request, i.e. as Partial IV component (see Section 5.2 of {{RFC8613}). However, the 40 bit available for the Partial IV are by far insufficient to ensure that the deterministic nonce is not reused across different Deterministic Requests. Even if the full deterministic AEAD nonce could be set, the sizes used by common algorithms would still be too short.
+One possibility would be to fix a deterministic key, and use the source of freshness to build a deterministic AEAD nonce for each Deterministic Request, i.e. as Partial IV component (see Section 5.2 of {{RFC8613}}). However, the 40 bit available for the Partial IV are by far insufficient to ensure that the deterministic nonce is not reused across different Deterministic Requests. Even if the full deterministic AEAD nonce could be set, the sizes used by common algorithms would still be too small.
 
-As a consequence, the proposed method takes the opposite approach, by considering a fixed deterministic AEAD nonce, while generating a deterministic encryption key for each Deterministic Request. That is, the hash computed over the plain CoAP request is taken as input to the key generation. As an advantage, this approach does not require to transport the computed hash in the OSCORE option.
+As a consequence, the proposed method takes the opposite approach, by considering a fixed deterministic AEAD nonce, while generating a different deterministic encryption key for each Deterministic Request. That is, the hash computed over the plain CoAP request is taken as input to the key generation. As an advantage, this approach does not require to transport the computed hash in the OSCORE option.
 
 \[ Note: This has a further positive side effect arising with version -11 of Group OSCORE. That is, since the full encoded OSCORE option is part of the AAD, it avoids a circular dependency from feeding the AAD into the hash computation, which in turn needs crude workarounds like building the full AAD twice, or zeroing out the hash-to-be. \]
 
@@ -186,23 +186,23 @@ In order to build a Deterministic Request, the client protects the plain CoAP re
    
       An actual Diffie-Hellman secret cannot be obtained, as there is no public key associated with the deterministic client.
    
-   * The Sender ID of the Deterministic Client is used as value for the 'id' element of the 'info' parameter used as third argument of the HKDF .
+   * The Sender ID of the Deterministic Client is used as value for the 'id' element of the 'info' parameter used as third argument of the HKDF.
 
-4. The client replaces the 'request\_kid' field of the AAD with the hash H from step 2.
- 
-5. The client protects the request using the pairwise mode of Group OSCORE as defined in Section 9.3 of {{I-D.ietf-core-oscore-groupcomm}}, using the AEAD nonce from step 1, the AEAD encryption key from step 3, and the finalized AAD from step 4.
- 
-6. The client includes a Request-Hash option in the protected request, with value set to the hash H.
+4. The client includes a Request-Hash option in the protected request, with value set to the hash H from Step 2.
+   
+5. The client replaces the 'request\_kid' field of the AAD with the hash H from step 2.
 
-7. The client sets FETCH as the outer code of the protected request to make it usable for a proxy's cache, even if no observation is requested.
+6. The client protects the request using the pairwise mode of Group OSCORE as defined in Section 9.3 of {{I-D.ietf-core-oscore-groupcomm}}, using the AEAD nonce from step 1, the AEAD encryption key from step 3, and the finalized AAD from step 5.
+
+7. The client sets FETCH as the outer code of the protected request to make it usable for a proxy's cache, even if no observation is requested {{RFC7641}}.
 
 The result is the Deterministic Request to be sent. Optionally, the client can further include a Padding option (see {{sec-padding}}), to mitigate a possible impact on communication privacy.
 
 Since the encryption key K is derived using material from the whole plain CoAP request, this (key, nonce) pair is only used for this very message, which is deterministically encrypted unless there is a hash collision between two Deterministic Requests.
 
-The deterministic encryption requires the used AEAD algorithm to be deterministic in itself. This is the case for all the AEAD algorithms currently registered with COSE are {{COSE.Algorithms}}. For future algorithms, a flag in the COSE registry is to be added.
+The deterministic encryption requires the used AEAD algorithm to be deterministic in itself. This is the case for all the AEAD algorithms currently registered with COSE in {{COSE.Algorithms}}. For future algorithms, a flag in the COSE registry is to be added.
 
-Note that, while the process defined above is based on the pairwise mode of Group OSCORE, no information about the server takes part of the key derivation or is included in the AAD. This is intentional, since it opens up the path to deterministic requests to multiple servers at once (see {{det-req-one-to-many}}), and requires later checks at the client when verifying a response to a Deterministic Request (see {{ssec-use-deterministic-requests-response}}).
+Note that, while the process defined above is based on the pairwise mode of Group OSCORE, no information about the server takes part to the key derivation or is included in the AAD. This is intentional, since it allows for sending a deterministic request to multiple servers at once (see {{det-req-one-to-many}}). On the other hand, it requires later checks at the client when verifying a response to a Deterministic Request (see {{ssec-use-deterministic-requests-response}}).
 
 ### Server Processing of Deterministic Request {#sssec-use-deterministic-requests-server-req}
 
@@ -222,13 +222,13 @@ A server that does not support Deterministic Requests would not be able to creat
    
    - The Recipient Key is derived as the key K in step 3 of {{sssec-use-deterministic-requests-client-req}}, with the hash H retrieved at the previous step.
 
-5. The server verifies the request using the pairwise mode of Group OSCORE, as defined in Section 9.4, using the Recipient Context from step 4, with the difference that it does not perform replay checks against a Replay Window (see below).
+5. The server verifies the request using the pairwise mode of Group OSCORE, as defined in Section 9.4 of {{I-D.ietf-core-oscore-groupcomm}}, using the Recipient Context from step 4, with the difference that it does not perform replay checks against a Replay Window (see below).
 
 In case of successful verification, the server MUST also perform the following actions, before possibly delivering the request to the application.
 
 * Starting from the recovered plain CoAP request, the server MUST recompute the same hash that the client computed at step 2 of {{sssec-use-deterministic-requests-client-req}}.
 
-   If the recomputed hash value differs from the value retrieved from the Request-Hash option, the server MUST treat the request as invalid and MAY reply with an unprotected 4.00 (Bad Request) error response. The server MAY set an Outer Max-Age option with value zero. The diagnostic payload MAY contain the string "Decryption failed".
+   If the recomputed hash value differs from the value retrieved from the Request-Hash option at step 3, the server MUST treat the request as invalid and MAY reply with an unprotected 4.00 (Bad Request) error response. The server MAY set an Outer Max-Age option with value zero. The diagnostic payload MAY contain the string "Decryption failed".
    
    This prevents an attacker that guessed a valid authentication tag for a given Request-Hash value to poison caches with incorrect responses.
 
@@ -242,11 +242,11 @@ In case of successful verification, the server MUST also perform the following a
 
 Both when protecting and unprotecting the response, the 'request\_kid' field of the external AAD is replaced with the Request-Hash value. This creates the request-response binding ensuring that no mismatched responses can be successfully unprotected.
 
-\[ Note: Mismatching this with the request's 'request\_kid' (that stays the Deterministic Client's Sender ID) is ugly, but also the only way to avoid any zeroing / rebuilding. \]
+\[ Note: Mismatching this with the actual request's 'request\_kid' (that stays the Deterministic Client's Sender ID) is ugly, but also the only way to avoid any zeroing/rebuilding of the AAD. \]
 
 \[ Suggestion for any OSCORE v2: avoid request details in the request's AAD as individual elements. Rather than having 'request_kid', 'request_piv' and (in Group OSCORE) 'request_kid_context' as separate fields, they can better be something more pluggable. \]
 
-When preparing the response:
+When preparing the response, the server performs the following actions.
 
 * The server sets a non-zero Max-Age option, thus making the Deterministic Request usable for the proxy cache.
 
@@ -256,11 +256,11 @@ When preparing the response:
 
 * In case of successful response, the server uses 2.05 (Content) as outer code even though it is not necessarily an Observe notification {{RFC7641}}, in order to make the response cachable.
 
-Upon receiving the response:
+Upon receiving the response, the client performs the following actions.
 
 * In case the response includes a 'kid' in the OSCORE option and unless responses from multiple servers are expected (see {{det-req-one-to-many}}), the client MUST verify it to be exactly the 'kid' of the server to which the Deterministic Request was sent.
 
-* The client verifies the response as defined in Section 8.4 of {{I-D.ietf-core-oscore-groupcomm}}. In particular, the client verifies the counter signature in the response, based on the 'kid' of the server it sent the request to.
+* The client verifies the response using the group mode of Group OSCORE, as defined in Section 8.4 of {{I-D.ietf-core-oscore-groupcomm}}. In particular, the client verifies the counter signature in the response, based on the 'kid' of the server it sent the request to.
 
 ### Deterministic Requests to Multiple Servers ### {#det-req-one-to-many}
 
@@ -270,7 +270,7 @@ To simplify key derivation, such a Deterministic Request is still created in the
 
 \[ Note: If it was protected with the group mode, the request hash would need to be fed into the group key derivation just for this corner case. Furthermore, there would need to be a signature from the absent public key. \]
 
-When a server receives a request from the Deterministic Client as addressed to a CoAP group, the server MUST include its Sender ID in the response, as 'kid' parameter of the OSCORE option.
+When a server receives a request from the Deterministic Client as addressed to a CoAP group, the server MUST include its own Sender ID in the response, as 'kid' parameter of the OSCORE option.
 
 Although it is normally optional for the server to include its Sender ID when replying to a request protected in pairwise mode, it is required in this case for allowing the client to retrieve the Recipient Context associated to the server originating the response.
 
@@ -307,9 +307,9 @@ For the Request-Hash option, the number suggested to IANA is 548.
 
 For the Padding option, the option number is picked to be the highest number in the Experts Review range; the high option number allows it to follow practically all other options, and thus to be set when the final unpadded message length including all options is known. Therefore, the number suggested to IANA is 64988.
 
-Applications that make use of the "Experimental use" range and want to preserve that property are invited to pick the largest suitable experimental number (65532)
+Applications that make use of the "Experimental use" range and want to preserve that property are invited to pick the largest suitable experimental number (65535)
 
-Note that unless other high options are used, this means that padding a message adds an overhead of at least 3 bytes, i.e. 1 byte for option delta/length and two more bytes of extended option delta). This is considered acceptable overhead, given that the application already chose to prefer the privacy gains of padding over wire transfer length.
+Note that unless other high options are used, this means that padding a message adds an overhead of at least 3 bytes, i.e. 1 byte for option delta/length and two more bytes of extended option delta. This is considered acceptable overhead, given that the application has already chosen to prefer the privacy gains of padding over wire transfer length.
 
 \]
 
@@ -327,7 +327,7 @@ As discussed in {{sec-security-considerations}}, information can be leaked by th
 
 In order to hide such information and mitigate the impact on privacy, the following Padding option is defined, to allow increasing a message's length without changing its meaning.
 
-The option can be used with any CoAP transport, but is especially useful with OSCORE as that does provide any padding of its own.
+The option can be used with any CoAP transport, but is especially useful with OSCORE as that does not provide any padding of its own.
 
 Before choosing to pad a message by using the Padding option, application designers should consider whether they can arrange for common message variants to have the same length by picking a suitable content representation; the canonical example here is expressing "yes" and "no" with "y" and "n", respectively.
 
@@ -350,12 +350,12 @@ A client may set the Padding option, specifying any content of any length as its
 
 A server MUST ignore the option.
 
-Proxies are free to keep the Padding option on a message, to remove it or to add further padding of its own.
+Proxies are free to keep the Padding option on a message, to remove it or to add further padding of their own.
 
 # Simple Cachability using Ticket Requests {#sec-ticket-requests}
 
 Building on the concept of Phantom Requests and Informative Responses defined in {{I-D.tiloca-core-observe-multicast-notifications}},
-basic proxying operation is already possible with the mechanisms described in that document.
+basic proxying operations are already possible with the mechanisms described in that document.
 
 That is, instead of replying to a client with a regular response, a server can send an Informative Response, defined as a protected 5.03 (Service Unavailable) error message. The payload of the Informative Response contains the Phantom Request, which is a Ticket Request in this document's broader terminology.
 
@@ -367,7 +367,7 @@ Following a successful verification -- and this is where the process starts to d
 
 Upon receiving the Ticket Request, the server produces a regular response and includes a non-zero Max-Age option as an outer CoAP option. Note that there is no point in including in an inner Max-Age option, as the client could not pin it in time.
 
-When a second, different client later asks for the same resource at the same server, its new request uses a different KID and Partial IV than the first client's. Thus, the new request produces a cache miss at the proxy and is forwarded to the server, which responds with the same Ticket Request provided to the first client. After that, when the second client sends the Ticket Request to the server, a cache hit at the proxy will be produced, and the Ticket Request can be served from the proxy's cache.
+When a second, different client later asks for the same resource at the same server, its new request uses a different 'kid' and 'Partial IV' than the first client's. Thus, the new request produces a cache miss at the proxy and is forwarded to the server, which responds with the same Ticket Request provided to the first client. After that, when the second client sends the Ticket Request to the server, a cache hit at the proxy will be produced, and the Ticket Request can be served from the proxy's cache.
 
 When multiple proxies are in use, or the response has expired from the proxy's cache, the server receives the Ticket Request multiple times. It is a matter of perspective whether the server treats that as an acceptable replay (given that this whole mechansim only makes sense on requests free of side effects), or whether it is conceptualized as having an internal proxy where the request produces a cache hit.
 
@@ -381,7 +381,7 @@ As all clients' original requests produce an initial cache miss at the proxy and
 
 For any other case, the benefit of caching a single response of only up to 1kB in size is probably outweighed by the necessity to have an additional round trip with the origin server, or at least drastically reduces the gains.
 
-\[  Note: The mechanism could probably be extended to work for inner Block-wise as well, e.g. by introducing an option by which the server sends the next-block Ticket Request along with the response. However, there has to be a better way... \]
+\[  Note: The mechanism could probably be extended to work for inner Block-wise as well, e.g. by introducing an option by which the server sends the next-block Ticket Request along with the response. However, there has to be a better way ... \]
 
 # Open questions
 
@@ -390,6 +390,8 @@ For any other case, the benefit of caching a single response of only up to 1kB i
   Otherwise, how would a proxy forwarding the Ticket Request to a multicast-notification network learn the relevant token?
 
   (The client shouldn't really trust the server's statement about the requests' equivalence anyway).
+  
+  \[ This is limited to Ticket Requests, and has become moot following the latest updates to the Multicast Notification document. \]
 
 * Is "deterministic encryption" something worthwhile to consider in COSE?
 
@@ -402,10 +404,9 @@ For any other case, the benefit of caching a single response of only up to 1kB i
 
   Conceptually, they should align well, and the implementation changes are likely limited to how the KDF is run.
 
-* An unprotection failure from a mismatched hash will not be part of the ideally constant-time code paths that otherwise lead to AEAD unprotect failues. Is that a problem?
+* An unprotection failure from a mismatched hash will not be part of the ideally constant-time code paths that otherwise lead to AEAD unprotect failures. Is that a problem?
 
-  After all, it does tell the attacker that they did succeed in producing a valid MAC
-  (it's just not doing it any good, because this key is only used for deterministic requests and thus also needs to pass the Request-Hash check).
+  After all, it does tell the attacker that they did succeed in producing a valid MAC (it's just not doing it any good, because this key is only used for deterministic requests and thus also needs to pass the Request-Hash check).
 
 # Unsorted further ideas
 
