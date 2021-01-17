@@ -224,7 +224,11 @@ A server that does not support Deterministic Requests would not be able to creat
    
    - The Recipient Key is derived as the key K in step 3 of {{sssec-use-deterministic-requests-client-req}}, with the hash H retrieved at the previous step.
 
-5. The server verifies the request using the pairwise mode of Group OSCORE, as defined in Section 9.4 of {{I-D.ietf-core-oscore-groupcomm}}, using the Recipient Context from step 4, with the difference that it does not perform replay checks against a Replay Window (see below).
+5. The server verifies the request using the pairwise mode of Group OSCORE, as defined in Section 9.4 of {{I-D.ietf-core-oscore-groupcomm}}, using the Recipient Context from step 4, with the following differences.
+
+   - The server sets the value of the 'request\_kid' field in the AAD to be the hash H from step 3.
+
+   - The server does not perform replay checks against a Replay Window (see below).
 
 In case of successful verification, the server MUST also perform the following actions, before possibly delivering the request to the application.
 
@@ -253,6 +257,8 @@ When preparing the response, the server performs the following actions.
 * The server sets a non-zero Max-Age option, thus making the Deterministic Request usable for the proxy cache.
 
 * The server MUST protect the response using the group mode of Group OSCORE, as defined in Section 8.3 of {{I-D.ietf-core-oscore-groupcomm}}. This is required to ensure that the client can verify source authentication of the response, since the "pairwise" key used for the Deterministic Request is actually shared among all the group members.
+
+    In particular, the server sets the value of the 'request\_kid' field in the AAD to be the hash H retrieved from the Request-Hash option of the Deterministic Request (see step 3 in {{sssec-use-deterministic-requests-server-req}}).
 
 * The server MUST use its own Sender Sequence Number as Partial IV to protect the response, and include it as Partial IV in the OSCORE option of the response. This is required since the server does not perform replay protection on the Deterministic Request (see {{ssec-use-deterministic-requests-response}}).
 
