@@ -256,7 +256,7 @@ When preparing the response, the server performs the following actions.
 
 * The server MUST use its own Sender Sequence Number as Partial IV to protect the response, and include it as Partial IV in the OSCORE option of the response. This is required since the server does not perform replay protection on the Deterministic Request (see {{ssec-use-deterministic-requests-response}}).
 
-* In case of successful response, the server uses 2.05 (Content) as outer code even though it is not necessarily an Observe notification {{RFC7641}}, in order to make the response cachable.
+* The server uses 2.05 (Content) as outer code even though it is not necessarily an Observe notification {{RFC7641}}, in order to make the response cachable.
 
 Upon receiving the response, the client performs the following actions.
 
