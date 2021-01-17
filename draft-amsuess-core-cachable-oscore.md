@@ -188,7 +188,7 @@ In order to build a Deterministic Request, the client protects the plain CoAP re
    
    * The Sender ID of the Deterministic Client is used as value for the 'id' element of the 'info' parameter used as third argument of the HKDF.
 
-4. The client includes a Request-Hash option in the protected request, with value set to the hash H from Step 2.
+4. The client includes a Request-Hash option in the request to protect, with value set to the hash H from Step 2.
    
 5. The client replaces the 'request\_kid' field of the AAD with the hash H from step 2.
 
