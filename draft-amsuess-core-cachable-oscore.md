@@ -214,6 +214,8 @@ A server that does not support Deterministic Requests would not be able to creat
 
 2. The server actually recognizes the request to be a Deterministic Request, due to the presence of the Request-Hash option and to the 'kid' parameter of the OSCORE option set to the Sender ID of the Deterministic Client.
 
+   If the 'kid' parameter of the OSCORE option specifies a different Sender ID than the one of the Deterministic Client, the server MUST NOT take the following steps, and instead processes the request as per Section 9.4 of {{I-D.ietf-core-oscore-groupcomm}}.
+
 3. The server retrieves the hash H from the Request-Hash option.
 
 4. The server derives a Recipient Context for processing the Deterministic Request. In particular:
