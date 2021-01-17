@@ -190,7 +190,7 @@ In order to build a Deterministic Request, the client protects the plain CoAP re
 
 4. The client includes a Request-Hash option in the request to protect, with value set to the hash H from Step 2.
    
-5. The client replaces the 'request\_kid' field of the AAD with the hash H from step 2.
+5. The client updates the value of the 'request\_kid' field in the AAD, and sets it to the hash H from step 2.
 
 6. The client protects the request using the pairwise mode of Group OSCORE as defined in Section 9.3 of {{I-D.ietf-core-oscore-groupcomm}}, using the AEAD nonce from step 1, the AEAD encryption key from step 3, and the finalized AAD from step 5.
 
