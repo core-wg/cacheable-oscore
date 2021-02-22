@@ -1,5 +1,5 @@
 ---
-title: "Cachable OSCORE"
+title: "Cacheable OSCORE"
 docname: draft-amsuess-core-cachable-oscore-latest
 ipr: trust200902
 stand_alone: true
@@ -59,7 +59,7 @@ Requests and responses protected with the group mode of Group OSCORE can be read
 
 This allows a trusted intermediary proxy which is also a member of the OSCORE group to populate its cache with responses from origin servers. Later on, the proxy can possibly reply to a request in the group with a response from its cache, if recognized as an eligible server by the client.
 
-However, an untrusted proxy which is not member of the OSCORE group only sees protected responses as opaque, uncachable ciphertext. In particular, different clients in the group that originate a same plain CoAP request would send different protected requests, as a result of their Group OSCORE processing. Such protected requests cannot yield a cache hit at the proxy, which makes the whole caching of protected responses pointless.
+However, an untrusted proxy which is not member of the OSCORE group only sees protected responses as opaque, uncacheable ciphertext. In particular, different clients in the group that originate a same plain CoAP request would send different protected requests, as a result of their Group OSCORE processing. Such protected requests cannot yield a cache hit at the proxy, which makes the whole caching of protected responses pointless.
 
 This document addresses this complication and enables cachability of protected responses, also for proxies that are not members of the OSCORE group and are unaware of OSCORE in general. To this end, it builds on the concept of "consensus request" initially considered in {{I-D.tiloca-core-observe-multicast-notifications}}, and defines "deterministic request" as a convenient incarnation of such concept.
 
@@ -262,7 +262,7 @@ When preparing the response, the server performs the following actions.
 
 * The server MUST use its own Sender Sequence Number as Partial IV to protect the response, and include it as Partial IV in the OSCORE option of the response. This is required since the server does not perform replay protection on the Deterministic Request (see {{ssec-use-deterministic-requests-response}}).
 
-* The server uses 2.05 (Content) as outer code even though it is not necessarily an Observe notification {{RFC7641}}, in order to make the response cachable.
+* The server uses 2.05 (Content) as outer code even though it is not necessarily an Observe notification {{RFC7641}}, in order to make the response cacheable.
 
 Upon receiving the response, the client performs the following actions.
 
@@ -367,7 +367,7 @@ basic proxying operations are already possible with the mechanisms described in 
 
 That is, instead of replying to a client with a regular response, a server can send an Informative Response, defined as a protected 5.03 (Service Unavailable) error message. The payload of the Informative Response contains the Phantom Request, which is a Ticket Request in this document's broader terminology.
 
-In particular, the Phantom Request is protected with the group mode of Group OSCORE. Even though the Phantom Request is not necessarily an Observe request {{RFC7641}}, the server always uses FETCH as outer code in order to make the response cachable.
+In particular, the Phantom Request is protected with the group mode of Group OSCORE. Even though the Phantom Request is not necessarily an Observe request {{RFC7641}}, the server always uses FETCH as outer code in order to make the response cacheable.
 
 More generally, upon receiving a Ticket Request, the client verifies it to be indeed equivalent to its original request. As in {{I-D.tiloca-core-observe-multicast-notifications}}, this check especially verifies that the request URI, including protocol and host name, is identical between the original request and the Ticket Request. Any difference there would indicate URI aliasing, which is currently not allowed.
 
