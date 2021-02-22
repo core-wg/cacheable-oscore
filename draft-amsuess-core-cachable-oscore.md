@@ -67,16 +67,6 @@ Intuitively, given a GET or FETCH plain CoAP request, all clients wishing to sen
 
 Cachability of protected responses is useful also in applications where several clients wish to frequently retrieve the same object, while it does not matter if an external party can determine that they are all requesting the same content. Note that the server can still update the ETag value for a resource, and generate a new (padded) response whenever the resource representation changes or has aged.
 
-## Procedural Status
-
-\[
-
-This is an early idea that would bring back some concepts to OSCORE that were present as OSCON in its early drafts.
-
-The main purpose of publishing the draft at this stage is to fathom whether the concept of a deterministic client has a chance of living up the standards of the IETF community (no pun intended).
-
-\]
-
 ## Terminology ## {#terminology}
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{RFC2119}} {{RFC8174}} when, and only when, they appear in all capitals, as shown here.
