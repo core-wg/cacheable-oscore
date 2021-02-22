@@ -32,7 +32,7 @@ normative:
   RFC8174:
   RFC8613:
   COSE.Algorithms:
-    author: 
+    author:
       org: IANA
     date: false
     title: COSE Algorithms
@@ -177,19 +177,19 @@ In order to build a Deterministic Request, the client protects the plain CoAP re
 2. The client uses the hash function indicated for the Deterministic Client, and computes a hash H over the following input: the Sender Key of the Deterministic Client, concatenated with the AAD from step 1, concatenated with the COSE plaintext.
 
    Note that the payload of the plain CoAP request (if any) is not self-delimiting, and thus hash functions are limited to non-malleable ones.
-  
+
 3. The client derives the Pairwise Sender Key K as defined in Section 2.3.1 of {{I-D.ietf-core-oscore-groupcomm}}, with the following differences:
 
    * The Sender Key of the Deterministic Client is used as first argument of the HKDF.
-   
+
    * The hash H from step 2 is used as second argument of the HKDF, i.e. as "Shared Secret" computable by all the group members.
-   
+
       An actual Diffie-Hellman secret cannot be obtained, as there is no public key associated with the deterministic client.
-   
+
    * The Sender ID of the Deterministic Client is used as value for the 'id' element of the 'info' parameter used as third argument of the HKDF.
 
 4. The client includes a Request-Hash option in the request to protect, with value set to the hash H from Step 2.
-   
+
 5. The client updates the value of the 'request\_kid' field in the AAD, and sets it to the hash H from step 2.
 
 6. The client protects the request using the pairwise mode of Group OSCORE as defined in Section 9.3 of {{I-D.ietf-core-oscore-groupcomm}}, using the AEAD nonce from step 1, the AEAD encryption key from step 3, and the finalized AAD from step 5.
@@ -221,7 +221,7 @@ A server that does not support Deterministic Requests would not be able to creat
 4. The server derives a Recipient Context for processing the Deterministic Request. In particular:
 
    - The Recipient ID is the Sender ID of the Deterministic Client.
-   
+
    - The Recipient Key is derived as the key K in step 3 of {{sssec-use-deterministic-requests-client-req}}, with the hash H retrieved at the previous step.
 
 5. The server verifies the request using the pairwise mode of Group OSCORE, as defined in Section 9.4 of {{I-D.ietf-core-oscore-groupcomm}}, using the Recipient Context from step 4, with the following differences.
@@ -235,13 +235,13 @@ In case of successful verification, the server MUST also perform the following a
 * Starting from the recovered plain CoAP request, the server MUST recompute the same hash that the client computed at step 2 of {{sssec-use-deterministic-requests-client-req}}.
 
    If the recomputed hash value differs from the value retrieved from the Request-Hash option at step 3, the server MUST treat the request as invalid and MAY reply with an unprotected 4.00 (Bad Request) error response. The server MAY set an Outer Max-Age option with value zero. The diagnostic payload MAY contain the string "Decryption failed".
-   
+
    This prevents an attacker that guessed a valid authentication tag for a given Request-Hash value to poison caches with incorrect responses.
 
 * The server MUST verify that the unprotected request is safe to be processed in the REST sense, i.e. that it has no side effects. If verification fails, the server MUST discard the message and SHOULD reply with a protected 4.01 (Unauthorized) error response.
 
   Note that some CoAP implementations may not be able to prevent that an application produces side effects from a safe request. This may incur checking whether the particular resource handler is marked as side-effect free. An implementation may also have a configured list of requests that are known to be side effect free,  and reject any other request.
-  
+
   These checks replace the otherwise present requirement that the server needs to check the Replay Window of the Recipient Context (see step 5 above), which is inapplicable with the Recipient Context derived at step 4 from the value of the Request-Hash option. The reasoning is analogous to the one in {{I-D.amsuess-lwig-oscore}} to treat the potential replay as answerable, if the handled request is side effect free.
 
 ### Response to a Deterministic Request {#ssec-use-deterministic-requests-response}
@@ -398,7 +398,7 @@ For any other case, the benefit of caching a single response of only up to 1kB i
   Otherwise, how would a proxy forwarding the Ticket Request to a multicast-notification network learn the relevant token?
 
   (The client shouldn't really trust the server's statement about the requests' equivalence anyway).
-  
+
   \[ This is limited to Ticket Requests, and has become moot following the latest updates to the Multicast Notification document. \]
 
 * Is "deterministic encryption" something worthwhile to consider in COSE?
