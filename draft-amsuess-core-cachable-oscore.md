@@ -3,7 +3,7 @@ title: "Cacheable OSCORE"
 docname: draft-amsuess-core-cachable-oscore-latest
 ipr: trust200902
 stand_alone: true
-cat: exp
+cat: std
 wg: CoRE Working Group
 kw: CoAP, OSCORE, multicast, caching, proxy
 author:
