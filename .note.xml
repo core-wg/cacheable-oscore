@@ -1,7 +1,7 @@
-<note title="Note to Readers">
+<note title="Discussion Venues" removeInRFC="true">
 <t>Discussion of this document takes place on the
   CORE Working Group mailing list (core@ietf.org),
-  which is archived at <eref target="https://mailarchive.ietf.org/arch/browse/core/">https://mailarchive.ietf.org/arch/browse/core/</eref>.</t>
+  which is archived at <eref target="https://mailarchive.ietf.org/arch/browse/core/"/>.</t>
 <t>Source for this draft and an issue tracker can be found at
-  <eref target="https://gitlab.com/chrysn/core-cachable-oscore/-/tree/master">https://gitlab.com/chrysn/core-cachable-oscore/</eref>.</t>
+  <eref target="https://gitlab.com/chrysn/core-cachable-oscore/"/>.</t>
 </note>
