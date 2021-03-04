@@ -210,7 +210,7 @@ In order to build a Deterministic Request, the client protects the plain CoAP re
 
    * The used Partial IV is 0, hence it does not need to be set in the OSCORE option.
 
-2. The client uses the hash function indicated for the Deterministic Client, and computes a hash H over the following input: the Sender Key of the Deterministic Client, concatenated with the AAD from step 1, concatenated with the COSE plaintext.
+2. The client uses the hash function indicated for the Deterministic Client, and computes a hash H over the following input: the Sender Key of the Deterministic Client, concatenated with the External AAD from step 1, concatenated with the COSE plaintext.
 
    Note that the payload of the plain CoAP request (if any) is not self-delimiting, and thus hash functions are limited to non-malleable ones.
 
