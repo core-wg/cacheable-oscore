@@ -177,7 +177,9 @@ The Request-Hash option is identical in all its properties to the Request-Tag op
 
   This is a potential future optimization which is not mentioned anywhere else yet, and allows clients to elide all other options and payload if it has reason to believe that it can produce a cache hit with the abbreviated request alone.
 
-* When used with a Deterministic Request, this option is created at message protection time by the client, and used before message unprotection by the server. Therefore, when used in a Deterministic Request, this option is treated as Class U for OSCORE {{RFC8613}}. Other uses of this option can put it into different classes for OSCORE the processing.
+* It may be present in responses (TBD: Does this affect any other properties?).
+
+* When used with a Deterministic Request, this option is created at message protection time by the sender, and used before message unprotection by the recipient. Therefore, in this use case, it is treated as Class U for OSCORE {{RFC8613}} in requests, and Class I in responses. Other uses of this option can put it into different classes for OSCORE the processing.
 
 ## Use of Deterministic Requests {#ssec-use-deterministic-requests}
 
@@ -224,11 +226,6 @@ In order to build a Deterministic Request, the client protects the plain CoAP re
 
 4. The client includes a Request-Hash option in the request to protect, with value set to the hash H from Step 2.
 
-5. The client updates the value of the 'request\_kid' field in the AAD, and sets it to the hash H from step 2.
-
-  (This step is still under active debate: While setting it like that makes the request and response AADs consistent,
-  it is also means that implementations which build the AAD in memory need to do so twice).
-
 6. The client protects the request using the pairwise mode of Group OSCORE as defined in Section 9.3 of {{I-D.ietf-core-oscore-groupcomm}}, using the AEAD nonce from step 1, the AEAD encryption key from step 3, and the finalized AAD from step 5.
 
 7. The client sets FETCH as the outer code of the protected request to make it usable for a proxy's cache, even if no observation is requested {{RFC7641}}.
@@ -263,8 +260,6 @@ A server that does not support Deterministic Requests would not be able to creat
 
 5. The server verifies the request using the pairwise mode of Group OSCORE, as defined in Section 9.4 of {{I-D.ietf-core-oscore-groupcomm}}, using the Recipient Context from step 4, with the following differences.
 
-   - The server sets the value of the 'request\_kid' field in the AAD to be the hash H from step 3.
-
    - The server does not perform replay checks against a Replay Window (see below).
 
 In case of successful verification, the server MUST also perform the following actions, before possibly delivering the request to the application.
@@ -283,27 +278,34 @@ In case of successful verification, the server MUST also perform the following a
 
 ### Response to a Deterministic Request {#ssec-use-deterministic-requests-response}
 
-Both when protecting and unprotecting the response, the 'request\_kid' field of the external AAD is replaced with the Request-Hash value. This creates the request-response binding ensuring that no mismatched responses can be successfully unprotected.
+When treating a response to a deterministic request, the Request-Hash option is treated as a Class I option. This creates the request-response binding ensuring that no mismatched responses can be successfully unprotected.
+The option does not actually need to be present in the message as transported (the server SHOULD elide it for compactness).
+The client MUST replace any Request-Hash values present in the response with the Request-Tag it sent in the request before any OSCORE processing.
 
-\[ Note: Mismatching this with the actual request's 'request\_kid' (that stays the Deterministic Client's Sender ID) is ugly, but also the only way to avoid any zeroing/rebuilding of the AAD. \]
-
-\[ Suggestion for any OSCORE v2: avoid request details in the request's AAD as individual elements. Rather than having 'request_kid', 'request_piv' and (in Group OSCORE) 'request_kid_context' as separate fields, they can better be something more pluggable. \]
+\[ Suggestion for any OSCORE v2: avoid request details in the request's AAD as individual elements. Rather than having 'request_kid', 'request_piv' and (in Group OSCORE) 'request_kid_context' as separate fields, they can better be something more pluggable.
+This would avoid the need to make up an option before processing.  \]
 
 When preparing the response, the server performs the following actions.
 
 * The server sets a non-zero Max-Age option, thus making the Deterministic Request usable for the proxy cache.
 
+* The server preliminarily sets the Request-Hash option with the full request hash.
+
 * The server MUST protect the response using the group mode of Group OSCORE, as defined in Section 8.3 of {{I-D.ietf-core-oscore-groupcomm}}. This is required to ensure that the client can verify source authentication of the response, since the "pairwise" key used for the Deterministic Request is actually shared among all the group members.
 
-    In particular, the server sets the value of the 'request\_kid' field in the AAD to be the hash H retrieved from the Request-Hash option of the Deterministic Request (see step 3 in {{sssec-use-deterministic-requests-server-req}}).
+  Note that the Request-Hash option is treated as Class I here.
 
 * The server MUST use its own Sender Sequence Number as Partial IV to protect the response, and include it as Partial IV in the OSCORE option of the response. This is required since the server does not perform replay protection on the Deterministic Request (see {{ssec-use-deterministic-requests-response}}).
 
 * The server uses 2.05 (Content) as outer code even though it is not necessarily an Observe notification {{RFC7641}}, in order to make the response cacheable.
 
+* The server SHOULD remove the Request-Hash option from the message before sending.
+
 Upon receiving the response, the client performs the following actions.
 
 * In case the response includes a 'kid' in the OSCORE option and unless responses from multiple servers are expected (see {{det-req-one-to-many}}), the client MUST verify it to be exactly the 'kid' of the server to which the Deterministic Request was sent.
+
+* The client removes any Request-Hash options from the response, and inserts a Request-Hash option with the full request hash in their place.
 
 * The client verifies the response using the group mode of Group OSCORE, as defined in Section 8.4 of {{I-D.ietf-core-oscore-groupcomm}}. In particular, the client verifies the counter signature in the response, based on the 'kid' of the server it sent the request to.
 
