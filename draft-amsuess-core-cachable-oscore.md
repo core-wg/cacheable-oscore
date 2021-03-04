@@ -384,6 +384,16 @@ Note that unless other high options are used, this means that padding a message 
 
 # Change log
 
+Since -01:
+
+* Not meddlingi with request_kid any more.
+
+  Instead, Request-Hash in responses is treated as Class I, but typically elided.
+
+  In requests, this removes the need to compute the external AAD twice.
+
+* Derivation of the hash now uses the external_aad, rather than the full AAD. This is good enough becuas AAD is a function only of the external AAD, and the external AAD is easier to get your hands on if COSE manages all the rest.
+
 Since -00:
 
 * More precise specification of the hashing (guided by first implementations)
