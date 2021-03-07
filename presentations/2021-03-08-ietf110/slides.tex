@@ -1,0 +1,123 @@
+\documentclass[aspectratio=169]{beamer}
+
+% generic packages
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+
+% about the presentation
+\title{Deterministic Requests: Cacheable OSCORE}
+\subtitle{\texttt{draft-amsuess-core-cachable-oscore}}
+\author{\textit{Christian~Amsüss}, Marco Tiloca}
+\date{2021-03-08, IETF 110}
+
+% used commands
+
+\usepackage{verbatim}
+\usepackage{soul}
+
+% attach self
+
+\usepackage{embedfile}
+\embedfile{\jobname.tex}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{Why caching?}\Large
+	\begin{itemize}
+		\item Reduce traffic
+
+			{\footnotesize Firmware updates}
+
+		\item Hide traffic
+
+			{\footnotesize Firmware updates, again}
+
+		\item Increase reliability
+		\item Decrease latency
+		\item Makes \texttt{multicast-notifications} work\footnote{It works without Deterministic Requests. It works {\em better} with.}
+
+			{\footnotesize Make protected case as simple as unprotected case}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Why is this hard in (even Group) OSCORE}\Large
+	\begin{eqnarray*}
+	\left.
+	\begin{array}{l}
+		\mbox{POST / 2.01} \\ 
+		\mbox{Different PIVs}
+	\end{array}
+	\right\}
+	&& \mbox{uncacheable}
+	\end{eqnarray*}
+
+	\begin{eqnarray*}
+	\left.
+	\begin{array}{l}
+		\mbox{Original KID / PIV unknown} \\
+		\mbox{Foreign KID request is untrusted%
+\footnote{It'd be a pity if someone requested {\texttt{/whom-i-know}}, but handed you a different request for {\texttt{/whom-to-trust}}}
+		}
+	\end{array}
+	\right\}
+	&& \mbox{unverifiable}
+	\end{eqnarray*}
+\end{frame}
+
+\begin{frame}{Proposed mechanism\footnote{including sneak peek at -02}}\Large
+	\begin{itemize}
+		\item Dedicated group member: Deterministic Client
+		\item Request-Hash option: Hash of DC sender key $||$ external AAD $||$ plaintext
+		\item ``Pairwise'' sender key of DC derived from DC sender key and Request-Hash\footnote{Details pending processing of received comments}
+		\item Server recognizes DC as requester, builds recipient key from Request-Hash, verifies Request-Hash
+		\item Response bound to request using external AAD (\%)
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Request-response binding: Details}\Large
+	\st{Overriding the Request-KID-Context}
+
+	\bigskip
+
+	\begin{itemize}
+		\item Request-Hash as an option in the response
+		\item Request-Hash is Class I for responses
+		\item Request-Hash may be elided from response on the wire transmission but is reconstructed by recipient before OSCORE processing
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Limitations}\Large
+	\begin{itemize}
+		\item Only safe requests (GET, FETCH)
+		\item Only resources every group member may access this way
+			\bigskip
+		\item Security properties traded for cacheability
+			\begin{itemize}\Large
+				\item No order between request and response
+				\item Limited request confidentiality
+				\item No source authentication
+				\item No replay protection
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Status}\Large
+	\begin{itemize}
+		\item Two implementations interop'd at version between -01 and -02
+
+			{\footnotesize The things you learn...}
+
+		\item Addressing pending comments on security.
+
+			Then: review with security in mind.
+
+		\item Practical testing
+
+		\item Further WG input?
+	\end{itemize}
+\end{frame}
+
+\end{document}
