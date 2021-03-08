@@ -29,17 +29,17 @@
 	\begin{itemize}
 		\item Reduce traffic
 
-			{\footnotesize Firmware updates}
+			{\normalsize Firmware updates}
 
 		\item Hide traffic
 
-			{\footnotesize Firmware updates, again}
+			{\normalsize Firmware updates, again}
 
 		\item Increase reliability
 		\item Decrease latency
 		\item Makes \texttt{multicast-notifications} work\footnote{It works without Deterministic Requests. It works {\em better} with.}
 
-			{\footnotesize Make protected case as simple as unprotected case}
+			{\normalsize Make protected case as simple as unprotected case}
 	\end{itemize}
 \end{frame}
 
@@ -93,7 +93,11 @@
 	\begin{itemize}
 		\item Only safe requests (GET, FETCH)
 		\item Only resources every group member may access this way
-			\bigskip
+		\item Algorithms limited to those doing AEAD deterministically
+		{\normalsize Currently, all are.}
+
+		\bigskip
+
 		\item Security properties traded for cacheability
 			\begin{itemize}\Large
 				\item No order between request and response
@@ -108,7 +112,7 @@
 	\begin{itemize}
 		\item Two implementations interop'd at version between -01 and -02
 
-			{\footnotesize The things you learn...}
+			{\normalsize The things you learn...}
 
 		\item Addressing pending comments on security.
 
