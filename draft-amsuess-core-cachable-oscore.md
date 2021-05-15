@@ -75,6 +75,8 @@ many similar devices fetch large representations at the same time.
 Collecting them at a proxy not only keeps the traffic low,
 but also lets the clients ride single file to hide their numbers[SW:EPIV].
 
+\[TODO: include the actual reference "SW:EPIV"\]
+
 When relying on intermediaries to fan out the delivery of multicast data protected end-to-end as in {{I-D.ietf-core-observe-multicast-notifications}}, deterministic requests allow for a more efficient setup, by reducing the amount of message exchanges and enabling early population of cache entries (see {{det-requests-for-notif}}).
 
 ## Terminology ## {#terminology}
@@ -119,21 +121,37 @@ but considered starting points are:
   even if no observation is intended (and no outer Observe is set).
   Thus, both observing and non-observing requests can be aggregated into a single request,
   that is upstreamed as an observation at the latest when any observing request reaches the proxy.
-
+  
 * Avoid setting the ETag option in requests on a whim.
   Only set it when there was a recent response with that ETag.
   When obtaining later blocks, do not send the known-stale ETag.
 
+<!--
+MT: It refers to "blocks". Does it simpy mean responses as different representation versions? It shouldn't necessarily refer to blocks as intended for the block-wise transfer (which is covered in the following bullet point).
+-->
+  
 * In block-wise transfer, maximally sized large inner blocks (szx=6) should be selected.
   This serves not only to align the clients on consistent cache entries,
   but also helps amortize the additional data transferred in the per-message signatures.
 
+<!--
+MT: proposed  s/should be selected/SHOULD be selected
+-->
+  
   Outer block-wise transfer can then be used if these messages excede a hop's efficiently usable MTU size.
 
   (If BERT {{?RFC8323}} is usable with OSCORE, its use is fine as well;
   in that case, the server picks a consistent block size for all clients anyway).
 
+<!--
+MT: proposed  s/If BERT ... is usable/When BERT ... is used
+-->
+  
 * If padding (see {{sec-padding}}) is used to limit an adversary's ability to deduce requests' content from their length, the requests are padded to reach a total length that should be agreed on among all users of a security context.
+
+<!--
+MT: proposed  s/should be agreed/SHOULD be agreed
+-->
 
 These only serve to ensure that cache entries are utilized; failure to follow them has no more severe consequences than decreasing the utility and effectiveness of a cache.
 
@@ -192,6 +210,10 @@ The use of Deterministic Requests in an OSCORE group requires that the intereste
 * The hash algorithm to use for computing the hash of a plain CoAP request, when producing the associated Deterministic Request.
 
 * Optionally, a creation timestamp associated to the Deterministic Client. This is aligned with the Group Manager that might replace the current Deterministic Client with a new one with a different Sender ID, e.g. to enforce freshness indications without rekeying the whole group.
+
+<!--
+MT: Why a creation timestamp and not an expiration timestamp or residual lifetime?
+-->
 
 Group members have to obtain this information from the Group Manager. A group member can do that, for instance, when obtaining the group key material upon joining the OSCORE group, or later on as an active member by sending a request to a dedicated resource at the Group Manager. In either case, information on the latest Deterministic Client is returned.
 
@@ -334,12 +356,24 @@ by just so much as to make caching possible:
   * It is more recent than any other response from the same group member that has a smaller sequence number.
   * It is more recent than the original creation of the deterministic security context.
 
+<!--
+MT: "more recent than the original creation ..." By whom? Perhaps it means: "It is more recent than any deterministic request protected by the same Deterministic Client." ?
+-->
+  
 * Request confidentiality is limited.
 
   An intermediary can determine that two requests from different clients
   are identical, and associate the different responses generated for them.
   Padding is suggested for responses where necessary.
 
+<!--
+MT: On the first sentence, why different responses? Does it refer to the case where the deterministic request is sent to a group of servers?
+-->
+
+<!--
+MT: On the second sentence, does this mean to possibly use the Padding CoAP option defined in Appendix B, or whatever else padding mechanism?
+-->
+  
 * Source authentication for requests is lost.
 
   Instead, the server must verify that the request (precisely: its handler) is side effect free.
@@ -411,6 +445,10 @@ In order to hide such information and mitigate the impact on privacy, the follow
 The option can be used with any CoAP transport, but is especially useful with OSCORE as that does not provide any padding of its own.
 
 Before choosing to pad a message by using the Padding option, application designers should consider whether they can arrange for common message variants to have the same length by picking a suitable content representation; the canonical example here is expressing "yes" and "no" with "y" and "n", respectively.
+
+<!--
+MT: Can we elaborate more on how the Padding option makes it more difficult for an adversary to related responses to two different clients? After all, the Padding option is well visible and recognizible.
+-->
 
 ## Definition of the Padding Option
 
@@ -487,11 +525,21 @@ The proxy can thus be configured by the server following the first request from 
 
   After all, it does tell the attacker that they did succeed in producing a valid MAC (it's just not doing it any good, because this key is only used for deterministic requests and thus also needs to pass the Request-Hash check).
 
+<!--
+MT: This second bullet point seems something that can already be said in the Security Considerations section.
+-->
+  
 # Unsorted further ideas
 
 * All or none of the deterministic requests should have an inner observe option.
   Preferably none -- that makes messages shorter, and clients need to ignore that option either way when checking whether a Consensus Request matches their intended request.
 
+<!--
+MT: How can clients start an observation then? That would require an inner Observe option, right?
+
+Also the guidelines in Section 2 suggest to have an inner observe option, regardless the resource being actually observable.
+-->
+  
 # Acknowledgments # {#acknowldegment}
 {: numbered="no"}
 
