@@ -75,8 +75,7 @@ many similar devices fetch large representations at the same time.
 Collecting them at a proxy not only keeps the traffic low,
 but also lets the clients ride single file to hide their numbers[SW:EPIV].
 
-When fanning out multicast data delivery,
-deterministic requests allow for a more efficient setup ({{det-requests-for-notif}}).
+When relying on intermediaries to fan out the delivery of multicast data protected end-to-end as in {{I-D.ietf-core-observe-multicast-notifications}}, deterministic requests allow for a more efficient setup, by reducing the amount of message exchanges and enabling early population of cache entries (see {{det-requests-for-notif}}).
 
 ## Terminology ## {#terminology}
 
@@ -465,25 +464,17 @@ When a second, different client later asks for the same resource at the same ser
 
 When multiple proxies are in use, or the response has expired from the proxy's cache, the server receives the Ticket Request multiple times. It is a matter of perspective whether the server treats that as an acceptable replay (given that this whole mechansim only makes sense on requests free of side effects), or whether it is conceptualized as having an internal proxy where the request produces a cache hit.
 
-# Application for more efficient end-to-end protected multicast notifications {#det-requests-for-notif}
+# Application for More Efficient End-to-End Protected Multicast Notifications {#det-requests-for-notif}
 
-Comparing the "Example with a Proxy" and the "Example with a Proxy and Group OSCORE" in {{I-D.ietf-core-observe-multicast-notifications}}
-shows that with OSCORE,
-more requests than without need to hit the server.
-This is because every client originally protects its request individually
-and thus needs a custom response served to send the Phantom Request as a Ticket Request.
+{{I-D.ietf-core-observe-multicast-notifications}} defines how a CoAP server can serve all clients observing a same resource at once, by sending notifications over multicast. The approach supports also the presence of intermediaries such as proxies, both also if Group OSCORE is used to protect notifications end-to-end.
 
-If the clients send their deterministic requests in a deterministic way,
-and the server uses these requests as Ticket Requests as well,
-then there is no need for a Phantom Request to be sent back to the client.
+However, comparing the "Example with a Proxy" in {{Section A of I-D.ietf-core-observe-multicast-notifications}} and the "Example with a Proxy and Group OSCORE" in {{Section B of I-D.ietf-core-observe-multicast-notifications}} shows that, when using Group OSCORE, more requests need to hit the server. This is because every client originally protects its Observation request individually, and thus needs a custom response served to obtain the Phantom Request as a Ticket Request.
 
-Instead, the server can send an unprotected Informative Response
-very much like in the example without OSCORE,
-setting the proxy up and giving the latest response along the way.
+If the clients send their requests as the same deterministic request, the server can use these requests as Ticket Requests as well. Thus, there is no need for the server to provide a same Phantom Request to each client.
 
-The proxy can thus be configured by the server with the first request,
-and has an active observation and a fresh cache entry
-in time for the second client to arrive.
+Instead, the server can send a single unprotected Informative Response - very much like in the example without Group OSCORE - hence setting the proxy up and optionally providing also the latest notification along the way.
+
+The proxy can thus be configured by the server following the first request from the clients, after which it has an active observation and a fresh cache entry in time for the second client to arrive.
 
 # Open questions
 
