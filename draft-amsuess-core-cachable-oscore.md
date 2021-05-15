@@ -47,7 +47,7 @@ informative:
 
 --- abstract
 
-Group communication with the Constrained Application Protocol (CoAP) can be secured end-to-end using Group Object Security for Constrained RESTful Environments (Group OSCORE), also across untrusted intermediary proxies. However, this sidesteps the proxies' abilities to cache responses from the origin server(s). This specification restores cachability of protected responses at proxies, by introducing consensus requests which any client in a group can send to one server or multiple servers in the same group.
+Group communication with the Constrained Application Protocol (CoAP) can be secured end-to-end using Group Object Security for Constrained RESTful Environments (Group OSCORE), also across untrusted intermediary proxies. However, this sidesteps the proxies' abilities to cache responses from the origin server(s). This specification restores cacheability of protected responses at proxies, by introducing consensus requests which any client in a group can send to one server or multiple servers in the same group.
 
 --- middle
 
@@ -61,11 +61,11 @@ This allows a trusted intermediary proxy which is also a member of the OSCORE gr
 
 However, an untrusted proxy which is not member of the OSCORE group only sees protected responses as opaque, uncacheable ciphertext. In particular, different clients in the group that originate a same plain CoAP request would send different protected requests, as a result of their Group OSCORE processing. Such protected requests cannot yield a cache hit at the proxy, which makes the whole caching of protected responses pointless.
 
-This document addresses this complication and enables cachability of protected responses, also for proxies that are not members of the OSCORE group and are unaware of OSCORE in general. To this end, it builds on the concept of "consensus request" initially considered in {{I-D.ietf-core-observe-multicast-notifications}}, and defines "deterministic request" as a convenient incarnation of such concept.
+This document addresses this complication and enables cacheability of protected responses, also for proxies that are not members of the OSCORE group and are unaware of OSCORE in general. To this end, it builds on the concept of "consensus request" initially considered in {{I-D.ietf-core-observe-multicast-notifications}}, and defines "deterministic request" as a convenient incarnation of such concept.
 
 Intuitively, given a GET or FETCH plain CoAP request, all clients wishing to send that request are able to deterministically compute the same protected request, using a variation on the pairwise mode of Group OSCORE. It follows that cache hits become possible at the proxy, which can thus serve clients in the group from its cache. Like in {{I-D.ietf-core-observe-multicast-notifications}}, this requires that clients and servers are already members of a suitable OSCORE group.
 
-Cachability of protected responses is useful also in applications where several clients wish to retrieve the same object.
+Cacheability of protected responses is useful also in applications where several clients wish to retrieve the same object.
 Some security properties of OSCORE are dispensed with to gain other desirable properties.
 
 ## Use cases
@@ -86,9 +86,9 @@ Readers are expected to be familiar with terms and concepts of CoAP {{RFC7252}} 
 
 This document introduces the following new terms.
 
-* Consensus Request: a Group OSCORE request that can be used repeatedly to access a particular resource, hosted at one or more servers in the OSCORE group.
+* Consensus Request: a CoAP request protected with Group OSCORE that can be used repeatedly to access a particular resource, hosted at one or more servers in the OSCORE group.
 
-   A Consensus Request has all the properties relevant to caching, but its transport dependent properties (e.g. Token or Message ID) are not defined. Thus, different requests on the wire can both be said to "be the same Consensus Request" even if they have different Tokens or client addresses.
+   A Consensus Request has all the properties relevant to caching, but its transport dependent properties (e.g. Token or Message ID) are not defined. Thus, different requests on the wire can both be said to "be the same Consensus Request" even if they have different Tokens or source addresses.
 
    The Consensus Request is the reference for request-response binding. Hence, if it does not generate a Consensus Request by itself, the client has still to be able to read and verify any obtained Consensus Request, before using it to verify a bound response.
 
@@ -104,7 +104,7 @@ This document introduces the following new terms.
   that are generated in a different way than as a Deterministic Request.
   The prototypical Ticket Request is the Phantom Request defined in {{I-D.ietf-core-observe-multicast-notifications}}.
 
-  In {{sec-ticket-requests}}, the term is used bridge the gap to that draft.
+  In {{sec-ticket-requests}}, the term is used to bridge the gap to that draft.
 
 # Deterministic Requests # {#sec-deterministic-requests}
 
@@ -118,8 +118,8 @@ but considered starting points are:
 
 * Set the inner Observe option to 0 if the requested resource is described as observable,
   even if no observation is intended (and no outer Observe is set).
-  Thus, both observing and non-observing requsts can be aggregated into a single request,
-  that is upstreamed as an observation at latest when any observing request reaches the proxy.
+  Thus, both observing and non-observing requests can be aggregated into a single request,
+  that is upstreamed as an observation at the latest when any observing request reaches the proxy.
 
 * Avoid setting the ETag option in requests on a whim.
   Only set it when there was a recent response with that ETag.
@@ -134,10 +134,9 @@ but considered starting points are:
   (If BERT {{?RFC8323}} is usable with OSCORE, its use is fine as well;
   in that case, the server picks a consistent block size for all clients anyway).
 
-* If padding (see {{sec-padding}}) is used to limit an adversary's ability to deduce requests' content from their length,
-  the length requests are padded to should be agreed on among all users of a security context.
+* If padding (see {{sec-padding}}) is used to limit an adversary's ability to deduce requests' content from their length, the requests are padded to reach a total length that should be agreed on among all users of a security context.
 
-These only serve to ensure that cache entries are utilized; failure to follow them has no more severe consequences than decreasing the utility of a cache.
+These only serve to ensure that cache entries are utilized; failure to follow them has no more severe consequences than decreasing the utility and effectiveness of a cache.
 
 ## Design Considerations ## {#ssec-deterministic-requests-design}
 
@@ -179,7 +178,7 @@ The Request-Hash option is identical in all its properties to the Request-Tag op
 
 * It may be present in responses (TBD: Does this affect any other properties?).
 
-* When used with a Deterministic Request, this option is created at message protection time by the sender, and used before message unprotection by the recipient. Therefore, in this use case, it is treated as Class U for OSCORE {{RFC8613}} in requests. In the same application, for responses, it is treated as Class I, and often elided from sending (but reconstructed at the receiver). Other uses of this option can put it into different classes for OSCORE the processing.
+* When used with a Deterministic Request, this option is created at message protection time by the sender, and used before message unprotection by the recipient. Therefore, in this use case, it is treated as Class U for OSCORE {{RFC8613}} in requests. In the same application, for responses, it is treated as Class I, and often elided from sending (but reconstructed at the receiver). Other uses of this option can put it into different classes for the OSCORE processing.
 
 ## Use of Deterministic Requests {#ssec-use-deterministic-requests}
 
@@ -226,9 +225,9 @@ In order to build a Deterministic Request, the client protects the plain CoAP re
 
 4. The client includes a Request-Hash option in the request to protect, with value set to the hash H from Step 2.
 
-6. The client protects the request using the pairwise mode of Group OSCORE as defined in {{Section 9.3 of I-D.ietf-core-oscore-groupcomm}}, using the AEAD nonce from step 1, the AEAD encryption key from step 3, and the finalized AAD from step 5.
+5. The client protects the request using the pairwise mode of Group OSCORE as defined in {{Section 9.3 of I-D.ietf-core-oscore-groupcomm}}, using the AEAD nonce from step 1, the AEAD encryption key from step 3, and the finalized AAD.
 
-7. The client sets FETCH as the outer code of the protected request to make it usable for a proxy's cache, even if no observation is requested {{RFC7641}}.
+6. The client sets FETCH as the outer code of the protected request to make it usable for a proxy's cache, even if no observation is requested {{RFC7641}}.
 
 The result is the Deterministic Request to be sent.
 
@@ -280,7 +279,7 @@ In case of successful verification, the server MUST also perform the following a
 
 When treating a response to a deterministic request, the Request-Hash option is treated as a Class I option. This creates the request-response binding ensuring that no mismatched responses can be successfully unprotected.
 The option does not actually need to be present in the message as transported (the server SHOULD elide it for compactness).
-The client MUST replace any Request-Hash values present in the response with the Request-Tag it sent in the request before any OSCORE processing.
+The client MUST replace any Request-Hash values present in the response with the Request-Hash it sent in the request before any OSCORE processing.
 
 \[ Suggestion for any OSCORE v2: avoid request details in the request's AAD as individual elements. Rather than having 'request_kid', 'request_piv' and (in Group OSCORE) 'request_kid_context' as separate fields, they can better be something more pluggable.
 This would avoid the need to make up an option before processing.  \]
@@ -439,7 +438,7 @@ A server MUST ignore the option.
 
 Proxies are free to keep the Padding option on a message, to remove it or to add further padding of their own.
 
-# Simple Cachability using Ticket Requests {#sec-ticket-requests}
+# Simple Cacheability using Ticket Requests {#sec-ticket-requests}
 
 Building on the concept of Phantom Requests and Informative Responses defined in {{I-D.ietf-core-observe-multicast-notifications}},
 basic caching is already possible without building a Deterministic Request.
@@ -460,7 +459,7 @@ The remaining exchange largely plays out like in {{I-D.ietf-core-observe-multica
 The client sends the Phantom Request to the proxy (but, lacking a ``tp_info``, without a Listen-To-Multicast-Responses option),
 which forwards it to the server for lack of the option.
 
-The server then produces a regular response and includes a non-zero Max-Age option as an outer CoAP option. Note that there is no point in including in an inner Max-Age option, as the client could not pin it in time.
+The server then produces a regular response and includes a non-zero Max-Age option as an outer CoAP option. Note that there is no point in including an inner Max-Age option, as the client could not pin it in time.
 
 When a second, different client later asks for the same resource at the same server, its new request uses a different 'kid' and 'Partial IV' than the first client's. Thus, the new request produces a cache miss at the proxy and is forwarded to the server, which responds with the same Ticket Request provided to the first client. After that, when the second client sends the Ticket Request, a cache hit at the proxy will be produced, and the Ticket Request can be served from the proxy's cache.
 
@@ -471,7 +470,7 @@ When multiple proxies are in use, or the response has expired from the proxy's c
 Comparing the "Example with a Proxy" and the "Example with a Proxy and Group OSCORE" in {{I-D.ietf-core-observe-multicast-notifications}}
 shows that with OSCORE,
 more requests than without need to hit the server.
-This is because every client originally protects their request individually
+This is because every client originally protects its request individually
 and thus needs a custom response served to send the Phantom Request as a Ticket Request.
 
 If the clients send their deterministic requests in a deterministic way,
@@ -511,6 +510,6 @@ in time for the second client to arrive.
 # Acknowledgments # {#acknowldegment}
 {: numbered="no"}
 
-The authors sincerely thank Jim Schaad for his comments and feedback.
+The authors sincerely thank Michael Richardson, Jim Schaad and Göran Selander for their comments and feedback.
 
 The work on this document has been partly supported by VINNOVA and the Celtic-Next project CRITISEC; and by the H2020 project SIFIS-Home (Grant agreement 952652).
