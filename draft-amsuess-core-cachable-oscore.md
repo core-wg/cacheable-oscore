@@ -43,7 +43,7 @@ informative:
   I-D.ietf-core-echo-request-tag:
   I-D.ietf-ace-key-groupcomm-oscore:
   I-D.amsuess-lwig-oscore:
-  I-D.tiloca-core-observe-multicast-notifications:
+  I-D.ietf-core-observe-multicast-notifications:
 
 --- abstract
 
@@ -61,9 +61,9 @@ This allows a trusted intermediary proxy which is also a member of the OSCORE gr
 
 However, an untrusted proxy which is not member of the OSCORE group only sees protected responses as opaque, uncacheable ciphertext. In particular, different clients in the group that originate a same plain CoAP request would send different protected requests, as a result of their Group OSCORE processing. Such protected requests cannot yield a cache hit at the proxy, which makes the whole caching of protected responses pointless.
 
-This document addresses this complication and enables cachability of protected responses, also for proxies that are not members of the OSCORE group and are unaware of OSCORE in general. To this end, it builds on the concept of "consensus request" initially considered in {{I-D.tiloca-core-observe-multicast-notifications}}, and defines "deterministic request" as a convenient incarnation of such concept.
+This document addresses this complication and enables cachability of protected responses, also for proxies that are not members of the OSCORE group and are unaware of OSCORE in general. To this end, it builds on the concept of "consensus request" initially considered in {{I-D.ietf-core-observe-multicast-notifications}}, and defines "deterministic request" as a convenient incarnation of such concept.
 
-Intuitively, given a GET or FETCH plain CoAP request, all clients wishing to send that request are able to deterministically compute the same protected request, using a variation on the pairwise mode of Group OSCORE. It follows that cache hits become possible at the proxy, which can thus serve clients in the group from its cache. Like in {{I-D.tiloca-core-observe-multicast-notifications}}, this requires that clients and servers are already members of a suitable OSCORE group.
+Intuitively, given a GET or FETCH plain CoAP request, all clients wishing to send that request are able to deterministically compute the same protected request, using a variation on the pairwise mode of Group OSCORE. It follows that cache hits become possible at the proxy, which can thus serve clients in the group from its cache. Like in {{I-D.ietf-core-observe-multicast-notifications}}, this requires that clients and servers are already members of a suitable OSCORE group.
 
 Cachability of protected responses is useful also in applications where several clients wish to retrieve the same object.
 Some security properties of OSCORE are dispensed with to gain other desirable properties.
@@ -102,7 +102,7 @@ This document introduces the following new terms.
 
   This term is not used in the main document, but is useful in comparison with other applications of consensus requests
   that are generated in a different way than as a Deterministic Request.
-  The prototypical Ticket Request is the Phantom Request defined in {{I-D.tiloca-core-observe-multicast-notifications}}.
+  The prototypical Ticket Request is the Phantom Request defined in {{I-D.ietf-core-observe-multicast-notifications}}.
 
   In {{sec-ticket-requests}}, the term is used bridge the gap to that draft.
 
@@ -146,7 +146,7 @@ The hard part is arriving at a consensus pair (key, nonce) to be used with the A
 Diversity can conceptually be enforced by applying a cryptographic hash function to the complete input of the encryption operation over the plain CoAP request (i.e., the AAD and the plaintext of the COSE object), and then using the result as source of uniqueness.
 Any non-malleable cryptographically secure hash of sufficient length to make collisions sufficiently unlikely is suitable for this purpose.
 
-A tempting possibility is to use a fixed key, and use the hash as a deterministic AEAD nonce for each Deterministic Request throught the Partial IV component (see Section 5.2 of {{RFC8613}}). However, the 40 bit available for the Partial IV are by far insufficient to ensure that the deterministic nonce is not reused across different Deterministic Requests. Even if the full deterministic AEAD nonce could be set, the sizes used by common algorithms would still be too small.
+A tempting possibility is to use a fixed key, and use the hash as a deterministic AEAD nonce for each Deterministic Request throught the Partial IV component (see {{Section 5.2 of RFC8613}}). However, the 40 bit available for the Partial IV are by far insufficient to ensure that the deterministic nonce is not reused across different Deterministic Requests. Even if the full deterministic AEAD nonce could be set, the sizes used by common algorithms would still be too small.
 
 As a consequence, the proposed method takes the opposite approach, by considering a fixed deterministic AEAD nonce, while generating a different deterministic encryption key for each Deterministic Request. That is, the hash computed over the plain CoAP request is taken as input to the key generation. As an advantage, this approach does not require to transport the computed hash in the OSCORE option.
 
@@ -202,7 +202,7 @@ no such extension has been drafted as of the publication of this draft.
 
 ### Client Processing of Deterministic Request {#sssec-use-deterministic-requests-client-req}
 
-In order to build a Deterministic Request, the client protects the plain CoAP request using the pairwise mode of Group OSCORE (see Section 9 of {{I-D.ietf-core-oscore-groupcomm}}), with the following alterations.
+In order to build a Deterministic Request, the client protects the plain CoAP request using the pairwise mode of Group OSCORE (see {{Section 9 of I-D.ietf-core-oscore-groupcomm}}), with the following alterations.
 
 1. When preparing the OSCORE option, the AAD and the AEAD nonce:
 
@@ -214,7 +214,7 @@ In order to build a Deterministic Request, the client protects the plain CoAP re
 
    Note that the payload of the plain CoAP request (if any) is not self-delimiting, and thus hash functions are limited to non-malleable ones.
 
-3. The client derives the Pairwise Sender Key K as defined in Section 2.3.1 of {{I-D.ietf-core-oscore-groupcomm}}, with the following differences:
+3. The client derives the Pairwise Sender Key K as defined in {{Section 2.3.1 of I-D.ietf-core-oscore-groupcomm}}, with the following differences:
 
    * The Sender Key of the Deterministic Client is used as first argument of the HKDF.
 
@@ -226,7 +226,7 @@ In order to build a Deterministic Request, the client protects the plain CoAP re
 
 4. The client includes a Request-Hash option in the request to protect, with value set to the hash H from Step 2.
 
-6. The client protects the request using the pairwise mode of Group OSCORE as defined in Section 9.3 of {{I-D.ietf-core-oscore-groupcomm}}, using the AEAD nonce from step 1, the AEAD encryption key from step 3, and the finalized AAD from step 5.
+6. The client protects the request using the pairwise mode of Group OSCORE as defined in {{Section 9.3 of I-D.ietf-core-oscore-groupcomm}}, using the AEAD nonce from step 1, the AEAD encryption key from step 3, and the finalized AAD from step 5.
 
 7. The client sets FETCH as the outer code of the protected request to make it usable for a proxy's cache, even if no observation is requested {{RFC7641}}.
 
@@ -248,7 +248,7 @@ A server that does not support Deterministic Requests would not be able to creat
 
 2. The server actually recognizes the request to be a Deterministic Request, due to the presence of the Request-Hash option and to the 'kid' parameter of the OSCORE option set to the Sender ID of the Deterministic Client.
 
-   If the 'kid' parameter of the OSCORE option specifies a different Sender ID than the one of the Deterministic Client, the server MUST NOT take the following steps, and instead processes the request as per Section 9.4 of {{I-D.ietf-core-oscore-groupcomm}}.
+   If the 'kid' parameter of the OSCORE option specifies a different Sender ID than the one of the Deterministic Client, the server MUST NOT take the following steps, and instead processes the request as per {{Section 9.4 of I-D.ietf-core-oscore-groupcomm}}.
 
 3. The server retrieves the hash H from the Request-Hash option.
 
@@ -258,7 +258,7 @@ A server that does not support Deterministic Requests would not be able to creat
 
    - The Recipient Key is derived as the key K in step 3 of {{sssec-use-deterministic-requests-client-req}}, with the hash H retrieved at the previous step.
 
-5. The server verifies the request using the pairwise mode of Group OSCORE, as defined in Section 9.4 of {{I-D.ietf-core-oscore-groupcomm}}, using the Recipient Context from step 4, with the following differences.
+5. The server verifies the request using the pairwise mode of Group OSCORE, as defined in {{Section 9.4 of I-D.ietf-core-oscore-groupcomm}}, using the Recipient Context from step 4, with the following differences.
 
    - The server does not perform replay checks against a Replay Window (see below).
 
@@ -291,7 +291,7 @@ When preparing the response, the server performs the following actions.
 
 * The server preliminarily sets the Request-Hash option with the full request hash.
 
-* The server MUST protect the response using the group mode of Group OSCORE, as defined in Section 8.3 of {{I-D.ietf-core-oscore-groupcomm}}. This is required to ensure that the client can verify source authentication of the response, since the "pairwise" key used for the Deterministic Request is actually shared among all the group members.
+* The server MUST protect the response using the group mode of Group OSCORE, as defined in {{Section 8.3 of I-D.ietf-core-oscore-groupcomm}}. This is required to ensure that the client can verify source authentication of the response, since the "pairwise" key used for the Deterministic Request is actually shared among all the group members.
 
   Note that the Request-Hash option is treated as Class I here.
 
@@ -307,7 +307,7 @@ Upon receiving the response, the client performs the following actions.
 
 * The client removes any Request-Hash options from the response, and inserts a Request-Hash option with the full request hash in their place.
 
-* The client verifies the response using the group mode of Group OSCORE, as defined in Section 8.4 of {{I-D.ietf-core-oscore-groupcomm}}. In particular, the client verifies the counter signature in the response, based on the 'kid' of the server it sent the request to.
+* The client verifies the response using the group mode of Group OSCORE, as defined in {{Section 8.4 of I-D.ietf-core-oscore-groupcomm}}. In particular, the client verifies the counter signature in the response, based on the 'kid' of the server it sent the request to.
 
 ### Deterministic Requests to Multiple Servers ### {#det-req-one-to-many}
 
@@ -384,6 +384,10 @@ Note that unless other high options are used, this means that padding a message 
 
 # Change log
 
+Since -02:
+
+* Editorial improvements.
+
 Since -01:
 
 * Not meddlingi with request_kid any more.
@@ -437,13 +441,13 @@ Proxies are free to keep the Padding option on a message, to remove it or to add
 
 # Simple Cachability using Ticket Requests {#sec-ticket-requests}
 
-Building on the concept of Phantom Requests and Informative Responses defined in {{I-D.tiloca-core-observe-multicast-notifications}},
+Building on the concept of Phantom Requests and Informative Responses defined in {{I-D.ietf-core-observe-multicast-notifications}},
 basic caching is already possible without building a Deterministic Request.
 
 This appendix is not provided for application
 (for it is only efficient when dealing with very large representations and no OSCORE inner Block-Wise mode,
 which is inefficient for other reasons,
-and for observations which are already well covered in {{I-D.tiloca-core-observe-multicast-notifications}}).
+and for observations which are already well covered in {{I-D.ietf-core-observe-multicast-notifications}}).
 It is more provided as a "mental exercise" for the authors and interested readers to bridge the gap between these documents.
 
 That is, instead of replying to a client with a regular response, a server can send an Informative Response, defined as a protected 5.03 (Service Unavailable) error message. The payload of the Informative Response contains the Phantom Request, which is a Ticket Request in this document's broader terminology.
@@ -452,7 +456,7 @@ Unlike a Deterministic Request, a Phantom Request is protected in Group Mode.
 Instead of verifying a hash, the client can see from the signature that this was indeed the request the server is answering.
 The client also verifies that the request URI is identical between the original request and the Ticket Request.
 
-The remaining exchange largely plays out like in {{I-D.tiloca-core-observe-multicast-notifications}}'s "Example with a Proxy and Group OSCORE":
+The remaining exchange largely plays out like in {{I-D.ietf-core-observe-multicast-notifications}}'s "Example with a Proxy and Group OSCORE":
 The client sends the Phantom Request to the proxy (but, lacking a ``tp_info``, without a Listen-To-Multicast-Responses option),
 which forwards it to the server for lack of the option.
 
@@ -464,7 +468,7 @@ When multiple proxies are in use, or the response has expired from the proxy's c
 
 # Application for more efficient end-to-end protected multicast notifications {#det-requests-for-notif}
 
-Comparing the "Example with a Proxy" and the "Example with a Proxy and Group OSCORE" in {{I-D.tiloca-core-observe-multicast-notifications}}
+Comparing the "Example with a Proxy" and the "Example with a Proxy and Group OSCORE" in {{I-D.ietf-core-observe-multicast-notifications}}
 shows that with OSCORE,
 more requests than without need to hit the server.
 This is because every client originally protects their request individually
