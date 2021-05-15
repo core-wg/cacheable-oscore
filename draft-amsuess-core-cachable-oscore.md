@@ -438,11 +438,9 @@ Proxies are free to keep the Padding option on a message, to remove it or to add
 Building on the concept of Phantom Requests and Informative Responses defined in {{I-D.ietf-core-observe-multicast-notifications}},
 basic caching is already possible without building a Deterministic Request.
 
-This appendix is not provided for application
-(for it is only efficient when dealing with very large representations and no OSCORE inner Block-Wise mode,
-which is inefficient for other reasons,
-and for observations which are already well covered in {{I-D.ietf-core-observe-multicast-notifications}}).
-It is more provided as a "mental exercise" for the authors and interested readers to bridge the gap between these documents.
+The approach discussed in this appendix is not provided for application. In fact, it is efficient only when dealing with very large representations and no OSCORE inner Block-Wise mode (which is inefficient for other reasons), or when dealing with observe notifications (which are already well covered in {{I-D.ietf-core-observe-multicast-notifications}}).
+
+Rather, it is more provided as a "mental exercise" for the authors and interested readers to bridge the gap between this document and {{I-D.ietf-core-observe-multicast-notifications}}.
 
 That is, instead of replying to a client with a regular response, a server can send an Informative Response, defined as a protected 5.03 (Service Unavailable) error message. The payload of the Informative Response contains the Phantom Request, which is a Ticket Request in this document's broader terminology.
 
