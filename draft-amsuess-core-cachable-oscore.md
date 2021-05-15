@@ -202,29 +202,29 @@ no such extension has been drafted as of the publication of this draft.
 
 In order to build a Deterministic Request, the client protects the plain CoAP request using the pairwise mode of Group OSCORE (see {{Section 9 of I-D.ietf-core-oscore-groupcomm}}), with the following alterations.
 
-1. When preparing the OSCORE option, the AAD and the AEAD nonce:
+1. When preparing the OSCORE option, the external_aad and the AEAD nonce:
 
    * The used Sender ID is the Deterministic Client's Sender ID.
 
-   * The used Partial IV is 0, hence it does not need to be set in the OSCORE option.
+   * The used Partial IV is 0.
 
-2. The client uses the hash function indicated for the Deterministic Client, and computes a hash H over the following input: the Sender Key of the Deterministic Client, concatenated with the External AAD from step 1, concatenated with the COSE plaintext.
+2. The client uses the hash function indicated for the Deterministic Client, and computes a hash H over the following input: the Sender Key of the Deterministic Client, concatenated with the external_aad from step 1, concatenated with the COSE plaintext.
 
    Note that the payload of the plain CoAP request (if any) is not self-delimiting, and thus hash functions are limited to non-malleable ones.
 
-3. The client derives the Pairwise Sender Key K as defined in {{Section 2.3.1 of I-D.ietf-core-oscore-groupcomm}}, with the following differences:
+3. The client derives the deterministic Pairwise Sender Key K as defined in {{Section 2.3.1 of I-D.ietf-core-oscore-groupcomm}}, with the following differences:
 
    * The Sender Key of the Deterministic Client is used as first argument of the HKDF.
 
-   * The hash H from step 2 is used as second argument of the HKDF, i.e. as "Shared Secret" computable by all the group members.
-
-      An actual Diffie-Hellman secret cannot be obtained, as there is no public key associated with the deterministic client.
-
+   * The hash H from step 2 is used as second argument of the HKDF, i.e. as a pseudo IKM-Sender computable by all the group members.
+   
+      Note that an actual IKM-Sender cannot be obtained, since there is no public key associated with the deterministic client, to be used as Sender Public Key and for computing an actual Diffie-Hellman Shared Secret.
+      
    * The Sender ID of the Deterministic Client is used as value for the 'id' element of the 'info' parameter used as third argument of the HKDF.
 
 4. The client includes a Request-Hash option in the request to protect, with value set to the hash H from Step 2.
 
-5. The client protects the request using the pairwise mode of Group OSCORE as defined in {{Section 9.3 of I-D.ietf-core-oscore-groupcomm}}, using the AEAD nonce from step 1, the AEAD encryption key from step 3, and the finalized AAD.
+5. The client protects the request using the pairwise mode of Group OSCORE as defined in {{Section 9.3 of I-D.ietf-core-oscore-groupcomm}}, using the AEAD nonce from step 1, the deterministic Pairwise Sender Key K from step 3 as AEAD encryption key, and the finalized AAD.
 
 6. The client sets FETCH as the outer code of the protected request to make it usable for a proxy's cache, even if no observation is requested {{RFC7641}}.
 
@@ -305,7 +305,7 @@ Upon receiving the response, the client performs the following actions.
 
 * The client removes any Request-Hash options from the response, and inserts a Request-Hash option with the full request hash in their place.
 
-* The client verifies the response using the group mode of Group OSCORE, as defined in {{Section 8.4 of I-D.ietf-core-oscore-groupcomm}}. In particular, the client verifies the counter signature in the response, based on the 'kid' of the server it sent the request to.
+* The client verifies the response using the group mode of Group OSCORE, as defined in {{Section 8.4 of I-D.ietf-core-oscore-groupcomm}}. In particular, the client verifies the counter signature in the response, based on the 'kid' of the server it sent the request to. When verifying the response, the Request-Hash option is treated as a Class I option.
 
 ### Deterministic Requests to Multiple Servers ### {#det-req-one-to-many}
 
@@ -315,7 +315,7 @@ To simplify key derivation, such a Deterministic Request is still created in the
 
 \[ Note: If it was protected with the group mode, the request hash would need to be fed into the group key derivation just for this corner case. Furthermore, there would need to be a signature from the absent public key. \]
 
-When a server receives a request from the Deterministic Client as addressed to a CoAP group, the server MUST include its own Sender ID in the response, as 'kid' parameter of the OSCORE option.
+When a server receives a request from the Deterministic Client as addressed to a CoAP group, the server proceeds as defined in {{sssec-use-deterministic-requests-server-req}}, with the difference that it MUST include its own Sender ID in the response, as 'kid' parameter of the OSCORE option.
 
 Although it is normally optional for the server to include its Sender ID when replying to a request protected in pairwise mode, it is required in this case for allowing the client to retrieve the Recipient Context associated to the server originating the response.
 
@@ -382,19 +382,15 @@ Note that unless other high options are used, this means that padding a message 
 
 # Change log
 
-Since -02:
-
-* Editorial improvements.
-
 Since -01:
 
-* Not meddlingi with request_kid any more.
+* Not meddling with request_kid any more.
 
   Instead, Request-Hash in responses is treated as Class I, but typically elided.
 
-  In requests, this removes the need to compute the external AAD twice.
+  In requests, this removes the need to compute the external_aad twice.
 
-* Derivation of the hash now uses the external_aad, rather than the full AAD. This is good enough becuas AAD is a function only of the external AAD, and the external AAD is easier to get your hands on if COSE manages all the rest.
+* Derivation of the hash now uses the external_aad, rather than the full AAD. This is good enough because AAD is a function only of the external_aad, and the external_aad is easier to get your hands on if COSE manages all the rest.
 
 Since -00:
 
