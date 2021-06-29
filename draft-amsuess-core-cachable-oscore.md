@@ -229,6 +229,8 @@ In order to build a Deterministic Request, the client protects the plain CoAP re
    * The used Sender ID is the Deterministic Client's Sender ID.
 
    * The used Partial IV is 0.
+   
+   When preparing the external_aad, the element 'sender_public_key' in the aad_array takes the CBOR simple value Null.
 
 2. The client uses the hash function indicated for the Deterministic Client, and computes a hash H over the following input: the Sender Key of the Deterministic Client, concatenated with the external_aad from step 1, concatenated with the COSE plaintext.
 
@@ -426,6 +428,10 @@ Since -01:
 
 * Derivation of the hash now uses the external_aad, rather than the full AAD. This is good enough because AAD is a function only of the external_aad, and the external_aad is easier to get your hands on if COSE manages all the rest.
 
+* Alignment with changes in core-oscore-groupcomm-12.
+
+* Editorial improvements.
+
 Since -00:
 
 * More precise specification of the hashing (guided by first implementations)
@@ -498,7 +504,7 @@ When multiple proxies are in use, or the response has expired from the proxy's c
 
 # Application for More Efficient End-to-End Protected Multicast Notifications {#det-requests-for-notif}
 
-{{I-D.ietf-core-observe-multicast-notifications}} defines how a CoAP server can serve all clients observing a same resource at once, by sending notifications over multicast. The approach supports also the presence of intermediaries such as proxies, both also if Group OSCORE is used to protect notifications end-to-end.
+{{I-D.ietf-core-observe-multicast-notifications}} defines how a CoAP server can serve all clients observing a same resource at once, by sending notifications over multicast. The approach supports the possible presence of intermediaries such as proxies, also if Group OSCORE is used to protect notifications end-to-end.
 
 However, comparing the "Example with a Proxy" in {{Section A of I-D.ietf-core-observe-multicast-notifications}} and the "Example with a Proxy and Group OSCORE" in {{Section B of I-D.ietf-core-observe-multicast-notifications}} shows that, when using Group OSCORE, more requests need to hit the server. This is because every client originally protects its Observation request individually, and thus needs a custom response served to obtain the Phantom Request as a Ticket Request.
 
