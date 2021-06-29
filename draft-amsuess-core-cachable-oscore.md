@@ -121,7 +121,11 @@ but considered starting points are:
   even if no observation is intended (and no outer Observe is set).
   Thus, both observing and non-observing requests can be aggregated into a single request,
   that is upstreamed as an observation at the latest when any observing request reaches the proxy.
-  
+
+<!--
+MT: Doesn't this prevent the request from C2 including an outer Observe option to reach the server, and hence for the proxy to start the observation at the server for obtaining future notifications?
+-->
+
 * Avoid setting the ETag option in requests on a whim.
   Only set it when there was a recent response with that ETag.
   When obtaining later blocks, do not send the known-stale ETag.
@@ -220,6 +224,10 @@ Group members have to obtain this information from the Group Manager. A group me
 The Group Manager defined in {{I-D.ietf-ace-key-groupcomm-oscore}} can be easily extended to support the provisioning of information about the Deterministic Client;
 no such extension has been drafted as of the publication of this draft.
 
+<!--
+MT: Should we actually define in this document how the ACE Group Manager is extended to provide such information on the current Deterministic Client?
+-->
+
 ### Client Processing of Deterministic Request {#sssec-use-deterministic-requests-client-req}
 
 In order to build a Deterministic Request, the client protects the plain CoAP request using the pairwise mode of Group OSCORE (see {{Section 9 of I-D.ietf-core-oscore-groupcomm}}), with the following alterations.
@@ -304,6 +312,10 @@ When treating a response to a deterministic request, the Request-Hash option is 
 The option does not actually need to be present in the message as transported (the server SHOULD elide it for compactness).
 The client MUST replace any Request-Hash values present in the response with the Request-Hash it sent in the request before any OSCORE processing.
 
+<!--
+MT: Is there any possible reason in this application of the Request-Hash option to not elide it the from the response?
+-->
+
 \[ Suggestion for any OSCORE v2: avoid request details in the request's AAD as individual elements. Rather than having 'request_kid', 'request_piv' and (in Group OSCORE) 'request_kid_context' as separate fields, they can better be something more pluggable.
 This would avoid the need to make up an option before processing.  \]
 
@@ -367,10 +379,6 @@ MT: "more recent than the original creation ..." By whom? Perhaps it means: "It 
   An intermediary can determine that two requests from different clients
   are identical, and associate the different responses generated for them.
   Padding is suggested for responses where necessary.
-
-<!--
-MT: On the first sentence, why different responses? Does it refer to the case where the deterministic request is sent to a group of servers?
--->
 
 <!--
 MT: On the second sentence, does this mean to possibly use the Padding CoAP option defined in Appendix B, or whatever else padding mechanism?
@@ -453,7 +461,7 @@ The option can be used with any CoAP transport, but is especially useful with OS
 Before choosing to pad a message by using the Padding option, application designers should consider whether they can arrange for common message variants to have the same length by picking a suitable content representation; the canonical example here is expressing "yes" and "no" with "y" and "n", respectively.
 
 <!--
-MT: Can we elaborate more on how the Padding option makes it more difficult for an adversary to related responses to two different clients? After all, the Padding option is well visible and recognizible.
+MT: Can we elaborate more on how the Padding option makes it more difficult for an adversary to relate responses to two different clients? After all, the Padding option is well visible and recognizable.
 -->
 
 ## Definition of the Padding Option
