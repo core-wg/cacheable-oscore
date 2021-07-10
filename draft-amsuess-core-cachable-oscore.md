@@ -453,6 +453,10 @@ Since -01:
 
 * Derivation of the hash now uses the external_aad, rather than the full AAD. This is good enough because AAD is a function only of the external_aad, and the external_aad is easier to get your hands on if COSE manages all the rest.
 
+* The Sender ID of the Deterministic Client is immutable throughout the group lifetime. Hence, no need for any related expiration/creation time and mechanisms to perform its update in the group.
+
+* Extension to the ACE Group Manager of ace-key-groupcomm-oscore to provide required info about the Deterministic Client to new group members when joining the group.
+
 * Alignment with changes in core-oscore-groupcomm-12.
 
 * Editorial improvements.
