@@ -211,15 +211,11 @@ The use of Deterministic Requests in an OSCORE group requires that the intereste
 
 * The Sender ID of the Deterministic Client, to be used as 'kid' parameter for the Deterministic Requests. This allows all group members to compute the Sender Key of the Deterministic Client.
 
+   The Sender ID of the Deterministic Client is immutable throughout the lifetime of the OSCORE group. That is, it is not relinquished and it does not change upon changes of the group keying material following a group rekeying performed by the Group Manager.
+
 * The hash algorithm to use for computing the hash of a plain CoAP request, when producing the associated Deterministic Request.
 
-* Optionally, a creation timestamp associated to the Deterministic Client. This is aligned with the Group Manager that might replace the current Deterministic Client with a new one with a different Sender ID, e.g. to enforce freshness indications without rekeying the whole group.
-
-<!--
-MT: Why a creation timestamp and not an expiration timestamp or residual lifetime?
--->
-
-Group members have to obtain this information from the Group Manager. A group member can do that, for instance, when obtaining the group key material upon joining the OSCORE group, or later on as an active member by sending a request to a dedicated resource at the Group Manager. In either case, information on the latest Deterministic Client is returned.
+Group members have to obtain this information from the Group Manager. A group member can do that, for instance, when obtaining the group keying material upon joining the OSCORE group, or later on as an active member by sending a request to a dedicated resource at the Group Manager.
 
 The Group Manager defined in {{I-D.ietf-ace-key-groupcomm-oscore}} can be easily extended to support the provisioning of information about the Deterministic Client;
 no such extension has been drafted as of the publication of this draft.
