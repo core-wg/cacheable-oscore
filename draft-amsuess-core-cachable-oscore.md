@@ -44,6 +44,8 @@ informative:
   I-D.ietf-ace-key-groupcomm-oscore:
   I-D.amsuess-lwig-oscore:
   I-D.ietf-core-observe-multicast-notifications:
+  I-D.ietf-ace-oauth-authz:
+  I-D.ietf-ace-oscore-profile:
 
 --- abstract
 
@@ -129,10 +131,6 @@ MT: Doesn't this prevent the request from C2 including an outer Observe option t
 * Avoid setting the ETag option in requests on a whim.
   Only set it when there was a recent response with that ETag.
   When obtaining later blocks, do not send the known-stale ETag.
-
-<!--
-MT: It refers to "blocks". Does it simpy mean responses as different representation versions? It shouldn't necessarily refer to blocks as intended for the block-wise transfer (which is covered in the following bullet point).
--->
   
 * In block-wise transfer, maximally sized large inner blocks (szx=6) should be selected.
   This serves not only to align the clients on consistent cache entries,
@@ -146,10 +144,6 @@ MT: proposed  s/should be selected/SHOULD be selected
 
   (If BERT {{?RFC8323}} is usable with OSCORE, its use is fine as well;
   in that case, the server picks a consistent block size for all clients anyway).
-
-<!--
-MT: proposed  s/If BERT ... is usable/When BERT ... is used
--->
   
 * If padding (see {{sec-padding}}) is used to limit an adversary's ability to deduce requests' content from their length, the requests are padded to reach a total length that should be agreed on among all users of a security context.
 
@@ -217,12 +211,7 @@ The use of Deterministic Requests in an OSCORE group requires that the intereste
 
 Group members have to obtain this information from the Group Manager. A group member can do that, for instance, when obtaining the group keying material upon joining the OSCORE group, or later on as an active member by sending a request to a dedicated resource at the Group Manager.
 
-The Group Manager defined in {{I-D.ietf-ace-key-groupcomm-oscore}} can be easily extended to support the provisioning of information about the Deterministic Client;
-no such extension has been drafted as of the publication of this draft.
-
-<!--
-MT: Should we actually define in this document how the ACE Group Manager is extended to provide such information on the current Deterministic Client?
--->
+The joining process based on the Group Manager defined in {{I-D.ietf-ace-key-groupcomm-oscore}} can be easily extended to support the provisioning of information about the Deterministic Client. Such an extension is defined in {{sec-obtaining-info}} of this document.
 
 ### Client Processing of Deterministic Request {#sssec-use-deterministic-requests-client-req}
 
@@ -351,6 +340,18 @@ When a server receives a request from the Deterministic Client as addressed to a
 
 Although it is normally optional for the server to include its Sender ID when replying to a request protected in pairwise mode, it is required in this case for allowing the client to retrieve the Recipient Context associated to the server originating the response.
 
+# Obtaining Information about the Deterministic Client {#sec-obtaining-info}
+
+This section extends the Joining Process defined in {{I-D.ietf-ace-key-groupcomm-oscore}}, and based on the ACE framework for Authentication and Authorization {{I-D.ietf-ace-oauth-authz}}. Upon joining the OSCORE group, this enables a new group member to obtain from the Group Manager the required information about the Deterministic Client (see {{sssec-use-deterministic-requests-pre-conditions}}).
+
+With reference to the 'key' parameter of the Joining Response defined in {{Section 6.4 of I-D.ietf-ace-key-groupcomm-oscore}}, the Group_OSCORE_Input_Material object specified as its value contains also the two additional parameters 'det_senderId' and 'det_hash_alg'. These are defined in {{ssec-iana-security-context-parameter-registry}} of this document. In particular:
+
+* The 'det_senderId' parameter, if present, has as value the OSCORE Sender ID assigned to the Deterministic Client by the Group Manager. This parameter MUST be present if the OSCORE group uses deterministic requests as defined in this document. Otherwise, this parameter MUST NOT be present.
+
+* The 'det_hash_alg' parameter, if present, has as value the hash algorithm to use for computing the hash of a plain CoAP request, when producing the associated Deterministic Request. This parameter takes values from the "Value" column of the "COSE Algorithms" Registry {{COSE.Algorithms}}. This parameter MUST be present if the OSCORE group uses deterministic requests as defined in this document. Otherwise, this parameter MUST NOT be present.
+
+The same extension above applies also to the 'key' parameter when included in a Key Distribution Response (see {{Sections 8.1 and 8.2 of I-D.ietf-ace-key-groupcomm-oscore}}) and in a Signature Verification Data Response (see {{Section 13 of I-D.ietf-ace-key-groupcomm-oscore}}).
+
 # Security Considerations # {#sec-security-considerations}
 
 The same security considerations from {{RFC7252}}{{I-D.ietf-core-groupcomm-bis}}{{RFC8613}}{{I-D.ietf-core-oscore-groupcomm}} hold for this document.
@@ -417,6 +418,26 @@ Applications that make use of the "Experimental use" range and want to preserve 
 Note that unless other high options are used, this means that padding a message adds an overhead of at least 3 bytes, i.e. 1 byte for option delta/length and two more bytes of extended option delta. This is considered acceptable overhead, given that the application has already chosen to prefer the privacy gains of padding over wire transfer length.
 
 \]
+
+## OSCORE Security Context Parameters Registry {#ssec-iana-security-context-parameter-registry}
+
+IANA is asked to register the following entries in the "OSCORE Security Context Parameters" Registry defined in {{Section 9.4 of I-D.ietf-ace-oscore-profile}}.
+
+*  Name: det_senderId
+*  CBOR Label: TBD3
+*  CBOR Type: bstr
+*  Registry: -
+*  Description: OSCORE Sender ID assigned to the Deterministic Client of an OSCORE group
+*  Reference: \[\[this document\]\] ({{sec-obtaining-info}})
+
+&nbsp;
+
+*  Name: det_hash_alg
+*  CBOR Label: TBD4
+*  CBOR Type: int / tstr
+*  Registry: -
+*  Description: Hash algorithm to use in an OSCORE group when producing a Deterministic Request
+*  Reference: \[\[this document\]\] ({{sec-obtaining-info}})
 
 --- back
 
