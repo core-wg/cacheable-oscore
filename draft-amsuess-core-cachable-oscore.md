@@ -140,7 +140,7 @@ MT: Doesn't this prevent the request from C2 including an outer Observe option t
 * Avoid setting the ETag option in requests on a whim.
   Only set it when there was a recent response with that ETag.
   When obtaining later blocks, do not send the known-stale ETag.
-  
+
 * In block-wise transfer, maximally sized large inner blocks (szx=6) should be selected.
   This serves not only to align the clients on consistent cache entries,
   but also helps amortize the additional data transferred in the per-message signatures.
@@ -148,12 +148,12 @@ MT: Doesn't this prevent the request from C2 including an outer Observe option t
 <!--
 MT: proposed  s/should be selected/SHOULD be selected
 -->
-  
+
   Outer block-wise transfer can then be used if these messages excede a hop's efficiently usable MTU size.
 
   (If BERT {{?RFC8323}} is usable with OSCORE, its use is fine as well;
   in that case, the server picks a consistent block size for all clients anyway).
-  
+
 * If padding (see {{sec-padding}}) is used to limit an adversary's ability to deduce requests' content from their length, the requests are padded to reach a total length that should be agreed on among all users of a security context.
 
 <!--
@@ -231,7 +231,7 @@ In order to build a Deterministic Request, the client protects the plain CoAP re
    * The used Sender ID is the Deterministic Client's Sender ID.
 
    * The used Partial IV is 0.
-   
+
    When preparing the external_aad, the element 'sender_public_key' in the aad_array takes the empty CBOR byte string.
 
 2. The client uses the hash function indicated for the Deterministic Client, and computes a hash H over the following input: the Sender Key of the Deterministic Client, concatenated with the external_aad from step 1, concatenated with the COSE plaintext.
@@ -243,9 +243,9 @@ In order to build a Deterministic Request, the client protects the plain CoAP re
    * The Sender Key of the Deterministic Client is used as first argument of the HKDF.
 
    * The hash H from step 2 is used as second argument of the HKDF, i.e. as a pseudo IKM-Sender computable by all the group members.
-   
+
       Note that an actual IKM-Sender cannot be obtained, since there is no public key associated with the deterministic client, to be used as Sender Public Key and for computing an actual Diffie-Hellman Shared Secret.
-      
+
    * The Sender ID of the Deterministic Client is used as value for the 'id' element of the 'info' parameter used as third argument of the HKDF.
 
 4. The client includes a Request-Hash option in the request to protect, with value set to the hash H from Step 2.
@@ -379,7 +379,7 @@ by just so much as to make caching possible:
 <!--
 MT: "more recent than the original creation ..." By whom? Perhaps it means: "It is more recent than any deterministic request protected by the same Deterministic Client." ?
 -->
-  
+
 * Request confidentiality is limited.
 
   An intermediary can determine that two requests from different clients
@@ -389,7 +389,7 @@ MT: "more recent than the original creation ..." By whom? Perhaps it means: "It 
 <!--
 MT: On the second sentence, does this mean to possibly use the Padding CoAP option defined in Appendix B, or whatever else padding mechanism?
 -->
-  
+
 * Source authentication for requests is lost.
 
   Instead, the server must verify that the request (precisely: its handler) is side effect free.
@@ -572,7 +572,7 @@ The proxy can thus be configured by the server following the first request from 
 <!--
 MT: This second bullet point seems something that can already be said in the Security Considerations section.
 -->
-  
+
 # Unsorted further ideas
 
 * All or none of the deterministic requests should have an inner observe option.
@@ -583,7 +583,7 @@ MT: How can clients start an observation then? That would require an inner Obser
 
 Also the guidelines in Section 2 suggest to have an inner observe option, regardless the resource being actually observable.
 -->
-  
+
 # Acknowledgments # {#acknowldegment}
 {: numbered="no"}
 
