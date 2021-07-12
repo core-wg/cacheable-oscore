@@ -46,6 +46,14 @@ informative:
   I-D.ietf-core-observe-multicast-notifications:
   I-D.ietf-ace-oauth-authz:
   I-D.ietf-ace-oscore-profile:
+  "SW-EPIV":
+    author:
+      -
+        ins: G. Lucas
+        name: George Lucas
+    date: 1977
+    title: Star Wars
+    seriesinfo: "Lucasfilm Ltd."
 
 --- abstract
 
@@ -75,9 +83,7 @@ Some security properties of OSCORE are dispensed with to gain other desirable pr
 When firmware updates are delivered using CoAP,
 many similar devices fetch large representations at the same time.
 Collecting them at a proxy not only keeps the traffic low,
-but also lets the clients ride single file to hide their numbers[SW:EPIV].
-
-\[TODO: include the actual reference "SW:EPIV"\]
+but also lets the clients ride single file to hide their numbers{{SW-EPIV}} and identities.
 
 When relying on intermediaries to fan out the delivery of multicast data protected end-to-end as in {{I-D.ietf-core-observe-multicast-notifications}}, deterministic requests allow for a more efficient setup, by reducing the amount of message exchanges and enabling early population of cache entries (see {{det-requests-for-notif}}).
 
