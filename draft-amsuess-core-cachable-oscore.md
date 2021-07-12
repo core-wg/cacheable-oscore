@@ -73,9 +73,9 @@ However, an untrusted proxy which is not member of the OSCORE group only sees pr
 
 This document addresses this complication and enables cacheability of protected responses, also for proxies that are not members of the OSCORE group and are unaware of OSCORE in general. To this end, it builds on the concept of "consensus request" initially considered in {{I-D.ietf-core-observe-multicast-notifications}}, and defines "deterministic request" as a convenient incarnation of such concept.
 
-Intuitively, given a GET or FETCH plain CoAP request, all clients wishing to send that request are able to deterministically compute the same protected request, using a variation on the pairwise mode of Group OSCORE. It follows that cache hits become possible at the proxy, which can thus serve clients in the group from its cache. Like in {{I-D.ietf-core-observe-multicast-notifications}}, this requires that clients and servers are already members of a suitable OSCORE group.
+All clients wishing to send a particular GET or FETCH request are able to deterministically compute the same protected request, using a variation on the pairwise mode of Group OSCORE. It follows that cache hits become possible at the proxy, which can thus serve clients in the group from its cache. Like in {{I-D.ietf-core-observe-multicast-notifications}}, this requires that clients and servers are already members of a suitable OSCORE group.
 
-Cacheability of protected responses is useful also in applications where several clients wish to retrieve the same object.
+Cacheability of protected responses is useful also in applications where several clients wish to retrieve the same object from a single server.
 Some security properties of OSCORE are dispensed with to gain other desirable properties.
 
 ## Use cases
@@ -97,9 +97,12 @@ This document introduces the following new terms.
 
 * Consensus Request: a CoAP request protected with Group OSCORE that can be used repeatedly to access a particular resource, hosted at one or more servers in the OSCORE group.
 
-   A Consensus Request has all the properties relevant to caching, but its transport dependent properties (e.g. Token or Message ID) are not defined. Thus, different requests on the wire can both be said to "be the same Consensus Request" even if they have different Tokens or source addresses.
+   A Consensus Request has all the properties relevant to caching, but its transport dependent properties (e.g. Token or Message ID) are not defined. Thus, different requests on the wire can be said to "be the same Consensus Request" even if they have different Tokens or source addresses.
 
-   The Consensus Request is the reference for request-response binding. Hence, if it does not generate a Consensus Request by itself, the client has still to be able to read and verify any obtained Consensus Request, before using it to verify a bound response.
+   The Consensus Request is the reference for request-response binding.
+   In general, a client processing a response to a consensus request did not generate (and thus sign) the consensus request.
+   The client not only needs to decrypt the Consensus Request to understand a response to it (for example to tell which path was requested),
+   it also needs to verify that this is the only Consensus Request that could elicit this response.
 
 * Deterministic Client: a fictitious member of an OSCORE group, having no Sender Sequence Number, no asymmetric key pair, and no Recipient Context.
 
@@ -119,7 +122,7 @@ This document introduces the following new terms.
 
 This section defines a method for clients starting from a same plain CoAP request to independently arrive at a same Deterministic Request protected with Group OSCORE.
 
-While the first client sending the Deterministic Request actually reaches the origin server, the response can be cached by an intermediary proxy. Later on, a different client with the same plain CoAP request would send the same Deterministic Request, which will be served from the proxy's cache.
+## Deterministic Unprotected Request
 
 Clients build the unprotected Deterministic Request in a way which is as much reproducible as possible.
 This document does not set out full guidelines for minimizing the variation,
