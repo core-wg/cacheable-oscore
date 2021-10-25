@@ -128,14 +128,10 @@ Clients build the unprotected Deterministic Request in a way which is as much re
 This document does not set out full guidelines for minimizing the variation,
 but considered starting points are:
 
-* Set the inner Observe option to 0 if the requested resource is described as observable,
+* Set the inner Observe option to 0,
   even if no observation is intended (and no outer Observe is set).
   Thus, both observing and non-observing requests can be aggregated into a single request,
   that is upstreamed as an observation at the latest when any observing request reaches the proxy.
-
-<!--
-MT: Doesn't this prevent the request from C2 including an outer Observe option to reach the server, and hence for the proxy to start the observation at the server for obtaining future notifications?
--->
 
 * Avoid setting the ETag option in requests on a whim.
   Only set it when there was a recent response with that ETag.
