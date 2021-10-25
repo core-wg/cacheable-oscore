@@ -370,13 +370,9 @@ by just so much as to make caching possible:
   It still contains two freshness statements, though:
 
   * It is more recent than any other response from the same group member that has a smaller sequence number.
-  * It is more recent than the original creation of the deterministic security context.
+  * It is more recent than the original creation of the deterministic security context's key material.
 
-<!--
-MT: "more recent than the original creation ..." By whom? Perhaps it means: "It is more recent than any deterministic request protected by the same Deterministic Client." ?
--->
-
-* Request confidentiality is limited.
+* Request privacy is limited.
 
   An intermediary can determine that two requests from different clients
   are identical, and associate the different responses generated for them.
