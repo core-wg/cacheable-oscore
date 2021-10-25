@@ -129,10 +129,10 @@ This document introduces the following new terms.
 
 # OSCORE processing without source authentication {#oscore-nosourceauth}
 
-The request-response binding of OSCORE is achieved by the request_kid / request_pid items
+The request-response binding of OSCORE is achieved by the request_kid / request_piv items
 (and, in group OSCORE, request_kid_context)
 present in the response's AAD.
-It security depends on the server obtaining source authentication for the request:
+Its security depends on the server obtaining source authentication for the request:
 Without, a malicious group member could alter a request to the server (without altering the request_ details above),
 and the client would still accept the response as if it were a response to its request.
 
