@@ -380,11 +380,8 @@ MT: "more recent than the original creation ..." By whom? Perhaps it means: "It 
 
   An intermediary can determine that two requests from different clients
   are identical, and associate the different responses generated for them.
-  Padding is suggested for responses where necessary.
-
-<!--
-MT: On the second sentence, does this mean to possibly use the Padding CoAP option defined in Appendix B, or whatever else padding mechanism?
--->
+  A server producing responses of varying size to a request
+  can use the Padding option to hide when the response is changing.
 
 * Source authentication for requests is lost.
 
@@ -486,10 +483,6 @@ The option can be used with any CoAP transport, but is especially useful with OS
 
 Before choosing to pad a message by using the Padding option, application designers should consider whether they can arrange for common message variants to have the same length by picking a suitable content representation; the canonical example here is expressing "yes" and "no" with "y" and "n", respectively.
 
-<!--
-MT: Can we elaborate more on how the Padding option makes it more difficult for an adversary to relate responses to two different clients? After all, the Padding option is well visible and recognizable.
--->
-
 ## Definition of the Padding Option
 
 As summarized in {{padding-table}}, the Padding option is elective, safe to forward and not part of the cache key; these follow from the usage instructions. The option may be repeated, as that may be the only way to achieve a certain total length for the padded message.
@@ -503,13 +496,24 @@ As summarized in {{padding-table}}, the Padding option is elective, safe to forw
 ~~~
 {: #padding-table title="Padding Option" artwork-align="center"}
 
+When used with OSCORE, the Padding option is of Class E,
+this makes it indistinguishable from other Class E options or the payload to third parties.
+
 ## Using and processing the Padding option
 
-A client may set the Padding option, specifying any content of any length as its value.
+When a server produces different responses of different length for a given class of requests
+but wishes to produce responses of consistent length
+(typically to hide the variation from anyone but the intended recipient),
+the server can pick a length that all possible responses can be padded to,
+and set the Padding option with a suitable all-zero option value in all responses to that class of requests.
 
-A server MUST ignore the option.
+Likewise, a client can decide on a class of requests that it pads to consistent length.
 
-Proxies are free to keep the Padding option on a message, to remove it or to add further padding of their own.
+Any party receiving a Padding option MUST ignore it.
+In particular, a server MUST NOT make its choice of padding dependent on any padding present in the request.
+(An option to coordinate response padding driven by the client is out of scope for this document).
+
+Proxies that see a padding option MAY discard it.
 
 # Simple Cacheability using Ticket Requests {#sec-ticket-requests}
 
