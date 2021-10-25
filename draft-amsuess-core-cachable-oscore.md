@@ -78,6 +78,15 @@ All clients wishing to send a particular GET or FETCH request are able to determ
 Cacheability of protected responses is useful also in applications where several clients wish to retrieve the same object from a single server.
 Some security properties of OSCORE are dispensed with to gain other desirable properties.
 
+In order to clearly handle the protocol's security properties,
+and to broaden applicability to group situations outside the deterministic case,
+the technical implementation is split in two halves:
+
+* maintaining request-response bindings in absence of request source authentication, and
+
+* building and processing of deterministic requests
+  (which have no source authentication, and thus require the former).
+
 ## Use cases
 
 When firmware updates are delivered using CoAP,
@@ -117,6 +126,45 @@ This document introduces the following new terms.
   The prototypical Ticket Request is the Phantom Request defined in {{I-D.ietf-core-observe-multicast-notifications}}.
 
   In {{sec-ticket-requests}}, the term is used to bridge the gap to that draft.
+
+# OSCORE processing without source authentication {#oscore-nosourceauth}
+
+The request-response binding of OSCORE is achieved by the request_kid / request_pid items
+(and, in group OSCORE, request_kid_context)
+present in the response's AAD.
+It security depends on the server obtaining source authentication for the request:
+Without, a malicious group member could alter a request to the server (without altering the request_ details above),
+and the client would still accept the response as if it were a response to its request.
+
+Source authentication is thus a precondition to secure use of OSCORE.
+However, it is hard to provide when:
+
+* Requests are built exclusively using shared key material (as in a deterministic client).
+* Requests are sent without source authentication, or where the source authentication is not checked. (This was part of {{I-D.ietf-core-oscore-groupcomm}} in revisions before -12).
+
+This document does not \[ yet? \] give full guidance on how to restore request-response binding for the general case,
+but currently only offers suggestions:
+
+* The response can contain the full request. An option that allows doing that was presented in {{?I-D.bormann-core-responses}}.
+* The response can contain a cryptographic hash of the full request. This is used in {{ssec-request-hash-option}}.
+* The above details can be transported in a Class E option (encrypted) or a a Class I option (unencrypted but part of the AAD).
+  The latter has the advantage that it can be removed in transit and reconstructed at the receiver.
+* Alternatively, the agreed-on request data can be placed in a different position in the AAD,
+  or be part of the security context derivation.
+  In the latter case, care needs to be taken to never initialize a security context twice with the same input,
+  as that would lead to nonce reuse.
+
+\[ Suggestion for any OSCORE v2: avoid request details in the request's AAD as individual elements. Rather than having 'request_kid', 'request_piv' and (in Group OSCORE) 'request_kid_context' as separate fields, they can better be something more pluggable.
+This would avoid the need to make up an option before processing, and would allow just plugging in the hash or request in there replacing the request_ items. \]
+
+Additional care has to be taken that details not expressed in the request itself
+(like the security context from which it is assumed to have originated) are captured.
+
+Processing of requests without source authentication has to be done assuming only the minimal possible privilege of the requester
+\[ which currently described as the authorization of the deterministic client, and may be moved up here in later versions of this document \].
+If a response is built to such a request that contains data more sensitive than that
+(which might be justified if the response is protected for an authorized group member in pairwise response mode),
+special consideration for any side channels like response size or timing is required.
 
 # Deterministic Requests # {#sec-deterministic-requests}
 
@@ -199,6 +247,8 @@ The Request-Hash option is identical in all its properties to the Request-Tag op
 * It may be present in responses (TBD: Does this affect any other properties?).
 
 * When used with a Deterministic Request, this option is created at message protection time by the sender, and used before message unprotection by the recipient. Therefore, in this use case, it is treated as Class U for OSCORE {{RFC8613}} in requests. In the same application, for responses, it is treated as Class I, and often elided from sending (but reconstructed at the receiver). Other uses of this option can put it into different classes for the OSCORE processing.
+
+This option achieves request-response binding described in {{oscore-nosourceauth}}.
 
 ## Use of Deterministic Requests {#ssec-use-deterministic-requests}
 
@@ -298,16 +348,13 @@ In case of successful verification, the server MUST also perform the following a
 
 ### Response to a Deterministic Request {#ssec-use-deterministic-requests-response}
 
-When treating a response to a deterministic request, the Request-Hash option is treated as a Class I option. This creates the request-response binding ensuring that no mismatched responses can be successfully unprotected.
+When treating a response to a deterministic request, the Request-Hash option is treated as a Class I option. This creates the request-response binding ensuring that no mismatched responses can be successfully unprotected (see {{oscore-nosourceauth}}).
 The option does not actually need to be present in the message as transported (the server SHOULD elide it for compactness).
 The client MUST reject responses with a Request-Hash not matching the one it sent in the request.
 
 <!--
 MT: Is there any possible reason in this application of the Request-Hash option to not elide it the from the response?
 -->
-
-\[ Suggestion for any OSCORE v2: avoid request details in the request's AAD as individual elements. Rather than having 'request_kid', 'request_piv' and (in Group OSCORE) 'request_kid_context' as separate fields, they can better be something more pluggable.
-This would avoid the need to make up an option before processing.  \]
 
 When preparing the response, the server performs the following actions.
 
