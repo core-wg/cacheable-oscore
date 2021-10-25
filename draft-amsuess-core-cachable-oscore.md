@@ -491,6 +491,8 @@ IANA is asked to register the following entries in the "OSCORE Security Context 
 
 Since -02:
 
+* Separate parts needed to respond to unauthenticated requests from the remaining deterministic response part.
+  (Currently this is mainly an addition; the document will undergo further refactoring if that split proves helpful).
 * Inner Observe is set unconditionally in deterministic requests.
 * Clarifications around padding and security considerations.
 
