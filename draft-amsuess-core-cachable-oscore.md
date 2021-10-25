@@ -442,6 +442,11 @@ IANA is asked to register the following entries in the "OSCORE Security Context 
 
 # Change log
 
+Since -02:
+
+* Inner Observe is set unconditionally in deterministic requests.
+* Clarifications around padding and security considerations.
+
 Since -01:
 
 * Not meddling with request_kid any more.
