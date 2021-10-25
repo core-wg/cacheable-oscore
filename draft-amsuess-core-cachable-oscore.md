@@ -504,6 +504,8 @@ the server can pick a length that all possible responses can be padded to,
 and set the Padding option with a suitable all-zero option value in all responses to that class of requests.
 
 Likewise, a client can decide on a class of requests that it pads to consistent length.
+(This is of little applicability to Deterministic Requests;
+there, the observer can group requests even if they are of the same length, and padding would hinder convergence on a single consensus request).
 
 Any party receiving a Padding option MUST ignore it.
 In particular, a server MUST NOT make its choice of padding dependent on any padding present in the request.
