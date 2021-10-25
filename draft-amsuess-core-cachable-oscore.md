@@ -300,7 +300,7 @@ In case of successful verification, the server MUST also perform the following a
 
 When treating a response to a deterministic request, the Request-Hash option is treated as a Class I option. This creates the request-response binding ensuring that no mismatched responses can be successfully unprotected.
 The option does not actually need to be present in the message as transported (the server SHOULD elide it for compactness).
-The client MUST replace any Request-Hash values present in the response with the Request-Hash it sent in the request before any OSCORE processing.
+The client MUST reject responses with a Request-Hash not matching the one it sent in the request.
 
 <!--
 MT: Is there any possible reason in this application of the Request-Hash option to not elide it the from the response?
@@ -329,7 +329,8 @@ Upon receiving the response, the client performs the following actions.
 
 * In case the response includes a 'kid' in the OSCORE option and unless responses from multiple servers are expected (see {{det-req-one-to-many}}), the client MUST verify it to be exactly the 'kid' of the server to which the Deterministic Request was sent.
 
-* The client removes any Request-Hash options from the response, and inserts a Request-Hash option with the full request hash in their place.
+* The client sets the Request-Hash option with the full request hash on the reponse.
+  If an option of a different value is already present, it rejects the response.
 
 * The client verifies the response using the group mode of Group OSCORE, as defined in {{Section 8.4 of I-D.ietf-core-oscore-groupcomm}}. In particular, the client verifies the counter signature in the response, based on the 'kid' of the server it sent the request to. When verifying the response, the Request-Hash option is treated as a Class I option.
 
