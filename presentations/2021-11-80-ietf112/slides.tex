@@ -1,0 +1,125 @@
+\documentclass[aspectratio=169]{beamer}
+\usetheme{Boadilla} % plainest one with slide number footer
+
+% generic packages
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{multicol}
+\usepackage{ulem}
+
+% about the presentation
+\title{Cacheable OSCORE}
+\hypersetup{pdftitle={Cacheable OSCORE}}
+\subtitle{
+	Or ``What to do when numeric request-response binding fails us''.
+	\texttt{draft-amsuess-core-cachable-oscore-03}}
+\author{\textit{Christian~Amsüss}, Marco~Tiloca}
+\date{2021-11-08, IETF 112}
+
+% used commands
+
+\usepackage{verbatim}
+
+\definecolor{darkgreen}{rgb}{0, 0.56, 0}
+
+% attach self
+
+\usepackage{embedfile}
+\embedfile{\jobname.tex}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{Development since IETF110: It's really two topics}\Large
+	\begin{itemize}
+		\item[I] How is request-response binding provided -- \\ when the server does not get source authentication?
+		\item[II] Once we know that, what do we need for cacheability?
+	\end{itemize}
+
+	\bigskip\mbox{}\bigskip
+
+	Split introduced late in -03 -- not as big as feared, but \ldots directions?
+\end{frame}
+
+\begin{frame}{Request-response binding in OSCORE}\Large
+	What would need to go wrong for response mismatch\footnote{See draft-mattsson-core-coap-attacks-01: CoAP Attacks} to happen?
+
+	\bigskip
+
+	Client intends (and sends) $R1$.
+
+	Server processes (and answers to) $R2$.
+
+	OSCORE ensures sender and seqno match between $R1$ and $R2$.
+
+	\bigskip
+
+	Only client and server can produce such messages, and can thus trust them to be identical.
+\end{frame}
+
+\begin{frame}{Request-response binding in Group OSCORE}\Large
+	What would need to go wrong for response mismatch to happen?
+
+	\bigskip
+
+	Client $C$ intends (and sends) $R1$.
+
+	Server $S$ processes (and answers to) $R2$.
+
+	OSCORE ensures sender and seqno match\footnote{\ldots and KID context, but that doesn't matter much here} between $R1$ and $R2$.
+
+	\bigskip
+
+	Only $C$ and $S$ can produce such messages \textit{because of source authentication in all messages}.
+\end{frame}
+
+\begin{frame}{Who can use a response?}\Large
+	In group/group mode, every member can read responses.
+
+	\bigskip
+
+	A third party $T$ can only trust a captured\footnote{Or cached, we'll come to that} response when the original client \textit{and} the server:
+	Client $C$ could have sent distinct $R1$ to be seen by $T$, and $R2$ to be seen by $S$.
+\end{frame}
+
+\begin{frame}{How can a response be made usable without trusting $C$?}\Large
+	\begin{itemize}
+		\item Full request is part of response
+
+			e.\,g. a Class E or Class I Response-For\footnote{draft-bormann-core-responses-00: Non-traditional response forms}
+
+		\item Hash of request is part of response (Class I or E)
+		\item Either is part of the AAD without being part of the message at all
+
+			e.\,g. by a ``hidden Class I option'' (currently in cacheable), or by extension of external\_aad
+	\end{itemize}
+
+	\bigskip
+
+	\ldots replacing / augmenting the (otherwise very practical) request-response binding mechanism.
+\end{frame}
+
+\begin{frame}{\ldots and thus, Cacheable OSCORE is split}\Large
+	\begin{itemize}
+		\item[I] Request-Response binding can be thusly managed -- with some caveats described for Cacheable OSCORE (no freshness)
+
+		\item[II] Deterministic requests become a simple means to create common cache keys, and only deal with avoiding nonce reuse and limited request privacy
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Questions}\Large 
+	\begin{itemize}
+		\item Where else is part I useful?
+		\item Is this simpler to follow when presented in split form inside a single document?
+	\end{itemize}
+
+	\vspace{2cm}
+
+	Answers? Other questions? Comments?
+\end{frame}
+
+\end{document}
