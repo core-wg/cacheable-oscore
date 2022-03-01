@@ -171,17 +171,16 @@ special consideration for any side channels like response size or timing is requ
 
 This section defines a method for clients starting from a same plain CoAP request to independently arrive at a same Deterministic Request protected with Group OSCORE.
 
-## Deterministic Unprotected Request
+## Deterministic Unprotected Request {#sec-deterministic-requests-unprotected}
 
 Clients build the unprotected Deterministic Request in a way which is as much reproducible as possible.
 This document does not set out full guidelines for minimizing the variation,
 but considered starting points are:
 
-* Set the inner Observe option to 0,
-  even if no observation is intended (and no outer Observe is set).
-  Thus, both observing and non-observing requests can be aggregated into a single request,
-  that is upstreamed as an observation at the latest when any observing request reaches the proxy.
+* Set the inner Observe option to 0 even if no observation is intended (and hence no outer Observe is set). Thus, both observing and non-observing requests can be aggregated into a single request, that is upstreamed as an observation at the latest when any observing request reaches a caching proxy.
 
+  In this case, following a Deterministic Request that includes only an inner Observe option, servers include an inner Observe option (but no outer Observe option) in a successful response sent as reply. Also, when receiving a response to such a Deterministic Request previously sent, clients have to silently ignore the inner Observe option in that response.
+  
 * Avoid setting the ETag option in requests on a whim.
   Only set it when there was a recent response with that ETag.
   When obtaining later blocks, do not send the known-stale ETag.
@@ -318,9 +317,13 @@ In order to build a Deterministic Request, the client protects the plain CoAP re
 
 4. The client includes a Request-Hash option in the request to protect, with value set to the hash H from Step 2.
 
-5. The client protects the request using the pairwise mode of Group OSCORE as defined in {{Section 9.3 of I-D.ietf-core-oscore-groupcomm}}, using the AEAD nonce from step 1, the deterministic Pairwise Sender Key K from step 3 as AEAD encryption key, and the finalized AAD.
+5. The client MAY include an inner Observe option set to 0 to be protected with OSCORE, even if no observation is intended (see {{sec-deterministic-requests-unprotected}}).
 
-6. The client sets FETCH as the outer code of the protected request to make it usable for a proxy's cache, even if no observation is requested {{RFC7641}}.
+6. The client protects the request using the pairwise mode of Group OSCORE as defined in {{Section 9.3 of I-D.ietf-core-oscore-groupcomm}}, using the AEAD nonce from step 1, the deterministic Pairwise Sender Key K from step 3 as AEAD encryption key, and the finalized AAD.
+
+7. The client MUST NOT include an unprotected (outer) Observe option if no observation is intended, even in case an inner Observe option was included at step 5 above.
+
+8. The client sets FETCH as the outer code of the protected request to make it usable for a proxy's cache, even if no observation is requested {{RFC7641}}.
 
 The result is the Deterministic Request to be sent.
 
@@ -350,9 +353,7 @@ A server that does not support Deterministic Requests would not be able to creat
 
    - The Recipient Key is derived as the key K in step 3 of {{sssec-use-deterministic-requests-client-req}}, with the hash H retrieved at the previous step.
 
-5. The server verifies the request using the pairwise mode of Group OSCORE, as defined in {{Section 9.4 of I-D.ietf-core-oscore-groupcomm}}, using the Recipient Context from step 4, with the following differences.
-
-   - The server does not perform replay checks against a Replay Window (see below).
+5. The server verifies the request using the pairwise mode of Group OSCORE, as defined in {{Section 9.4 of I-D.ietf-core-oscore-groupcomm}}, using the Recipient Context from step 4, with the difference that the server does not perform replay checks against a Replay Window (see below).
 
 In case of successful verification, the server MUST also perform the following actions, before possibly delivering the request to the application.
 
@@ -379,29 +380,37 @@ MT: Is there any possible reason in this application of the Request-Hash option 
 
 When preparing the response, the server performs the following actions.
 
-* The server sets a non-zero Max-Age option, thus making the Deterministic Request usable for the proxy cache.
+1. The server sets a non-zero Max-Age option, thus making the Deterministic Request usable for the proxy cache.
 
-* The server preliminarily sets the Request-Hash option with the full request hash.
+2. The server preliminarily sets the Request-Hash option with the full request hash.
 
-* The server MUST protect the response using the group mode of Group OSCORE, as defined in {{Section 8.3 of I-D.ietf-core-oscore-groupcomm}}. This is required to ensure that the client can verify source authentication of the response, since the "pairwise" key used for the Deterministic Request is actually shared among all the group members.
+3. If the Deterministic Request included an inner Observe option but not an outer Observe option, the server MUST include an inner Observe option in the response.
 
-  Note that the Request-Hash option is treated as Class I here.
+4. The server MUST protect the response using the group mode of Group OSCORE, as defined in {{Section 8.3 of I-D.ietf-core-oscore-groupcomm}}. This is required to ensure that the client can verify source authentication of the response, since the "pairwise" key used for the Deterministic Request is actually shared among all the group members.
 
-* The server MUST use its own Sender Sequence Number as Partial IV to protect the response, and include it as Partial IV in the OSCORE option of the response. This is required since the server does not perform replay protection on the Deterministic Request (see {{ssec-use-deterministic-requests-response}}).
+    Note that the Request-Hash option is treated as Class I here.
 
-* The server uses 2.05 (Content) as outer code even though it is not necessarily an Observe notification {{RFC7641}}, in order to make the response cacheable.
+5. The server MUST use its own Sender Sequence Number as Partial IV to protect the response, and include it as Partial IV in the OSCORE option of the response. This is required since the server does not perform replay protection on the Deterministic Request (see {{ssec-use-deterministic-requests-response}}).
 
-* The server SHOULD remove the Request-Hash option from the message before sending
+6. The server uses 2.05 (Content) as outer code even though it is not necessarily an Observe notification {{RFC7641}}, in order to make the response cacheable.
+
+7. The server SHOULD remove the Request-Hash option from the message before sending
   as per the general option mechanism of {{ssec-request-hash-option}}.
+
+8. If the Deterministic Request included an inner Observe option but not an outer Observe option, the server MUST NOT include an outer Observe option in the response.
 
 Upon receiving the response, the client performs the following actions.
 
-* In case the response includes a 'kid' in the OSCORE option and unless responses from multiple servers are expected (see {{det-req-one-to-many}}), the client MUST verify it to be exactly the 'kid' of the server to which the Deterministic Request was sent.
+1. In case the response includes a 'kid' in the OSCORE option and unless responses from multiple servers are expected (see {{det-req-one-to-many}}), the client MUST verify it to be exactly the 'kid' of the server to which the Deterministic Request was sent.
 
-* The client sets the Request-Hash option with the full request hash on the reponse.
+2. The client sets the Request-Hash option with the full request hash on the reponse.
   If an option of a different value is already present, it rejects the response.
 
-* The client verifies the response using the group mode of Group OSCORE, as defined in {{Section 8.4 of I-D.ietf-core-oscore-groupcomm}}. In particular, the client verifies the counter signature in the response, based on the 'kid' of the server it sent the request to. When verifying the response, the Request-Hash option is treated as a Class I option.
+3. The client verifies the response using the group mode of Group OSCORE, as defined in {{Section 8.4 of I-D.ietf-core-oscore-groupcomm}}. In particular, the client verifies the counter signature in the response, based on the 'kid' of the server it sent the request to. When verifying the response, the Request-Hash option is treated as a Class I option.
+
+4. If the Deterministic Request included an inner Observe option but not an outer Observe option (see {{sec-deterministic-requests-unprotected}}), the client MUST silently ignore the inner Observe option in the response and MUST NOT stop processing the response.
+
+\[ Note: This deviates from Section 4.1.3.5.2 of RFC 8613, but it is limited to a very specific situation, where the client and server both know exactly what happens. This does not affect the use of OSCORE in other situations. \]
 
 ### Deterministic Requests to Multiple Servers ### {#det-req-one-to-many}
 
@@ -510,6 +519,14 @@ IANA is asked to register the following entries in the "OSCORE Security Context 
 --- back
 
 # Change log
+
+Since -03:
+
+* Processing steps in case only inner Observe is included.
+
+* Clarified preserving/eliding the Request-Hash option in responses.
+
+* Clarified limited use of the Echo option.
 
 Since -02:
 
