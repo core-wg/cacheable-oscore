@@ -140,7 +140,7 @@ and the client would still accept the response as if it were a response to its r
 Source authentication is thus a precondition to secure use of OSCORE.
 However, it is hard to provide when:
 
-* Requests are built exclusively using shared key material (as in a deterministic client).
+* Requests are built exclusively using shared key material (as in a Deterministic Client).
 * Requests are sent without source authentication, or where the source authentication is not checked. (This was part of {{I-D.ietf-core-oscore-groupcomm}} in revisions before -12).
 
 This document does not \[ yet? \] give full guidance on how to restore request-response binding for the general case,
@@ -162,7 +162,7 @@ Additional care has to be taken that details not expressed in the request itself
 (like the security context from which it is assumed to have originated) are captured.
 
 Processing of requests without source authentication has to be done assuming only the minimal possible privilege of the requester
-\[ which currently described as the authorization of the deterministic client, and may be moved up here in later versions of this document \].
+\[ which currently described as the authorization of the Deterministic Client, and may be moved up here in later versions of this document \].
 If a response is built to such a request that contains data more sensitive than that
 (which might be justified if the response is protected for an authorized group member in pairwise response mode),
 special consideration for any side channels like response size or timing is required.
@@ -312,7 +312,7 @@ In order to build a Deterministic Request, the client protects the plain CoAP re
 
    * The hash H from step 2 is used as second argument of the HKDF, i.e. as a pseudo IKM-Sender computable by all the group members.
 
-      Note that an actual IKM-Sender cannot be obtained, since there is no public key associated with the deterministic client, to be used as Sender Public Key and for computing an actual Diffie-Hellman Shared Secret.
+      Note that an actual IKM-Sender cannot be obtained, since there is no authentication credential (and public key included therein) associated with the Deterministic Client, to be used as Sender Authentication Credential and for computing an actual Diffie-Hellman Shared Secret.
 
    * The Sender ID of the Deterministic Client is used as value for the 'id' element of the 'info' parameter used as third argument of the HKDF.
 
@@ -409,7 +409,7 @@ A Deterministic Request *can* be sent to a CoAP group, e.g. over UDP and IP mult
 
 To simplify key derivation, such a Deterministic Request is still created in the same way as a one-to-one request and still protected with the pairwise mode of Group OSCORE, as defined in {{sssec-use-deterministic-requests-client-req}}.
 
-\[ Note: If it was protected with the group mode, the request hash would need to be fed into the group key derivation just for this corner case. Furthermore, there would need to be a signature from the absent public key. \]
+\[ Note: If it was protected with the group mode, the request hash would need to be fed into a group key derivation just for this corner case. Furthermore, there would need to be a signature in spite of no authentication credential (and public key included therein) associated with the Deterministic Client. \]
 
 When a server receives a request from the Deterministic Client as addressed to a CoAP group, the server proceeds as defined in {{sssec-use-deterministic-requests-server-req}}, with the difference that it MUST include its own Sender ID in the response, as 'kid' parameter of the OSCORE option.
 
