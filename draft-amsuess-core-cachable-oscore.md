@@ -40,7 +40,7 @@ normative:
 
 informative:
   RFC7641:
-  I-D.ietf-core-echo-request-tag:
+  RFC9175:
   I-D.ietf-ace-key-groupcomm-oscore:
   I-D.amsuess-lwig-oscore:
   I-D.ietf-core-observe-multicast-notifications:
@@ -205,7 +205,7 @@ MT: proposed  s/should be selected/SHOULD be selected
 MT: proposed  s/should be agreed/SHOULD be agreed
 -->
 
-* Clients should not send any inner Echo options ({{?I-D.ietf-core-echo-request-tag}}) in deterministic requests.
+* Clients should not send any inner Echo options {{?RFC9175}} in deterministic requests.
 
   This limits the use of the Echo option in combination with deterministic requests to unprotected (outer) options,
   and thus to limited to testing the reachability of the client.
@@ -242,7 +242,7 @@ The option is called Request-Hash. As summarized in {{request-hash-table}}, the 
 ~~~
 {: #request-hash-table title="Request-Hash Option" artwork-align="center"}
 
-The Request-Hash option is identical in all its properties to the Request-Tag option defined in {{I-D.ietf-core-echo-request-tag}}, with the following exceptions:
+The Request-Hash option is identical in all its properties to the Request-Tag option defined in {{RFC9175}}, with the following exceptions:
 
 * It may be arbitrarily long.
 
