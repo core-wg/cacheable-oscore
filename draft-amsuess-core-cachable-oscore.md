@@ -65,7 +65,7 @@ Group communication with the Constrained Application Protocol (CoAP) can be secu
 
 The Constrained Application Protocol (CoAP) {{RFC7252}} supports also group communication, for instance over UDP and IP multicast {{I-D.ietf-core-groupcomm-bis}}. In a group communication environment, exchanged messages can be secured end-to-end by using Group Object Security for Constrained RESTful Environments (Group OSCORE) {{I-D.ietf-core-oscore-groupcomm}}.
 
-Requests and responses protected with the group mode of Group OSCORE can be read by all group members, i.e. not only by the intended recipient(s), thus achieving group-level confidentiality.
+Requests and responses protected with the group mode of Group OSCORE can be read by all group members, i.e., not only by the intended recipient(s), thus achieving group-level confidentiality.
 
 This allows a trusted intermediary proxy which is also a member of the OSCORE group to populate its cache with responses from origin servers. Later on, the proxy can possibly reply to a request in the group with a response from its cache, if recognized as an eligible server by the client.
 
@@ -107,7 +107,7 @@ This document introduces the following new terms.
 * Consensus Request: a CoAP request that multiple clients use to repeatedly access a particular resource.
   In this document, it exclusively refers to requests protected with Group OSCORE to a resource hosted at one or more servers in the OSCORE group.
 
-   A Consensus Request has all the properties relevant to caching, but its transport dependent properties (e.g. Token or Message ID) are not defined. Thus, different requests on the wire can be said to "be the same Consensus Request" even if they have different Tokens or source addresses.
+   A Consensus Request has all the properties relevant to caching, but its transport dependent properties (e.g., Token or Message ID) are not defined. Thus, different requests on the wire can be said to "be the same Consensus Request" even if they have different Tokens or source addresses.
 
    The Consensus Request is the reference for request-response binding.
    In general, a client processing a response to a consensus request did not generate (and thus sign) the consensus request.
@@ -310,7 +310,7 @@ In order to build a Deterministic Request, the client protects the plain CoAP re
 
    * The Sender Key of the Deterministic Client is used as first argument of the HKDF.
 
-   * The hash H from step 2 is used as second argument of the HKDF, i.e. as a pseudo IKM-Sender computable by all the group members.
+   * The hash H from step 2 is used as second argument of the HKDF, i.e., as a pseudo IKM-Sender computable by all the group members.
 
       Note that an actual IKM-Sender cannot be obtained, since there is no authentication credential (and public key included therein) associated with the Deterministic Client, to be used as Sender Authentication Credential and for computing an actual Diffie-Hellman Shared Secret.
 
@@ -362,7 +362,7 @@ In case of successful verification, the server MUST also perform the following a
 
    This prevents an attacker that guessed a valid authentication tag for a given Request-Hash value to poison caches with incorrect responses.
 
-* The server MUST verify that the unprotected request is safe to be processed in the REST sense, i.e. that it has no side effects. If verification fails, the server MUST discard the message and SHOULD reply with a protected 4.01 (Unauthorized) error response.
+* The server MUST verify that the unprotected request is safe to be processed in the REST sense, i.e., that it has no side effects. If verification fails, the server MUST discard the message and SHOULD reply with a protected 4.01 (Unauthorized) error response.
 
   Note that some CoAP implementations may not be able to prevent that an application produces side effects from a safe request. This may incur checking whether the particular resource handler is explicitly marked as eligible for processing deterministic requests. An implementation may also have a configured list of requests that are known to be side effect free, or even a pre-built list of valid hashes for all sensible requests for them, and reject any other request.
 
@@ -405,7 +405,7 @@ Upon receiving the response, the client performs the following actions.
 
 ### Deterministic Requests to Multiple Servers ### {#det-req-one-to-many}
 
-A Deterministic Request *can* be sent to a CoAP group, e.g. over UDP and IP multicast {{I-D.ietf-core-groupcomm-bis}}, thus targeting multiple servers at once.
+A Deterministic Request *can* be sent to a CoAP group, e.g., over UDP and IP multicast {{I-D.ietf-core-groupcomm-bis}}, thus targeting multiple servers at once.
 
 To simplify key derivation, such a Deterministic Request is still created in the same way as a one-to-one request and still protected with the pairwise mode of Group OSCORE, as defined in {{sssec-use-deterministic-requests-client-req}}.
 
@@ -413,7 +413,7 @@ To simplify key derivation, such a Deterministic Request is still created in the
 
 When a server receives a request from the Deterministic Client as addressed to a CoAP group, the server proceeds as defined in {{sssec-use-deterministic-requests-server-req}}, with the difference that it MUST include its own Sender ID in the response, as 'kid' parameter of the OSCORE option.
 
-Although it is normally optional for the server to include its Sender ID when replying to a request protected in pairwise mode, it is required in this case for allowing the client to retrieve the Recipient Context associated to the server originating the response.
+Although it is normally optional for the server to include its Sender ID when replying to a request protected in pairwise mode, it is required in this case for allowing the client to retrieve the Recipient Context associated with the server originating the response.
 
 # Obtaining Information about the Deterministic Client {#sec-obtaining-info}
 
@@ -483,7 +483,7 @@ For the Padding option, the option number is picked to be the highest number in 
 
 Applications that make use of the "Experimental use" range and want to preserve that property are invited to pick the largest suitable experimental number (65532)
 
-Note that unless other high options are used, this means that padding a message adds an overhead of at least 3 bytes, i.e. 1 byte for option delta/length and two more bytes of extended option delta. This is considered acceptable overhead, given that the application has already chosen to prefer the privacy gains of padding over wire transfer length.
+Note that unless other high options are used, this means that padding a message adds an overhead of at least 3 bytes, i.e., 1 byte for option delta/length and two more bytes of extended option delta. This is considered acceptable overhead, given that the application has already chosen to prefer the privacy gains of padding over wire transfer length.
 
 \]
 
