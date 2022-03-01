@@ -104,7 +104,8 @@ Readers are expected to be familiar with terms and concepts of CoAP {{RFC7252}} 
 
 This document introduces the following new terms.
 
-* Consensus Request: a CoAP request protected with Group OSCORE that can be used repeatedly to access a particular resource, hosted at one or more servers in the OSCORE group.
+* Consensus Request: a CoAP request that multiple clients use to repeatedly access a particular resource.
+  In this document, it exclusively refers to requests protected with Group OSCORE to a resource hosted at one or more servers in the OSCORE group.
 
    A Consensus Request has all the properties relevant to caching, but its transport dependent properties (e.g. Token or Message ID) are not defined. Thus, different requests on the wire can be said to "be the same Consensus Request" even if they have different Tokens or source addresses.
 
