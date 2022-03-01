@@ -208,9 +208,9 @@ MT: proposed  s/should be agreed/SHOULD be agreed
 * Clients should not send any inner Echo options {{?RFC9175}} in deterministic requests.
 
   This limits the use of the Echo option in combination with deterministic requests to unprotected (outer) options,
-  and thus to limited to testing the reachability of the client.
+  and thus is limited to testing the reachability of the client.
   This is not practically limiting, as the use as an inner option would be to prove freshness,
-  which is something deterministic requests simply can not provide anyway.
+  which is something deterministic requests simply cannot provide anyway.
 
 These only serve to ensure that cache entries are utilized; failure to follow them has no more severe consequences than decreasing the utility and effectiveness of a cache.
 
@@ -254,7 +254,7 @@ The Request-Hash option is identical in all its properties to the Request-Tag op
   equal to the request's.
   The response is only valid if its Request-Hash is equal to the matching request's.
 
-  Servers (including proxies) thus generally SHOULD not need to send the Request-Hash option explicitly in responses,
+  Servers (including proxies) thus generally SHOULD NOT need to send the Request-Hash option explicitly in responses,
   especially as a matter of bandwidth efficiency.
 
   A reason (and, currently, the only known) to actually send a Request-Hash in a response
