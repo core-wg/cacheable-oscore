@@ -243,8 +243,6 @@ The Request-Hash option is identical in all its properties to the Request-Tag op
 
 * A proxy MAY use any fresh cached response from the selected server to respond to a request with the same Request-Hash (or possibly even if the new request's Request-Hash is a prefix of the cached one).
 
-  This is a potential future optimization which is not mentioned anywhere else yet, and allows clients to elide all other options and payload if it has reason to believe that it can produce a cache hit with the abbreviated request alone.
-
 * It may be present in responses (TBD: Does this affect any other properties?).
 
 * When used with a Deterministic Request, this option is created at message protection time by the sender, and used before message unprotection by the recipient. Therefore, in this use case, it is treated as Class U for OSCORE {{RFC8613}} in requests. In the same application, for responses, it is treated as Class I, and often elided from sending (but reconstructed at the receiver). Other uses of this option can put it into different classes for the OSCORE processing.
@@ -637,6 +635,16 @@ MT: How can clients start an observation then? That would require an inner Obser
 
 Also the guidelines in Section 2 suggest to have an inner observe option, regardless the resource being actually observable.
 -->
+
+* We could allows clients to elide all other options than Request-Hash, and elide the payload,
+  if it has reason to believe that it can produce a cache hit with the abbreviated request alone.
+
+  This may prove troublesome in terms of cache invalidation
+  (the server would have to use short-lived responses to indicate that it does need the full request,
+  or we'd need special handling for error responses,
+  or criteria by which proxies don't even forward these if they don't have a response at hand).
+
+  That may be more trouble than it's worth without a strong use case (say, of complex but converging FETCH requests).
 
 # Acknowledgments # {#acknowldegment}
 {: numbered="no"}
