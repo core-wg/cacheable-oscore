@@ -198,7 +198,7 @@ MT: proposed  s/should be selected/SHOULD be selected
   (If BERT {{?RFC8323}} is usable with OSCORE, its use is fine as well;
   in that case, the server picks a consistent block size for all clients anyway).
 
-* If padding (see {{sec-padding}}) is used to limit an adversary's ability to deduce requests' content from their length, the requests are padded to reach a total length that should be agreed on among all users of a security context.
+* The Padding option defined in {{sec-padding}} can be used to limit an adversary's ability to deduce the content and the target resource of Deterministic Requests from their length. In particular, all Deterministic Requests of the same class (ideally, all requests to a particular server) can be padded to reach the same total length, that should be agreed on among all users of the same OSCORE Security Context.
 
 <!--
 MT: proposed  s/should be agreed/SHOULD be agreed
@@ -528,6 +528,8 @@ Since -03:
 
 * Clarified limited use of the Echo option.
 
+* Clarifications on using the Padding option.
+
 Since -02:
 
 * Separate parts needed to respond to unauthenticated requests from the remaining deterministic response part.
@@ -597,9 +599,7 @@ but wishes to produce responses of consistent length
 the server can pick a length that all possible responses can be padded to,
 and set the Padding option with a suitable all-zero option value in all responses to that class of requests.
 
-Likewise, a client can decide on a class of requests that it pads to consistent length.
-(This is of little applicability to Deterministic Requests;
-there, the observer can group requests even if they are of the same length, and padding would hinder convergence on a single consensus request).
+Likewise, a client can decide on a class of requests that it pads to consistent length. This has considerably less efficacy and applicability when applied to Deterministic Requests. That is: an external observer can group requests even if they are of the same length; and padding would hinder convergence on a single Consensus Request, thus requiring all users of the same OSCORE Security Context to agree on the same total length in advance.
 
 Any party receiving a Padding option MUST ignore it.
 In particular, a server MUST NOT make its choice of padding dependent on any padding present in the request.
