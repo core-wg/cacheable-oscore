@@ -241,9 +241,25 @@ The Request-Hash option is identical in all its properties to the Request-Tag op
 
   Implementations can limit its length to that of the longest output of the supported hash functions.
 
-* A proxy MAY use any fresh cached response from the selected server to respond to a request with the same Request-Hash (or possibly even if the new request's Request-Hash is a prefix of the cached one).
-
 * It may be present in responses (TBD: Does this affect any other properties?).
+
+  A response's Request-Hash is, as a matter of default value,
+  equal to the request's.
+  The response is only valid if its Request-Hash is equal to the matching request's.
+
+  Servers (including proxies) thus generally SHOULD not need to send the Request-Hash option explicitly in responses,
+  especially as a matter of bandwidth efficiency.
+
+  A reason (and, currently, the only known) to actually send a Request-Hash in a response
+  are non-traditional responses as described in {{?I-D.bormann-core-responses}},
+  which in terms of that document are non-matching to the request (and thus easily usable);
+  the request hash in the response allows populating caches (see below) and decryption of the response in deterministic request contexts.
+  In the context of non-traditional responses, a matching request's Request-Hash can be inferred from its value in the response.
+
+* A proxy MAY use any fresh cached response from the selected server to respond to a request with the same Request-Hash;
+  this may save it some memory.
+
+  A proxy can add or remove the request's Request-Tag value to / from a response.
 
 * When used with a Deterministic Request, this option is created at message protection time by the sender, and used before message unprotection by the recipient. Therefore, in this use case, it is treated as Class U for OSCORE {{RFC8613}} in requests. In the same application, for responses, it is treated as Class I, and often elided from sending (but reconstructed at the receiver). Other uses of this option can put it into different classes for the OSCORE processing.
 
@@ -347,8 +363,7 @@ In case of successful verification, the server MUST also perform the following a
 
 ### Response to a Deterministic Request {#ssec-use-deterministic-requests-response}
 
-When treating a response to a deterministic request, the Request-Hash option is treated as a Class I option. This creates the request-response binding ensuring that no mismatched responses can be successfully unprotected (see {{oscore-nosourceauth}}).
-The option does not actually need to be present in the message as transported (the server SHOULD elide it for compactness).
+When treating a response to a deterministic request, the Request-Hash option is treated as a Class I option (but usually not sent). This creates the request-response binding ensuring that no mismatched responses can be successfully unprotected (see {{oscore-nosourceauth}}).
 The client MUST reject responses with a Request-Hash not matching the one it sent in the request.
 
 <!--
@@ -369,7 +384,8 @@ When preparing the response, the server performs the following actions.
 
 * The server uses 2.05 (Content) as outer code even though it is not necessarily an Observe notification {{RFC7641}}, in order to make the response cacheable.
 
-* The server SHOULD remove the Request-Hash option from the message before sending.
+* The server SHOULD remove the Request-Hash option from the message before sending
+  as per the general option mechanism of {{ssec-request-hash-option}}.
 
 Upon receiving the response, the client performs the following actions.
 
@@ -645,6 +661,8 @@ Also the guidelines in Section 2 suggest to have an inner observe option, regard
   or criteria by which proxies don't even forward these if they don't have a response at hand).
 
   That may be more trouble than it's worth without a strong use case (say, of complex but converging FETCH requests).
+
+  Hashes could also be used in truncated form for that.
 
 # Acknowledgments # {#acknowldegment}
 {: numbered="no"}
