@@ -205,6 +205,13 @@ MT: proposed  s/should be selected/SHOULD be selected
 MT: proposed  s/should be agreed/SHOULD be agreed
 -->
 
+* Clients should not send any inner Echo options ({{?I-D.ietf-core-echo-request-tag}}) in deterministic requests.
+
+  This limits the use of the Echo option in combination with deterministic requests to unprotected (outer) options,
+  and thus to limited to testing the reachability of the client.
+  This is not practically limiting, as the use as an inner option would be to prove freshness,
+  which is something deterministic requests simply can not provide anyway.
+
 These only serve to ensure that cache entries are utilized; failure to follow them has no more severe consequences than decreasing the utility and effectiveness of a cache.
 
 ## Design Considerations ## {#ssec-deterministic-requests-design}
