@@ -436,7 +436,7 @@ Upon receiving the response, the client performs the following actions.
 
 A Deterministic Request *can* be sent to a CoAP group, e.g., over UDP and IP multicast {{I-D.ietf-core-groupcomm-bis}}, thus targeting multiple servers at once.
 
-To simplify key derivation, such a Deterministic Request is still created in the same way as a one-to-one request and still protected with the pairwise mode of Group OSCORE, as defined in {{sssec-use-deterministic-requests-client-req}}.
+To simplify key derivation, such a Deterministic Request is still created in the same way as a one-to-one request and still protected with the pairwise mode of Group OSCORE, as defined in {{sssec-use-deterministic-requests-client-req}}. Note that this deviates from {{Section 8 of I-D.ietf-core-oscore-groupcomm}}, since the Deterministic Request in this case is indeed intended to multiple recipients, but yet it is protected with the pairwise mode.
 
 \[ Note: If it was protected with the group mode, the request hash would need to be fed into a group key derivation just for this corner case. Furthermore, there would need to be a signature in spite of no authentication credential (and public key included therein) associated with the Deterministic Client. \]
 
@@ -545,6 +545,8 @@ IANA is asked to register the following entries in the "OSCORE Security Context 
 Since -04:
 
 * Revised and extended list of use cases.
+
+* Added further note on Deterministic Requests to a group of servers as still protected with the pairwise mode.
 
 * Suppression of error responses for servers in a CoAP groups.
 
