@@ -1,9 +1,12 @@
 ---
+v: 3
+
 title: "Cacheable OSCORE"
 docname: draft-amsuess-core-cachable-oscore-latest
 ipr: trust200902
 stand_alone: true
 cat: std
+submissiontype: IETF
 wg: CoRE Working Group
 kw: CoAP, OSCORE, multicast, caching, proxy
 author:
@@ -92,7 +95,7 @@ the technical implementation is split in two halves:
 When firmware updates are delivered using CoAP,
 many similar devices fetch large representations at the same time.
 Collecting them at a proxy not only keeps the traffic low,
-but also lets the clients ride single file to hide their numbers{{SW-EPIV}} and identities.
+but also lets the clients ride single file to hide their numbers {{SW-EPIV}} and identities.
 
 When relying on intermediaries to fan out the delivery of multicast data protected end-to-end as in {{I-D.ietf-core-observe-multicast-notifications}}, deterministic requests allow for a more efficient setup, by reducing the amount of message exchanges and enabling early population of cache entries (see {{det-requests-for-notif}}).
 
@@ -180,7 +183,7 @@ but considered starting points are:
 * Set the inner Observe option to 0 even if no observation is intended (and hence no outer Observe is set). Thus, both observing and non-observing requests can be aggregated into a single request, that is upstreamed as an observation at the latest when any observing request reaches a caching proxy.
 
   In this case, following a Deterministic Request that includes only an inner Observe option, servers include an inner Observe option (but no outer Observe option) in a successful response sent as reply. Also, when receiving a response to such a Deterministic Request previously sent, clients have to silently ignore the inner Observe option in that response.
-  
+
 * Avoid setting the ETag option in requests on a whim.
   Only set it when there was a recent response with that ETag.
   When obtaining later blocks, do not send the known-stale ETag.
@@ -691,6 +694,6 @@ Also the guidelines in Section 2 suggest to have an inner observe option, regard
 # Acknowledgments # {#acknowldegment}
 {: numbered="no"}
 
-The authors sincerely thank Michael Richardson, Jim Schaad and Göran Selander for their comments and feedback.
+The authors sincerely thank {{{Michael Richardson}}}, {{{Jim Schaad}}} and {{{Göran Selander}}} for their comments and feedback.
 
 The work on this document has been partly supported by VINNOVA and the Celtic-Next project CRITISEC; and by the H2020 project SIFIS-Home (Grant agreement 952652).
