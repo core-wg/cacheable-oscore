@@ -57,6 +57,24 @@ informative:
     date: 1977
     title: Star Wars
     seriesinfo: "Lucasfilm Ltd."
+  "ICN-paper":
+    author:
+      -
+        ins: C. Gündoğan
+        name: Cenk Gündoğan
+      -
+        ins: C. Amsüss
+        name: Christian Amsüss
+      -
+        ins: T. C. Schmidt
+        name: Thomas C. Schmidt
+      -
+        ins: M. Wählisch
+        name: Matthias Wählisch
+    title: "Group Communication with OSCORE: RESTful Multiparty Access to a Data-Centric Web of Things"
+    date: 2021-10
+    target: https://ieeexplore.ieee.org/document/9525000
+
 
 --- abstract
 
@@ -92,12 +110,11 @@ the technical implementation is split in two halves:
 
 ## Use cases
 
-When firmware updates are delivered using CoAP,
-many similar devices fetch large representations at the same time.
-Collecting them at a proxy not only keeps the traffic low,
-but also lets the clients ride single file to hide their numbers {{SW-EPIV}} and identities.
+When firmware updates are delivered using CoAP, many similar devices fetch the same large data at the same time. Collecting such large data at a proxy from its cache not only keeps the traffic low, but also lets the clients ride single file to hide their numbers {{SW-EPIV}} and identities. By using protected deterministic requests as defined in this document, it is possible to efficiently perform data collection at a proxy also when the firmware updates are protected end-to-end.
 
-When relying on intermediaries to fan out the delivery of multicast data protected end-to-end as in {{I-D.ietf-core-observe-multicast-notifications}}, deterministic requests allow for a more efficient setup, by reducing the amount of message exchanges and enabling early population of cache entries (see {{det-requests-for-notif}}).
+When relying on intermediaries to fan out the delivery of multicast data protected end-to-end as in {{I-D.ietf-core-observe-multicast-notifications}}, the use of protected deterministic requests as defined in this document allows for a more efficient setup, by reducing the amount of message exchanges and enabling early population of cache entries (see {{det-requests-for-notif}}).
+
+When relying on Information-Centric Networking (ICN) for multiparty dissemination of cacheable content, CoAP and CoAP proxies can be used to enable asynchronous group communication. This leverages CoAP proxies performing request aggregation, as well as response replication and cacheability {{ICN-paper}}. By restoring cacheability of OSCORE-protected responses, the deterministic requests defined in this document make it possible to attain dissemination of cacheable content in ICN-based deployments, also when the content is protected end-to-end.
 
 ## Terminology ## {#terminology}
 
@@ -522,6 +539,10 @@ IANA is asked to register the following entries in the "OSCORE Security Context 
 --- back
 
 # Change log
+
+Since -04:
+
+* Revised and extended list of use cases.
 
 Since -03:
 
