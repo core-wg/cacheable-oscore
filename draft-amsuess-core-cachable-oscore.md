@@ -464,28 +464,38 @@ The same extension above applies also to the 'key' parameter when included in a 
 
 The same security considerations from {{RFC7252}}{{I-D.ietf-core-groupcomm-bis}}{{RFC8613}}{{I-D.ietf-core-oscore-groupcomm}} hold for this document.
 
-Compared to Group OSCORE,
-Deterministic Requests dispense with some of OSCORE's security properties
-by just so much as to make caching possible:
+The following elaborates on how, compared to Group OSCORE, Deterministic Requests dispense with some of the OSCORE's security properties, by just so much as to make caching possible.
 
-* Receiving a response to a Deterministic Request does not mean that the response was generated after the request was sent.
+* A Deterministic Request is intrinsically designed to be replayed, as intended to be identically sent multiple times by multiple clients to the same server(s).
 
-  It still contains two freshness statements, though:
+   Consistently, as per the processing defined in {{sssec-use-deterministic-requests-server-req}}, a server receiving a Deterministic Request does not perform replay checks against an OSCORE Replay Window.
+
+   This builds on the following considerations.
+
+   - For a given request, the level of tolerance to replay risk is specific to the resource it operates upon (and therefore only known to the origin server). In general, if processing a request does not have state-changing side effects, the consequences of replay are not significant.
+
+     Just like for what concerns the lack of source authentication (see below), the server must verify that the received Deterministic Request (precisely: its handler) is side effect free. The distinct semantics of the CoAP request codes can help the server make that assessment.
+
+   - Consistently with the point above, a server can choose whether it will process a Deterministic Request on a per-resource basis. It is RECOMMENDED that origin servers allow resources to explicitly configure whether Deterministic Requests are appropriate to receive, as still limited to requests that are safe to be processed in the REST sense and do not have state-changing side effects.
+
+* Receiving a response to a Deterministic Request does not mean that the response was generated after the Deterministic Request was sent.
+
+  However, a valid response to a Deterministic Request still contains two freshness statements.
 
   * It is more recent than any other response from the same group member that has a smaller sequence number.
+
   * It is more recent than the original creation of the deterministic security context's key material.
 
-* Request privacy is limited.
+* Source authentication of Deterministic Requests is lost.
 
-  An intermediary can determine that two requests from different clients
-  are identical, and associate the different responses generated for them.
-  A server producing responses of varying size to a request
-  can use the Padding option to hide when the response is changing.
+  Instead, the server must verify that the Deterministic Request (precisely: its handler) is side effect free. The distinct semantics of the CoAP request codes can help the server make that assessment.
 
-* Source authentication for requests is lost.
+  Just like for what concerns the acceptance of replayed Deterministic Requests (see above), the server can choose whether it will process a Deterministic Request on a per-resource basis.
 
-  Instead, the server must verify that the request (precisely: its handler) is side effect free.
-  The distinct semantics of the CoAP request codes can help the server make that assessment.
+* The privacy of Deterministic Requests is limited.
+
+  An intermediary can determine that two Deterministic Requests from different clients are identical, and associate the different responses generated for them.
+  A server producing responses of varying size to a Deterministic Request can use the Padding option to hide when the response is changing.
 
 \[ More on the verification of the Deterministic Request \]
 
@@ -551,6 +561,8 @@ Since -04:
 * Added further note on Deterministic Requests to a group of servers as still protected with the pairwise mode.
 
 * Suppression of error responses for servers in a CoAP group.
+
+* Extended security considerations with discussion on replayed requests.
 
 Since -03:
 
