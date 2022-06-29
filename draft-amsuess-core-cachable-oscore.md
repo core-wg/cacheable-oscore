@@ -444,6 +444,8 @@ When a server receives a request from the Deterministic Client as addressed to a
 
 Although it is normally optional for the server to include its Sender ID when replying to a request protected in pairwise mode, it is required in this case for allowing the client to retrieve the Recipient Context associated with the server originating the response.
 
+If a server is member of a CoAP group, and it fails to successfully decrypt and verify an incoming deterministic request, then it is RECOMMENDED for that server to not send back any error message, in case the server asserts that the deterministic request was sent to the CoAP group (e.g., to the associated IP multicast address) or in case the server is not able to assert that altogether.
+
 # Obtaining Information about the Deterministic Client {#sec-obtaining-info}
 
 This section extends the Joining Process defined in {{I-D.ietf-ace-key-groupcomm-oscore}}, and based on the ACE framework for Authentication and Authorization {{I-D.ietf-ace-oauth-authz}}. Upon joining the OSCORE group, this enables a new group member to obtain from the Group Manager the required information about the Deterministic Client (see {{sssec-use-deterministic-requests-pre-conditions}}).
@@ -543,6 +545,8 @@ IANA is asked to register the following entries in the "OSCORE Security Context 
 Since -04:
 
 * Revised and extended list of use cases.
+
+* Suppression of error responses for servers in a CoAP groups.
 
 Since -03:
 
