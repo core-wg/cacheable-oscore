@@ -92,7 +92,7 @@ This allows a trusted intermediary proxy which is also a member of the OSCORE gr
 
 However, an untrusted proxy which is not member of the OSCORE group only sees protected responses as opaque, uncacheable ciphertext. In particular, different clients in the group that originate a same plain CoAP request would send different protected requests, as a result of their Group OSCORE processing. Such protected requests cannot yield a cache hit at the proxy, which makes the whole caching of protected responses pointless.
 
-This document addresses this complication and enables cacheability of protected responses, also for proxies that are not members of the OSCORE group and are unaware of OSCORE in general. To this end, it builds on the concept of "consensus request" initially considered in {{I-D.ietf-core-observe-multicast-notifications}}, and defines "deterministic request" as a convenient incarnation of such concept.
+This document addresses this complication and enables cacheability of protected responses, also for proxies that are not members of the OSCORE group and are unaware of OSCORE in general. To this end, it builds on the concept of "consensus request" initially considered in {{I-D.ietf-core-observe-multicast-notifications}}, and defines "Deterministic Request" as a convenient incarnation of such concept.
 
 All clients wishing to send a particular GET or FETCH request are able to deterministically compute the same protected request, using a variation on the pairwise mode of Group OSCORE. It follows that cache hits become possible at the proxy, which can thus serve clients in the group from its cache. Like in {{I-D.ietf-core-observe-multicast-notifications}}, this requires that clients and servers are already members of a suitable OSCORE group.
 
@@ -105,16 +105,16 @@ the technical implementation is split in two halves:
 
 * maintaining request-response bindings in absence of request source authentication, and
 
-* building and processing of deterministic requests
+* building and processing of Deterministic Requests
   (which have no source authentication, and thus require the former).
 
 ## Use cases
 
-When firmware updates are delivered using CoAP, many similar devices fetch the same large data at the same time. Collecting such large data at a proxy from its cache not only keeps the traffic low, but also lets the clients ride single file to hide their numbers {{SW-EPIV}} and identities. By using protected deterministic requests as defined in this document, it is possible to efficiently perform data collection at a proxy also when the firmware updates are protected end-to-end.
+When firmware updates are delivered using CoAP, many similar devices fetch the same large data at the same time. Collecting such large data at a proxy from its cache not only keeps the traffic low, but also lets the clients ride single file to hide their numbers {{SW-EPIV}} and identities. By using protected Deterministic Requests as defined in this document, it is possible to efficiently perform data collection at a proxy also when the firmware updates are protected end-to-end.
 
-When relying on intermediaries to fan out the delivery of multicast data protected end-to-end as in {{I-D.ietf-core-observe-multicast-notifications}}, the use of protected deterministic requests as defined in this document allows for a more efficient setup, by reducing the amount of message exchanges and enabling early population of cache entries (see {{det-requests-for-notif}}).
+When relying on intermediaries to fan out the delivery of multicast data protected end-to-end as in {{I-D.ietf-core-observe-multicast-notifications}}, the use of protected Deterministic Requests as defined in this document allows for a more efficient setup, by reducing the amount of message exchanges and enabling early population of cache entries (see {{det-requests-for-notif}}).
 
-When relying on Information-Centric Networking (ICN) for multiparty dissemination of cacheable content, CoAP and CoAP proxies can be used to enable asynchronous group communication. This leverages CoAP proxies performing request aggregation, as well as response replication and cacheability {{ICN-paper}}. By restoring cacheability of OSCORE-protected responses, the deterministic requests defined in this document make it possible to attain dissemination of cacheable content in ICN-based deployments, also when the content is protected end-to-end.
+When relying on Information-Centric Networking (ICN) for multiparty dissemination of cacheable content, CoAP and CoAP proxies can be used to enable asynchronous group communication. This leverages CoAP proxies performing request aggregation, as well as response replication and cacheability {{ICN-paper}}. By restoring cacheability of OSCORE-protected responses, the Deterministic Requests defined in this document make it possible to attain dissemination of cacheable content in ICN-based deployments, also when the content is protected end-to-end.
 
 ## Terminology ## {#terminology}
 
@@ -224,12 +224,12 @@ MT: proposed  s/should be selected/SHOULD be selected
 MT: proposed  s/should be agreed/SHOULD be agreed
 -->
 
-* Clients should not send any inner Echo options {{?RFC9175}} in deterministic requests.
+* Clients should not send any inner Echo options {{?RFC9175}} in Deterministic Requests.
 
-  This limits the use of the Echo option in combination with deterministic requests to unprotected (outer) options,
+  This limits the use of the Echo option in combination with Deterministic Requests to unprotected (outer) options,
   and thus is limited to testing the reachability of the client.
   This is not practically limiting, as the use as an inner option would be to prove freshness,
-  which is something deterministic requests simply cannot provide anyway.
+  which is something Deterministic Requests simply cannot provide anyway.
 
 These only serve to ensure that cache entries are utilized; failure to follow them has no more severe consequences than decreasing the utility and effectiveness of a cache.
 
@@ -279,7 +279,7 @@ The Request-Hash option is identical in all its properties to the Request-Tag op
   A reason (and, currently, the only known) to actually send a Request-Hash in a response
   are non-traditional responses as described in {{?I-D.bormann-core-responses}},
   which in terms of that document are non-matching to the request (and thus easily usable);
-  the request hash in the response allows populating caches (see below) and decryption of the response in deterministic request contexts.
+  the request hash in the response allows populating caches (see below) and decryption of the response in Deterministic Request contexts.
   In the context of non-traditional responses, a matching request's Request-Hash can be inferred from its value in the response.
 
 * A proxy MAY use any fresh cached response from the selected server to respond to a request with the same Request-Hash;
@@ -351,7 +351,7 @@ Since the encryption key K is derived using material from the whole plain CoAP r
 
 The deterministic encryption requires the used AEAD algorithm to be deterministic in itself. This is the case for all the AEAD algorithms currently registered with COSE in {{COSE.Algorithms}}. For future algorithms, a flag in the COSE registry is to be added.
 
-Note that, while the process defined above is based on the pairwise mode of Group OSCORE, no information about the server takes part to the key derivation or is included in the AAD. This is intentional, since it allows for sending a deterministic request to multiple servers at once (see {{det-req-one-to-many}}). On the other hand, it requires later checks at the client when verifying a response to a Deterministic Request (see {{ssec-use-deterministic-requests-response}}).
+Note that, while the process defined above is based on the pairwise mode of Group OSCORE, no information about the server takes part to the key derivation or is included in the AAD. This is intentional, since it allows for sending a Deterministic Request to multiple servers at once (see {{det-req-one-to-many}}). On the other hand, it requires later checks at the client when verifying a response to a Deterministic Request (see {{ssec-use-deterministic-requests-response}}).
 
 ### Server Processing of Deterministic Request {#sssec-use-deterministic-requests-server-req}
 
@@ -385,13 +385,13 @@ In case of successful verification, the server MUST also perform the following a
 
 * The server MUST verify that the unprotected request is safe to be processed in the REST sense, i.e., that it has no side effects. If verification fails, the server MUST discard the message and SHOULD reply with a protected 4.01 (Unauthorized) error response.
 
-  Note that some CoAP implementations may not be able to prevent that an application produces side effects from a safe request. This may incur checking whether the particular resource handler is explicitly marked as eligible for processing deterministic requests. An implementation may also have a configured list of requests that are known to be side effect free, or even a pre-built list of valid hashes for all sensible requests for them, and reject any other request.
+  Note that some CoAP implementations may not be able to prevent that an application produces side effects from a safe request. This may incur checking whether the particular resource handler is explicitly marked as eligible for processing Deterministic Requests. An implementation may also have a configured list of requests that are known to be side effect free, or even a pre-built list of valid hashes for all sensible requests for them, and reject any other request.
 
   These checks replace the otherwise present requirement that the server needs to check the Replay Window of the Recipient Context (see step 5 above), which is inapplicable with the Recipient Context derived at step 4 from the value of the Request-Hash option. The reasoning is analogous to the one in {{I-D.amsuess-lwig-oscore}} to treat the potential replay as answerable, if the handled request is side effect free.
 
 ### Response to a Deterministic Request {#ssec-use-deterministic-requests-response}
 
-When treating a response to a deterministic request, the Request-Hash option is treated as a Class I option (but usually not sent). This creates the request-response binding ensuring that no mismatched responses can be successfully unprotected (see {{oscore-nosourceauth}}).
+When treating a response to a Deterministic Request, the Request-Hash option is treated as a Class I option (but usually not sent). This creates the request-response binding ensuring that no mismatched responses can be successfully unprotected (see {{oscore-nosourceauth}}).
 The client MUST reject responses with a Request-Hash not matching the one it sent in the request.
 
 <!--
@@ -446,7 +446,7 @@ When a server receives a request from the Deterministic Client as addressed to a
 
 Although it is normally optional for the server to include its Sender ID when replying to a request protected in pairwise mode, it is required in this case for allowing the client to retrieve the Recipient Context associated with the server originating the response.
 
-If a server is member of a CoAP group, and it fails to successfully decrypt and verify an incoming deterministic request, then it is RECOMMENDED for that server to not send back any error message, in case the server asserts that the deterministic request was sent to the CoAP group (e.g., to the associated IP multicast address) or in case the server is not able to assert that altogether.
+If a server is member of a CoAP group, and it fails to successfully decrypt and verify an incoming Deterministic Request, then it is RECOMMENDED for that server to not send back any error message, in case the server asserts that the Deterministic Request was sent to the CoAP group (e.g., to the associated IP multicast address) or in case the server is not able to assert that altogether.
 
 # Obtaining Information about the Deterministic Client {#sec-obtaining-info}
 
@@ -454,9 +454,9 @@ This section extends the Joining Process defined in {{I-D.ietf-ace-key-groupcomm
 
 With reference to the 'key' parameter of the Joining Response defined in {{Section 6.4 of I-D.ietf-ace-key-groupcomm-oscore}}, the Group_OSCORE_Input_Material object specified as its value contains also the two additional parameters 'det_senderId' and 'det_hash_alg'. These are defined in {{ssec-iana-security-context-parameter-registry}} of this document. In particular:
 
-* The 'det_senderId' parameter, if present, has as value the OSCORE Sender ID assigned to the Deterministic Client by the Group Manager. This parameter MUST be present if the OSCORE group uses deterministic requests as defined in this document. Otherwise, this parameter MUST NOT be present.
+* The 'det_senderId' parameter, if present, has as value the OSCORE Sender ID assigned to the Deterministic Client by the Group Manager. This parameter MUST be present if the OSCORE group uses Deterministic Requests as defined in this document. Otherwise, this parameter MUST NOT be present.
 
-* The 'det_hash_alg' parameter, if present, has as value the hash algorithm to use for computing the hash of a plain CoAP request, when producing the associated Deterministic Request. This parameter takes values from the "Value" column of the "COSE Algorithms" Registry {{COSE.Algorithms}}. This parameter MUST be present if the OSCORE group uses deterministic requests as defined in this document. Otherwise, this parameter MUST NOT be present.
+* The 'det_hash_alg' parameter, if present, has as value the hash algorithm to use for computing the hash of a plain CoAP request, when producing the associated Deterministic Request. This parameter takes values from the "Value" column of the "COSE Algorithms" Registry {{COSE.Algorithms}}. This parameter MUST be present if the OSCORE group uses Deterministic Requests as defined in this document. Otherwise, this parameter MUST NOT be present.
 
 The same extension above applies also to the 'key' parameter when included in a Key Distribution Response (see {{Sections 8.1 and 8.2 of I-D.ietf-ace-key-groupcomm-oscore}}) and in a Signature Verification Data Response (see {{Section 13 of I-D.ietf-ace-key-groupcomm-oscore}}).
 
@@ -465,10 +465,10 @@ The same extension above applies also to the 'key' parameter when included in a 
 The same security considerations from {{RFC7252}}{{I-D.ietf-core-groupcomm-bis}}{{RFC8613}}{{I-D.ietf-core-oscore-groupcomm}} hold for this document.
 
 Compared to Group OSCORE,
-deterministic requests dispense with some of OSCORE's security properties
+Deterministic Requests dispense with some of OSCORE's security properties
 by just so much as to make caching possible:
 
-* Receiving a response to a deterministic request does not mean that the response was generated after the request was sent.
+* Receiving a response to a Deterministic Request does not mean that the response was generated after the request was sent.
 
   It still contains two freshness statements, though:
 
@@ -566,7 +566,7 @@ Since -02:
 
 * Separate parts needed to respond to unauthenticated requests from the remaining deterministic response part.
   (Currently this is mainly an addition; the document will undergo further refactoring if that split proves helpful).
-* Inner Observe is set unconditionally in deterministic requests.
+* Inner Observe is set unconditionally in Deterministic Requests.
 * Clarifications around padding and security considerations.
 
 Since -01:
@@ -591,7 +591,7 @@ Since -00:
 
 * More precise specification of the hashing (guided by first implementations)
 
-* Focus shifted to deterministic requests (where it should have been in the first place; all the build-up of Token Requests was moved to a motivating appendix)
+* Focus shifted to Deterministic Requests (where it should have been in the first place; all the build-up of Token Requests was moved to a motivating appendix)
 
 * Aligned with draft-tiloca-core-observe-responses-multicast-05 (not submitted at the time of submission)
 
@@ -670,7 +670,7 @@ When multiple proxies are in use, or the response has expired from the proxy's c
 
 However, comparing the "Example with a Proxy" in {{Section A of I-D.ietf-core-observe-multicast-notifications}} and the "Example with a Proxy and Group OSCORE" in {{Section B of I-D.ietf-core-observe-multicast-notifications}} shows that, when using Group OSCORE, more requests need to hit the server. This is because every client originally protects its Observation request individually, and thus needs a custom response served to obtain the Phantom Request as a Ticket Request.
 
-If the clients send their requests as the same deterministic request, the server can use these requests as Ticket Requests as well. Thus, there is no need for the server to provide a same Phantom Request to each client.
+If the clients send their requests as the same Deterministic Request, the server can use these requests as Ticket Requests as well. Thus, there is no need for the server to provide a same Phantom Request to each client.
 
 Instead, the server can send a single unprotected Informative Response - very much like in the example without Group OSCORE - hence setting the proxy up and optionally providing also the latest notification along the way.
 
@@ -685,13 +685,13 @@ The proxy can thus be configured by the server following the first request from 
   COSE would probably run through KDF with a KDF context structure).
 
   COSE would give a header parameter name to the Request-Hash
-  (which for the purpose of OSCORE deterministic requests would put back into Request-Hash by extending the option compression function across the two options).
+  (which for the purpose of OSCORE Deterministic Requests would put back into Request-Hash by extending the option compression function across the two options).
 
   Conceptually, they should align well, and the implementation changes are likely limited to how the KDF is run.
 
 * An unprotection failure from a mismatched hash will not be part of the ideally constant-time code paths that otherwise lead to AEAD unprotect failures. Is that a problem?
 
-  After all, it does tell the attacker that they did succeed in producing a valid MAC (it's just not doing it any good, because this key is only used for deterministic requests and thus also needs to pass the Request-Hash check).
+  After all, it does tell the attacker that they did succeed in producing a valid MAC (it's just not doing it any good, because this key is only used for Deterministic Requests and thus also needs to pass the Request-Hash check).
 
 <!--
 MT: This second bullet point seems something that can already be said in the Security Considerations section.
@@ -699,7 +699,7 @@ MT: This second bullet point seems something that can already be said in the Sec
 
 # Unsorted further ideas
 
-* All or none of the deterministic requests should have an inner observe option.
+* All or none of the Deterministic Requests should have an inner observe option.
   Preferably none -- that makes messages shorter, and clients need to ignore that option either way when checking whether a Consensus Request matches their intended request.
 
 <!--
