@@ -476,7 +476,7 @@ The following elaborates on how, compared to Group OSCORE, Deterministic Request
 
      Just like for what concerns the lack of source authentication (see below), the server must verify that the received Deterministic Request (precisely: its handler) is side effect free. The distinct semantics of the CoAP request codes can help the server make that assessment.
 
-   - Consistently with the point above, a server can choose whether it will process a Deterministic Request on a per-resource basis. It is RECOMMENDED that origin servers allow resources to explicitly configure whether Deterministic Requests are appropriate to receive, as still limited to requests that are safe to be processed in the REST sense and do not have state-changing side effects.
+   - Consistently with the point above, a server can choose whether it will process a Deterministic Request on a per-resource basis. It is RECOMMENDED that origin servers allow resources to explicitly configure whether Deterministic Requests are appropriate to receive, as still limited to requests that are safe to be processed in the REST sense, i.e., they do not have state-changing side effects.
 
 * Receiving a response to a Deterministic Request does not mean that the response was generated after the Deterministic Request was sent.
 
