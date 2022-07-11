@@ -680,7 +680,7 @@ When multiple proxies are in use, or the response has expired from the proxy's c
 
 {{I-D.ietf-core-observe-multicast-notifications}} defines how a CoAP server can serve all clients observing a same resource at once, by sending notifications over multicast. The approach supports the possible presence of intermediaries such as proxies, also if Group OSCORE is used to protect notifications end-to-end.
 
-However, comparing the "Example with a Proxy" in {{Section A of I-D.ietf-core-observe-multicast-notifications}} and the "Example with a Proxy and Group OSCORE" in {{Section B of I-D.ietf-core-observe-multicast-notifications}} shows that, when using Group OSCORE, more requests need to hit the server. This is because every client originally protects its Observation request individually, and thus needs a custom response served to obtain the Phantom Request as a Ticket Request.
+However, comparing the "Example with a Proxy" in {{Section E of I-D.ietf-core-observe-multicast-notifications}} and the "Example with a Proxy and Group OSCORE" in {{Section F of I-D.ietf-core-observe-multicast-notifications}} shows that, when using Group OSCORE, more requests need to hit the server. This is because every client originally protects its Observation request individually, and thus needs a custom response served to obtain the Phantom Request as a Ticket Request.
 
 If the clients send their requests as the same Deterministic Request, the server can use these requests as Ticket Requests as well. Thus, there is no need for the server to provide a same Phantom Request to each client.
 
