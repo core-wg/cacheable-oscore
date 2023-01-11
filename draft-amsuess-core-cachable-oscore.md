@@ -27,13 +27,13 @@ author:
 normative:
   I-D.ietf-core-groupcomm-bis:
   I-D.ietf-core-oscore-groupcomm:
-  I-D.ietf-cose-rfc8152bis-struct:
-  I-D.ietf-cose-rfc8152bis-algs:
   RFC2119:
   RFC7252:
   RFC8132:
   RFC8174:
   RFC8613:
+  RFC9052:
+  RFC9053:
   COSE.Algorithms:
     author:
       org: IANA
@@ -44,11 +44,11 @@ normative:
 informative:
   RFC7641:
   RFC9175:
+  RFC9200:
+  RFC9203:
   I-D.ietf-ace-key-groupcomm-oscore:
   I-D.amsuess-lwig-oscore:
   I-D.ietf-core-observe-multicast-notifications:
-  I-D.ietf-ace-oauth-authz:
-  I-D.ietf-ace-oscore-profile:
   "SW-EPIV":
     author:
       -
@@ -120,7 +120,7 @@ When relying on Information-Centric Networking (ICN) for multiparty disseminatio
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{RFC2119}} {{RFC8174}} when, and only when, they appear in all capitals, as shown here.
 
-Readers are expected to be familiar with terms and concepts of CoAP {{RFC7252}} and its method FETCH {{RFC8132}}, group communication for CoAP {{I-D.ietf-core-groupcomm-bis}}, COSE {{I-D.ietf-cose-rfc8152bis-struct}}{{I-D.ietf-cose-rfc8152bis-algs}}, OSCORE {{RFC8613}}, and Group OSCORE {{I-D.ietf-core-oscore-groupcomm}}.
+Readers are expected to be familiar with terms and concepts of CoAP {{RFC7252}} and its method FETCH {{RFC8132}}, group communication for CoAP {{I-D.ietf-core-groupcomm-bis}}, COSE {{RFC9052}}{{RFC9053}}, OSCORE {{RFC8613}}, and Group OSCORE {{I-D.ietf-core-oscore-groupcomm}}.
 
 This document introduces the following new terms.
 
@@ -450,7 +450,7 @@ If a server is member of a CoAP group, and it fails to successfully decrypt and 
 
 # Obtaining Information about the Deterministic Client {#sec-obtaining-info}
 
-This section extends the Joining Process defined in {{I-D.ietf-ace-key-groupcomm-oscore}}, and based on the ACE framework for Authentication and Authorization {{I-D.ietf-ace-oauth-authz}}. Upon joining the OSCORE group, this enables a new group member to obtain from the Group Manager the required information about the Deterministic Client (see {{sssec-use-deterministic-requests-pre-conditions}}).
+This section extends the Joining Process defined in {{I-D.ietf-ace-key-groupcomm-oscore}}, and based on the ACE framework for Authentication and Authorization {{RFC9200}}. Upon joining the OSCORE group, this enables a new group member to obtain from the Group Manager the required information about the Deterministic Client (see {{sssec-use-deterministic-requests-pre-conditions}}).
 
 With reference to the 'key' parameter of the Joining Response defined in {{Section 6.4 of I-D.ietf-ace-key-groupcomm-oscore}}, the Group_OSCORE_Input_Material object specified as its value contains also the two additional parameters 'det_senderId' and 'det_hash_alg'. These are defined in {{ssec-iana-security-context-parameter-registry}} of this document. In particular:
 
@@ -532,7 +532,7 @@ Note that unless other high options are used, this means that padding a message 
 
 ## OSCORE Security Context Parameters Registry {#ssec-iana-security-context-parameter-registry}
 
-IANA is asked to register the following entries in the "OSCORE Security Context Parameters" Registry defined in {{Section 9.4 of I-D.ietf-ace-oscore-profile}}.
+IANA is asked to register the following entries in the "OSCORE Security Context Parameters" Registry defined in {{Section 9.4 of RFC9203}}.
 
 *  Name: det_senderId
 *  CBOR Label: TBD3
@@ -553,6 +553,10 @@ IANA is asked to register the following entries in the "OSCORE Security Context 
 --- back
 
 # Change log
+
+Since -05:
+
+* Updated references.
 
 Since -04:
 
