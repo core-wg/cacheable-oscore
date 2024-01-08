@@ -118,7 +118,7 @@ When relying on intermediaries to fan out the delivery of multicast data protect
 
 When relying on Information-Centric Networking (ICN) for multiparty dissemination of cacheable content, CoAP and CoAP proxies can be used to enable asynchronous group communication. This leverages CoAP proxies performing request aggregation, as well as response replication and cacheability {{ICN-paper}}. By restoring cacheability of OSCORE-protected responses, the Deterministic Requests defined in this document make it possible to attain dissemination of cacheable content in ICN-based deployments, also when the content is protected end-to-end.
 
-When DNS messages are transported over CoAP {{I-D.ietf-core-dns-over-coap}}, it is recommended to use OSCORE for protecting such messages. By restoring cacheability of OSCORE-protected responses, it becomes possible to enable the cache retrieval of such CoAP responses that particularly transport DNS messages.
+When DNS messages are transported over CoAP {{I-D.ietf-core-dns-over-coap}}, it is recommended to use OSCORE for protecting such messages. By restoring cacheability of OSCORE-protected responses, it becomes possible to benefit from the cache retrieval of such CoAP responses that particularly transport DNS messages.
 
 ## Terminology ## {#terminology}
 
