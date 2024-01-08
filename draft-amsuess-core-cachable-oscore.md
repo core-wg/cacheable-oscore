@@ -762,6 +762,755 @@ Also the guidelines in Section 2 suggest to have an inner observe option, regard
 
   Hashes could also be used in truncated form for that.
 
+# Test Vectors
+
+This appendix includes test vectors for an example where the method defined in this document is used.
+
+In the following, a CoAP Client C and a CoAP Server S are member of the same OSCORE group, and exchange Deterministic Requests and corresponding responses.
+
+Note that, while they are consistent with the presented example, the values of the Token and Message ID in the CoAP messages are only indicative, as they are subject to change throughout different message exchanges.
+
+When using the CBOR diagnostic notation or showing a binary serialization, line-breaks are used for readability purposes only.
+
+## Setup
+
+The Group OSCORE Security Context specifies the following parameters.
+
+* AEAD Algorithm: AES-CCM-16-64-128
+
+* HKDF Algorithm: HKDF SHA-256
+
+* Group Encryption Algorithm: AES-CCM-16-64-128
+
+* Signature Algorithm: EdDSA (used with curve Ed25519)
+
+* Pairwise Key Agreement Algorithm: ECDH-SS-HKDF-256 (used with curve X25519)
+
+* Hash algorithm for Deterministic Requests: SHA-256
+
+* Master Secret (16 bytes):
+
+~~~~~~~~~~~
+   0x0102030405060708090a0b0c0d0e0f10
+~~~~~~~~~~~
+
+* Master Salt (8 bytes):
+
+~~~~~~~~~~~
+   0x9e7ca92223786340
+~~~~~~~~~~~
+
+* ID Context (2 bytes):
+
+~~~~~~~~~~~
+   0xdd11
+~~~~~~~~~~~
+
+* Deterministic Client's Sender ID (1 byte):
+
+~~~~~~~~~~~
+   0xdc
+~~~~~~~~~~~
+
+* Client's Sender ID (1 byte):
+
+~~~~~~~~~~~
+   0x25
+~~~~~~~~~~~
+
+* Client's authentication credential as CCS (diagnostic notation):
+
+~~~~~~~~~~~
+   { 1: "coaps://tester1.example.com",
+     2: "myname",
+     3: "coaps://hello1.example.org",
+     4: 1879067471,
+     8: {
+          1: {
+                1: 1,
+                3: -8,
+               -1: 6,
+               -2: h'069e912b83963acc5941b63546867dec
+                     106e5b9051f2ee14f3bc5cc961acd43a'
+             }
+        }
+   }
+~~~~~~~~~~~
+
+* Client's authentication credential as CCS (serialization) (119 bytes):
+
+~~~~~~~~~~~
+   0xa501781b636f6170733a2f2f746573746572312e6578616d706c652e636f
+     6d02666d796e616d6503781a636f6170733a2f2f68656c6c6f312e657861
+     6d706c652e6f7267041a70004b4f08a101a4010103272006215820069e91
+     2b83963acc5941b63546867dec106e5b9051f2ee14f3bc5cc961acd43a
+~~~~~~~~~~~
+
+* Client's private key (32 bytes):
+
+~~~~~~~~~~~
+   0x64714d41a240b61d8d823502717ab088
+     c9f4af6fc9844553e4ad4c42cc735239
+~~~~~~~~~~~
+
+* Server's Sender ID (1 byte):
+
+~~~~~~~~~~~
+   0x52
+~~~~~~~~~~~
+
+* Server's authentication credential as CCS (diagnostic notation):
+
+~~~~~~~~~~~
+   { 1: "coaps://server.example.com",
+     2: "sender",
+     3: "coaps://client.example.org",
+     4: 1879067471,
+     8: {
+          1: {
+                1: 1,
+                3: -8,
+               -1: 6,
+               -2: h'77ec358c1d344e41ee0e87b8383d23a2
+                     099acd39bdf989ce45b52e887463389b'
+             }
+        }
+   }
+~~~~~~~~~~~
+
+* Server's authentication credential as CCS (serialization) (118 bytes):
+
+~~~~~~~~~~~
+   0xa501781a636f6170733a2f2f7365727665722e6578616d706c652e636f6d
+     026673656e64657203781a636f6170733a2f2f636c69656e742e6578616d
+     706c652e6f7267041a70004b4f08a101a401010327200621582077ec358c
+     1d344e41ee0e87b8383d23a2099acd39bdf989ce45b52e887463389b
+~~~~~~~~~~~
+
+* Server's private key (serialization) (32 bytes):
+
+~~~~~~~~~~~
+   0x857eb61d3f6d70a278a36740d132c099
+     f62880ed497e27bdfd4685fa1a304f26
+~~~~~~~~~~~
+
+* Group Manager's authentication credential as CCS (diagnostic notation):
+
+~~~~~~~~~~~
+   { 1: "coaps://mysite.example.com",
+     2: "groupmanager",
+     3: "coaps://domain.example.org",
+     4: 2879067471,
+     8: {
+          1: {
+               1: 1,
+               3: -8,
+              -1: 6,
+              -2: h'cde3efd3bc3f99c9c9ee210415c6cba55
+                    061b5046e963b8a58c9143a61166472'
+            }
+        }
+   }
+~~~~~~~~~~~
+
+* Group Manager's authentication credential as CCS (serialization) (124 bytes):
+
+~~~~~~~~~~~
+   0xa501781a636f6170733a2f2f6d79736974652e6578616d706c652e636f6d
+     026c67726f75706d616e6167657203781a636f6170733a2f2f646f6d6169
+     6e2e6578616d706c652e6f7267041aab9b154f08a101a401010327200621
+     5820cde3efd3bc3f99c9c9ee210415c6cba55061b5046e963b8a58c9143a
+     61166472
+~~~~~~~~~~~
+
+## Deterministic Request \#1 ## {#ssec-test-vectors-det-req-1}
+
+The client generates an unprotected CoAP GET request, which contains only the Uri-Path option with value "helloWorld". The request is Confirmable, with a Token length equal to 8 bytes.
+
+Unprotected CoAP request (23 bytes):
+
+~~~~~~~~~~~
+0x48019483f0aeef1c796812a0ba68656c6c6f576f726c64
+
+0x48 (Version: 1, Type: CON, Token Length: 8 - 1 byte)
+  01 (Code: GET - 1 byte)
+  9483 (Message ID - 2 bytes)
+  f0aeef1c796812a0 (Token - 8 bytes)
+  ba 68656c6c6f576f726c64 (Uri-path:"helloWord" - 11 bytes)
+~~~~~~~~~~~
+
+The client protects the CoAP request above to produce a Deterministic Request. When doing so, the client does not include an inner Observe option.
+
+&nbsp;
+
+The following information is used to compute the Request-Hash value.
+
+* Deterministic Client's Sender Key (16 bytes):
+
+~~~~~~~~~~~
+   0x761c3081b8d8329790a8b321b3b4c3a4
+~~~~~~~~~~~
+
+* aad_array (diagnostic notation):
+
+~~~~~~~~~~~
+   [1,
+    [10, 10, -8, -27],
+    h'dc',
+    h'00',
+    h'',
+    h'dd11',
+    h'190002dd11dc',
+    h'',
+    h'a501781a636f6170733a2f2f6d79736974652e6578616d706c652e636f6d
+      026c67726f75706d616e6167657203781a636f6170733a2f2f646f6d6169
+      6e2e6578616d706c652e6f7267041aab9b154f08a101a401010327200621
+      5820cde3efd3bc3f99c9c9ee210415c6cba55061b5046e963b8a58c9143a
+      61166472'
+   ]
+~~~~~~~~~~~
+
+* aad_array (serialization) (150 bytes):
+
+~~~~~~~~~~~
+   0x8901840a0a27381a41dc41004042dd1146190002dd11dc40587ca501781a
+     636f6170733a2f2f6d79736974652e6578616d706c652e636f6d026c6772
+     6f75706d616e6167657203781a636f6170733a2f2f646f6d61696e2e6578
+     616d706c652e6f7267041aab9b154f08a101a4010103272006215820cde3
+     efd3bc3f99c9c9ee210415c6cba55061b5046e963b8a58c9143a61166472
+~~~~~~~~~~~
+
+* Plaintext (12 bytes):
+
+~~~~~~~~~~~
+   0x01ba68656c6c6f576f726c64
+~~~~~~~~~~~
+
+* Request-Hash value (32 bytes):
+
+~~~~~~~~~~~
+   0x404b3a7c9f8c878a0b5246cca71e3926
+     f0a8cebefdcabbc80e79579d5a1ee17d
+~~~~~~~~~~~
+
+&nbsp;
+
+The following information is used to produce the protected Deterministic Request.
+
+* Partial IV (1 byte):
+
+~~~~~~~~~~~
+   0x00
+~~~~~~~~~~~
+
+* kid (1 byte):
+
+~~~~~~~~~~~
+   0xdc
+~~~~~~~~~~~
+
+* kid context (2 bytes):
+
+~~~~~~~~~~~
+   0xdd11
+~~~~~~~~~~~
+
+* AAD (serialization) (163 bytes):
+
+~~~~~~~~~~~
+    0x8368456e6372797074304058968901840a0a27381a41dc41004042dd114619
+      0002dd11dc40587ca501781a636f6170733a2f2f6d79736974652e6578616d
+      706c652e636f6d026c67726f75706d616e6167657203781a636f6170733a2f
+      2f646f6d61696e2e6578616d706c652e6f7267041aab9b154f08a101a40101
+      03272006215820cde3efd3bc3f99c9c9ee210415c6cba55061b5046e963b8a
+      58c9143a61166472
+~~~~~~~~~~~
+
+* Plaintext (12 bytes):
+
+~~~~~~~~~~~
+   0x01ba68656c6c6f576f726c64
+~~~~~~~~~~~
+
+* Encryption Key (16 bytes):
+
+~~~~~~~~~~~
+   0x5d4671f0d12d27a59dec68c2e2ebcc88
+~~~~~~~~~~~
+
+* Nonce (13 bytes):
+
+~~~~~~~~~~~
+   0x46eb80969ab7389b084dd6f996
+~~~~~~~~~~~
+
+&nbsp;
+
+From the previous parameter, the following is derived:
+
+* OSCORE option value (6 bytes):
+
+~~~~~~~~~~~
+   0x190002dd11dc
+~~~~~~~~~~~
+
+* Request-Hash option value (32 bytes):
+
+~~~~~~~~~~~
+   0x404b3a7c9f8c878a0b5246cca71e3926
+     f0a8cebefdcabbc80e79579d5a1ee17d
+~~~~~~~~~~~
+
+* Ciphertext (20 bytes):
+
+~~~~~~~~~~~
+   0x65bcd5d5edf413497bfdeec8975e2acafa702b45
+~~~~~~~~~~~
+
+From there, the protected CoAP request as Deterministic Request (76 bytes):
+
+~~~~~~~~~~~
+0x48059483f0aeef1c796812a096190002dd11dced010e13404b3a7c9f8c878a
+  0b5246cca71e3926f0a8cebefdcabbc80e79579d5a1ee17dff65bcd5d5edf4
+  13497bfdeec8975e2acafa702b45
+
+0x48 (version:1, type: CON, Token Length: 8 - 1 byte)
+  05 (Code: FETCH - 1 byte)
+  9483 (Message ID - 2 bytes)
+  f0aeef1c796812a0 (Token - 8 bytes)
+  96 190002dd11dc (OSCORE option - 7 bytes)
+  ed 010e 13 404b3a7c9f8c878a0b5246cca71e3926f0a8cebefdcabbc8
+             0e79579d5a1ee17d (Request-Hash option - 36 bytes)
+  ff (payload marker - 1 byte)
+  65bcd5d5edf413497bfdeec8975e2acafa702b45 (payload - 20 bytes)
+~~~~~~~~~~~
+
+## Response to Deterministic Request \#1
+
+The server responds to the first request with an ACK message, to which a 2.05 (Content) response indicating a Max-Age of 3600 seconds is piggybacked. The payload of the response is the ASCII-encoded string ". ID: 42".
+
+Unprotected CoAP response (61 bytes):
+
+~~~~~~~~~~~
+0x68459483f0aeef1c796812a0d2010e10ed010913404b3a7c9f8c878a0b5246
+  cca71e3926f0a8cebefdcabbc80e79579d5a1ee17dff2e2049443a203432
+
+0x68 (version: 1, type: ACK, Token Length: 8 - 1 byte)
+  45 (Code: 2.05 - 1 byte)
+  9483 (Message ID - 2 bytes)
+  f0aeef1c796812a0 (Token - 8 bytes)
+  d2 01 0e10 (Max-Age:3600 - 4 bytes)
+  ed 0109 13 404b3a7c9f8c878a0b5246cca71e3926f0a8cebefdcabbc8
+             0e79579d5a1ee17d (Request-Hash - 36 bytes)
+  ff (payload marker - 1 byte)
+  2e2049443a203432 (payload - 8 bytes)
+~~~~~~~~~~~
+
+The server protects the CoAP response above as follows. When doing so, the server: does not include an inner Observe option; includes its own Sender ID in the 'kid' of the OSCORE option; elides the Request-Hash option from the response.
+
+&nbsp;
+
+The following information is used to protect the response.
+
+* Partial IV (1 byte):
+
+~~~~~~~~~~~
+   0x00
+~~~~~~~~~~~
+
+* kid (1 byte):
+
+~~~~~~~~~~~
+   0x52
+~~~~~~~~~~~
+
+* kid context (2 bytes):
+
+~~~~~~~~~~~
+   0xdd11
+~~~~~~~~~~~
+
+* aad_array (diagnostic notation):
+
+~~~~~~~~~~~
+   [1,
+    [10, 10, -8, -27],
+    h'dc',
+    h'00',
+    h'ed011713404b3a7c9f8c878a0b5246cca71e3926f0a8cebefdcabbc80e79
+      579d5a1ee17d',
+    h'dd11',
+    h'290052',
+    h'a501781a636f6170733a2f2f7365727665722e6578616d706c652e636f6d
+      026673656e64657203781a636f6170733a2f2f636c69656e742e6578616d
+      706c652e6f7267041a70004b4f08a101a401010327200621582077ec358c
+      1d344e41ee0e87b8383d23a2099acd39bdf989ce45b52e887463389b',
+    h'a501781a636f6170733a2f2f6d79736974652e6578616d706c652e636f6d
+      026c67726f75706d616e6167657203781a636f6170733a2f2f646f6d6169
+      6e2e6578616d706c652e6f7267041aab9b154f08a101a401010327200621
+      5820cde3efd3bc3f99c9c9ee210415c6cba55061b5046e963b8a58c9143a
+      61166472'
+   ]
+~~~~~~~~~~~
+
+* aad_array (serialization) (303 bytes):
+
+~~~~~~~~~~~
+   0x8901840a0a27381a41dc41005824ed011713404b3a7c9f8c878a0b5246cc
+     a71e3926f0a8cebefdcabbc80e79579d5a1ee17d42dd11432900525876a5
+     01781a636f6170733a2f2f7365727665722e6578616d706c652e636f6d02
+     6673656e64657203781a636f6170733a2f2f636c69656e742e6578616d70
+     6c652e6f7267041a70004b4f08a101a401010327200621582077ec358c1d
+     344e41ee0e87b8383d23a2099acd39bdf989ce45b52e887463389b587ca5
+     01781a636f6170733a2f2f6d79736974652e6578616d706c652e636f6d02
+     6c67726f75706d616e6167657203781a636f6170733a2f2f646f6d61696e
+     2e6578616d706c652e6f7267041aab9b154f08a101a40101032720062158
+     20cde3efd3bc3f99c9c9ee210415c6cba55061b5046e963b8a58c9143a61
+     166472
+~~~~~~~~~~~
+
+* AAD (serialization) (317 bytes):
+
+~~~~~~~~~~~
+   0x8368456e6372797074304059012f8901840a0a27381a41dc41005824ed01
+     1713404b3a7c9f8c878a0b5246cca71e3926f0a8cebefdcabbc80e79579d
+     5a1ee17d42dd11432900525876a501781a636f6170733a2f2f7365727665
+     722e6578616d706c652e636f6d026673656e64657203781a636f6170733a
+     2f2f636c69656e742e6578616d706c652e6f7267041a70004b4f08a101a4
+     01010327200621582077ec358c1d344e41ee0e87b8383d23a2099acd39bd
+     f989ce45b52e887463389b587ca501781a636f6170733a2f2f6d79736974
+     652e6578616d706c652e636f6d026c67726f75706d616e6167657203781a
+     636f6170733a2f2f646f6d61696e2e6578616d706c652e6f7267041aab9b
+     154f08a101a4010103272006215820cde3efd3bc3f99c9c9ee210415c6cb
+     a55061b5046e963b8a58c9143a61166472
+~~~~~~~~~~~
+
+* Plaintext (14 bytes):
+
+~~~~~~~~~~~
+   0x45d2010e10ff2e2049443a203432
+~~~~~~~~~~~
+
+* Encryption Key (16 bytes):
+
+~~~~~~~~~~~
+   0xa8c8b7db5d05cfc7faa2bb1afaca6c2f
+~~~~~~~~~~~
+
+* Nonce (13 bytes):
+
+~~~~~~~~~~~
+   0x46eb80969ab73815084dd6f996
+~~~~~~~~~~~
+
+&nbsp;
+
+From the previous parameter, the following is derived:
+
+* OSCORE option value (3 bytes):
+
+~~~~~~~~~~~
+   0x290052
+~~~~~~~~~~~
+
+* Request-Hash option value (32 bytes):
+
+~~~~~~~~~~~
+   0x404b3a7c9f8c878a0b5246cca71e3926
+     f0a8cebefdcabbc80e79579d5a1ee17d
+~~~~~~~~~~~
+
+* Ciphertext (22 bytes):
+
+~~~~~~~~~~~
+   0xcbc7356c84c10b626fef8bd57ed2dfaeec175f8e44e1
+~~~~~~~~~~~
+
+* Plain signature (64 bytes):
+
+~~~~~~~~~~~
+   0x44879f32ab6e8533fd89dedada6e104d10d88ea42fa6d0
+     c8e7ccb21e0088e0226ef98405a84f13525a22fd7cf327
+     9f3b1cee59af3f45e96d38c48f38a0217405
+~~~~~~~~~~~
+
+* Signature Encryption Key (16 bytes):
+
+~~~~~~~~~~~
+   0x85ca7c0bc5b8ea2e267b203dc3b71ce6
+~~~~~~~~~~~
+
+* Signature Keystream (64 bytes):
+
+~~~~~~~~~~~
+   0xf6161f5ea4d6375819924cbcac00f45a469c517f0a435d
+     e590b7a242064d5afc092fa2290b480166701088a1c4ad
+     06d3e933a3f21a39b3204f7159b977193ce8
+~~~~~~~~~~~
+
+* Encrypted Signature (64 bytes):
+
+~~~~~~~~~~~
+   0xb291806c0fb8b26be41b9266766ee4175644dfdb25e58d
+     2d777b105c06c5bade67d6262ca30712342a3275dd378a
+     99e8f5ddfa5d257c5a4d77b5d681d73848ed
+~~~~~~~~~~~
+
+&nbsp;
+
+From there, the protected CoAP response (106 bytes):
+
+~~~~~~~~~~~
+0x68459483f0aeef1c796812a093290052520e10ffcbc7356c84c10b626fef8b
+  d57ed2dfaeec175f8e44e1b291806c0fb8b26be41b9266766ee4175644dfdb
+  25e58d2d777b105c06c5bade67d6262ca30712342a3275dd378a99e8f5ddfa
+  5d257c5a4d77b5d681d73848ed
+
+0x68 (version:1, type: ACK, Token Length: 8 - 1 byte)
+  45 (Code: 2.05 - 1 byte)
+  9483 (Message ID - 2 bytes)
+  f0aeef1c796812a0 (Token - 8 bytes)
+  93 290052 (OSCORE option - 4 bytes)
+  52 0e10 (Max age option - 3 bytes)
+  ff (payload marker - 1 byte)
+  cbc7356c84c10b626fef8bd57ed2dfaeec175f8e44e1b29180
+    6c0fb8b26be41b9266766ee4175644dfdb25e58d2d777b10
+    5c06c5bade67d6262ca30712342a3275dd378a99e8f5ddfa
+    5d257c5a4d77b5d681d73848ed (payload - 86 bytes)
+~~~~~~~~~~~
+
+## Deterministic Request \#2
+
+This second unprotected CoAP request is like the first one shown in {{ssec-test-vectors-det-req-1}}, except for Token and Message ID.
+
+Unprotected CoAP request (23 bytes):
+
+~~~~~~~~~~~
+0x4801948428a1a5dc286ee601ba68656c6c6f576f726c64
+
+0x48 (version: 1, type: CON, Token Length: 8 - 1 byte)
+  01 (Code: GET - 1 byte)
+  9484 (Message ID - 2 bytes)
+  28a1a5dc286ee601 (Token - 8 bytes)
+  ba 68656c6c6f576f726c64 (Uri-path:"helloWord" - 11 bytes)
+~~~~~~~~~~~
+
+&nbsp;
+
+The client protects the CoAP request above to produce a Deterministic Request like done for the first CoAP request in in {{ssec-test-vectors-det-req-1}}, and thus using the same information.
+
+From there, the protected CoAP request as Deterministic Request (76 bytes):
+
+~~~~~~~~~~~
+0x4805948428a1a5dc286ee60196190002dd11dced010e13404b3a7c9f8c878a
+  0b5246cca71e3926f0a8cebefdcabbc80e79579d5a1ee17dff65bcd5d5edf4
+  13497bfdeec8975e2acafa702b45
+
+0x48 (version: 1, type: CON, Token Length: 8 - 1 byte)
+  05 (Code: FETCH - 1 byte)
+  9484 (Message ID - 2 bytes)
+  28a1a5dc286ee601 (Token - 8 bytes)
+  96 190002dd11dc (OSCORE option - 7 bytes)
+  ed 010e 13 404b3a7c9f8c878a0b5246cca71e3926f0a8cebefdcabbc8
+             0e79579d5a1ee17d (Request-Hash option - 36 bytes)
+  ff (payload marker - 1 byte)
+  65bcd5d5edf413497bfdeec8975e2acafa702b45 (payload - 20 bytes)
+~~~~~~~~~~~
+
+## Response to Deterministic Request \#2
+
+The server responds to the second request with an ACK message, to which a 2.05 (Content) response indicating a Max-Age of 3600 seconds is piggybacked. The payload of the response is the ASCII-encoded string ". ID: 42".
+
+Unprotected CoAP response (61 bytes):
+
+~~~~~~~~~~~
+0x68459483f0aeef1c796812a0d2010e10ed010913404b3a7c9f8c878a0b5246
+  cca71e3926f0a8cebefdcabbc80e79579d5a1ee17dff2e2049443a203432
+
+0x68 (version: 1, type: ACK, Token Length: 8 - 1 byte)
+  45 (Code: 2.05 - 1 byte)
+  9483 (Message ID - 2 bytes)
+  f0aeef1c796812a0 (Token - 8 bytes)
+  d2 01 0e10 (Max-Age:3600 - 4 bytes)
+  ed 0109 13 404b3a7c9f8c878a0b5246cca71e3926f0a8cebefdcabbc8
+             0e79579d5a1ee17d (Request-Hash - 36 bytes)
+  ff (payload marker - 1 byte)
+  2e2049443a203432 (payload - 8 bytes)
+~~~~~~~~~~~
+
+The server protects the CoAP response above as follows. When doing so, the server: does not include an inner Observe option; includes its own Sender ID in the 'kid' of the OSCORE option; elides the Request-Hash option from the response.
+
+&nbsp;
+
+The following information is used to protect the response.
+
+* Partial IV:
+
+~~~~~~~~~~~
+   0x01 (1 byte)
+~~~~~~~~~~~
+
+* kid:
+
+~~~~~~~~~~~
+   0x52 (1 byte)
+~~~~~~~~~~~
+
+* kid context:
+
+~~~~~~~~~~~
+   0xdd11 (2 bytes)
+~~~~~~~~~~~
+
+* aad_array (diagnostic notation):
+
+~~~~~~~~~~~
+   [1,
+    [10, 10, -8, -27],
+    h'dc',
+    h'00',
+    h'ed011713404b3a7c9f8c878a0b5246cca71e3926f0a8cebefdcabbc80e79
+      579d5a1ee17d',
+    h'dd11',
+    h'290052',
+    h'a501781a636f6170733a2f2f7365727665722e6578616d706c652e636f6d
+      026673656e64657203781a636f6170733a2f2f636c69656e742e6578616d
+      706c652e6f7267041a70004b4f08a101a401010327200621582077ec358c
+      1d344e41ee0e87b8383d23a2099acd39bdf989ce45b52e887463389b',
+    h'a501781a636f6170733a2f2f6d79736974652e6578616d706c652e636f6d
+      026c67726f75706d616e6167657203781a636f6170733a2f2f646f6d6169
+      6e2e6578616d706c652e6f7267041aab9b154f08a101a401010327200621
+      5820cde3efd3bc3f99c9c9ee210415c6cba55061b5046e963b8a58c9143a
+      61166472'
+   ]
+~~~~~~~~~~~
+
+* aad_array (serialization) (303 bytes):
+
+~~~~~~~~~~~
+   0x8901840a0a27381a41dc41005824ed011713404b3a7c9f8c878a0b5246cc
+     a71e3926f0a8cebefdcabbc80e79579d5a1ee17d42dd11432901525876a5
+     01781a636f6170733a2f2f7365727665722e6578616d706c652e636f6d02
+     6673656e64657203781a636f6170733a2f2f636c69656e742e6578616d70
+     6c652e6f7267041a70004b4f08a101a401010327200621582077ec358c1d
+     344e41ee0e87b8383d23a2099acd39bdf989ce45b52e887463389b587ca5
+     01781a636f6170733a2f2f6d79736974652e6578616d706c652e636f6d02
+     6c67726f75706d616e6167657203781a636f6170733a2f2f646f6d61696e
+     2e6578616d706c652e6f7267041aab9b154f08a101a40101032720062158
+     20cde3efd3bc3f99c9c9ee210415c6cba55061b5046e963b8a58c9143a61
+     166472
+~~~~~~~~~~~
+
+* AAD (serialization) (317 bytes):
+
+~~~~~~~~~~~
+   0x8368456e6372797074304059012f8901840a0a27381a41dc41005824ed01
+     1713404b3a7c9f8c878a0b5246cca71e3926f0a8cebefdcabbc80e79579d
+     5a1ee17d42dd11432901525876a501781a636f6170733a2f2f7365727665
+     722e6578616d706c652e636f6d026673656e64657203781a636f6170733a
+     2f2f636c69656e742e6578616d706c652e6f7267041a70004b4f08a101a4
+     01010327200621582077ec358c1d344e41ee0e87b8383d23a2099acd39bd
+     f989ce45b52e887463389b587ca501781a636f6170733a2f2f6d79736974
+     652e6578616d706c652e636f6d026c67726f75706d616e6167657203781a
+     636f6170733a2f2f646f6d61696e2e6578616d706c652e6f7267041aab9b
+     154f08a101a4010103272006215820cde3efd3bc3f99c9c9ee210415c6cb
+     a55061b5046e963b8a58c9143a61166472
+~~~~~~~~~~~
+
+* Plaintext (14 bytes):
+
+~~~~~~~~~~~
+   0x45d2010e10ff2e2049443a203432
+~~~~~~~~~~~
+
+* Encryption Key (16 bytes):
+
+~~~~~~~~~~~
+   0xa8c8b7db5d05cfc7faa2bb1afaca6c2f
+~~~~~~~~~~~
+
+* Nonce (13 bytes):
+
+~~~~~~~~~~~
+   0x46eb80969ab73815084dd6f997
+~~~~~~~~~~~
+
+&nbsp;
+
+From the previous parameter, the following is derived:
+
+* OSCORE option value (3 bytes):
+
+~~~~~~~~~~~
+   0x290152
+~~~~~~~~~~~
+
+* Request-Hash option value (32 bytes):
+
+~~~~~~~~~~~
+   0x404b3a7c9f8c878a0b5246cca71e3926
+     f0a8cebefdcabbc80e79579d5a1ee17d
+~~~~~~~~~~~
+
+* Ciphertext (22 bytes):
+
+~~~~~~~~~~~
+   0x998f7baca13fff25406b3ddbf5e5585f74d31855003d
+~~~~~~~~~~~
+
+* Plain signature (64 bytes):
+
+~~~~~~~~~~~
+   0x5c275a02c97d19dac174f476511c79a8f69a2e4329a305
+     dc98cc65b4d1cc2995a8876aec014b0dfa39b3cce0293e
+     4b6563daac7f38545f53420d9cbab68a630b
+~~~~~~~~~~~
+
+* Signature Encryption Key (16 bytes):
+
+~~~~~~~~~~~
+   0x85ca7c0bc5b8ea2e267b203dc3b71ce6
+~~~~~~~~~~~
+
+* Signature Keystream (64 bytes):
+
+~~~~~~~~~~~
+   0x7a5f288775731f2d23301acb98fa214cb8b153453962d9
+     5a551f6ae28182607047edf722babdb18e1f7861296c22
+     8529ce6e6aaca622f7c903d21e7fe03cceae
+~~~~~~~~~~~
+
+* Encrypted Signature (64 bytes):
+
+~~~~~~~~~~~
+   0x26787285bc0e06f7e244eebdc9e658e44e2b7d0610c1dc
+     86cdd30f56504e49e5ef6a9dcebbf6bc7426cbadc9451c
+     ce4cadb4c6d39e76a89a41df82c556b6ada5
+~~~~~~~~~~~
+
+&nbsp;
+
+From there, the protected CoAP response (106 bytes):
+
+~~~~~~~~~~~
+0x6845948428a1a5dc286ee60193290152520e10ff998f7baca13fff25406b3d
+  dbf5e5585f74d31855003d26787285bc0e06f7e244eebdc9e658e44e2b7d06
+  10c1dc86cdd30f56504e49e5ef6a9dcebbf6bc7426cbadc9451cce4cadb4c6
+  d39e76a89a41df82c556b6ada5
+
+0x68 (version:1, type: ACK, Token Length: 8 - 1 byte)
+  45 (Code: 2.05 - 1 byte)
+  9484 (Message ID - 2 bytes)
+  28a1a5dc286ee601 (Token - 8 bytes)
+  93 290152 (OSCORE option - 4 bytes)
+  52 0e10 (Max age option - 3 bytes)
+  ff (payload marker - 1 byte)
+  998f7baca13fff25406b3ddbf5e5585f74d31855003d267872
+    85bc0e06f7e244eebdc9e658e44e2b7d0610c1dc86cdd30f
+    56504e49e5ef6a9dcebbf6bc7426cbadc9451cce4cadb4c6
+    d39e76a89a41df82c556b6ada5 (payload - 86 bytes)
+~~~~~~~~~~~
+
 # Acknowledgments # {#acknowldegment}
 {: numbered="no"}
 
