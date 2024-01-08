@@ -458,13 +458,15 @@ If a server is member of a CoAP group, and it fails to successfully decrypt and 
 
 This section extends the Joining Process defined in {{I-D.ietf-ace-key-groupcomm-oscore}}, and based on the ACE framework for Authentication and Authorization {{RFC9200}}. Upon joining the OSCORE group, this enables a new group member to obtain from the Group Manager the required information about the Deterministic Client (see {{sssec-use-deterministic-requests-pre-conditions}}).
 
-With reference to the 'key' parameter of the Join Response defined in {{Section 6.3 of I-D.ietf-ace-key-groupcomm-oscore}}, the Group_OSCORE_Input_Material object specified as its value contains also the two additional parameters 'det_senderId' and 'det_hash_alg'. These are defined in {{ssec-iana-security-context-parameter-registry}} of this document. In particular:
+With reference to the 'key' parameter included in the Join Response defined in {{Section 6.3 of I-D.ietf-ace-key-groupcomm-oscore}}, the Group_OSCORE_Input_Material object specified as its value contains also the two additional parameters 'det_senderId' and 'det_hash_alg'. These are defined in {{ssec-iana-security-context-parameter-registry}} of this document. In particular:
 
 * The 'det_senderId' parameter, if present, has as value the OSCORE Sender ID assigned to the Deterministic Client by the Group Manager. This parameter MUST be present if the OSCORE group uses Deterministic Requests as defined in this document. Otherwise, this parameter MUST NOT be present.
 
 * The 'det_hash_alg' parameter, if present, has as value the hash algorithm to use for computing the hash of a plain CoAP request, when producing the associated Deterministic Request. This parameter takes values from the "Value" column of the "COSE Algorithms" Registry {{COSE.Algorithms}}. This parameter MUST be present if the OSCORE group uses Deterministic Requests as defined in this document. Otherwise, this parameter MUST NOT be present.
 
-The same extension above applies also to the 'key' parameter when included in a Key Distribution Response (see {{Sections 9.1.1 and 9.1.2 of I-D.ietf-ace-key-groupcomm-oscore}}) and in a Signature Verification Data Response (see {{Section 9.6 of I-D.ietf-ace-key-groupcomm-oscore}}).
+The same extension above applies also to the 'key' parameter included in a Key Distribution Response (see {{Sections 9.1.1 and 9.1.2 of I-D.ietf-ace-key-groupcomm-oscore}}).
+
+With reference to the 'key' parameter included in a Signature Verification Data Response defined in {{Section 9.6 of I-D.ietf-ace-key-groupcomm-oscore}}, the Group_OSCORE_Input_Material object specified as its value contains also the 'det_senderId' parameter defined above.
 
 # Security Considerations # {#sec-security-considerations}
 
@@ -569,6 +571,8 @@ Since -07:
 * Added DNS over CoAP as possible use case.
 
 * Corrected parameter name 'sender_cred'.
+
+* Simplified parameter provisioning to the external signature verifier.
 
 Since -06:
 
