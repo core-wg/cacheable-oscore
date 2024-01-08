@@ -324,7 +324,7 @@ In order to build a Deterministic Request, the client protects the plain CoAP re
 
    When preparing the external_aad, the element 'sender_cred' in the aad_array takes the empty CBOR byte string.
 
-2. The client uses the hash function indicated for the Deterministic Client, and computes a hash H over the following input: the Sender Key of the Deterministic Client, concatenated with the external_aad from step 1, concatenated with the COSE plaintext.
+2. The client uses the hash function indicated for the Deterministic Client, and computes a hash H over the following input: the Sender Key of the Deterministic Client, concatenated with the binary serialization of the aad_array from step 1, concatenated with the COSE plaintext.
 
    Note that the payload of the plain CoAP request (if any) is not self-delimiting, and thus hash functions are limited to non-malleable ones.
 
@@ -569,6 +569,8 @@ Since -07:
 * Use of "Consensus Request" instead of "Deterministic Request" in one sentence.
 
 * Added DNS over CoAP as possible use case.
+
+* The computation of the Request Hash takes as input the aad_array (i.e., not the external_aad).
 
 * Corrected parameter name 'sender_cred'.
 
