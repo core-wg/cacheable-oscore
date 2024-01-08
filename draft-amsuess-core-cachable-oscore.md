@@ -48,6 +48,7 @@ informative:
   I-D.ietf-ace-key-groupcomm-oscore:
   I-D.amsuess-lwig-oscore:
   I-D.ietf-core-observe-multicast-notifications:
+  I-D.ietf-core-dns-over-coap:
   "SW-EPIV":
     author:
       -
@@ -116,6 +117,8 @@ When firmware updates are delivered using CoAP, many similar devices fetch the s
 When relying on intermediaries to fan out the delivery of multicast data protected end-to-end as in {{I-D.ietf-core-observe-multicast-notifications}}, the use of protected Deterministic Requests as defined in this document allows for a more efficient setup, by reducing the amount of message exchanges and enabling early population of cache entries (see {{det-requests-for-notif}}).
 
 When relying on Information-Centric Networking (ICN) for multiparty dissemination of cacheable content, CoAP and CoAP proxies can be used to enable asynchronous group communication. This leverages CoAP proxies performing request aggregation, as well as response replication and cacheability {{ICN-paper}}. By restoring cacheability of OSCORE-protected responses, the Deterministic Requests defined in this document make it possible to attain dissemination of cacheable content in ICN-based deployments, also when the content is protected end-to-end.
+
+When DNS messages are transported over CoAP {{I-D.ietf-core-dns-over-coap}}, it is recommended to use OSCORE for protecting such messages. By restoring cacheability of OSCORE-protected responses, it becomes possible to enable the cache retrieval of such CoAP responses that particularly transport DNS messages.
 
 ## Terminology ## {#terminology}
 
@@ -562,6 +565,8 @@ IANA is asked to register the following entries in the "OSCORE Security Context 
 Since -07:
 
 * Use of "Consensus Request" instead of "Deterministic Request" in one sentence.
+
+* Added DNS over CoAP as possible use case.
 
 Since -06:
 
