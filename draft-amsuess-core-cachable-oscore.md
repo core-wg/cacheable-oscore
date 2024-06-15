@@ -2,13 +2,17 @@
 v: 3
 
 title: "Cacheable OSCORE"
+abbrev: "Cacheable OSCORE"
 docname: draft-amsuess-core-cachable-oscore-latest
 ipr: trust200902
-stand_alone: true
+
 cat: std
 submissiontype: IETF
 wg: CoRE Working Group
 kw: CoAP, OSCORE, multicast, caching, proxy
+
+coding: utf-8
+
 author:
 - ins: C. Amsüss
   name: Christian Amsüss
@@ -27,10 +31,8 @@ author:
 normative:
   I-D.ietf-core-groupcomm-bis:
   I-D.ietf-core-oscore-groupcomm:
-  RFC2119:
   RFC7252:
   RFC8132:
-  RFC8174:
   RFC8613:
   RFC9052:
   RFC9053:
@@ -122,7 +124,7 @@ When DNS messages are transported over CoAP {{I-D.ietf-core-dns-over-coap}}, it 
 
 ## Terminology ## {#terminology}
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{RFC2119}} {{RFC8174}} when, and only when, they appear in all capitals, as shown here.
+{::boilerplate bcp14-tagged}
 
 Readers are expected to be familiar with terms and concepts of CoAP {{RFC7252}} and its method FETCH {{RFC8132}}, group communication for CoAP {{I-D.ietf-core-groupcomm-bis}}, COSE {{RFC9052}}{{RFC9053}}, OSCORE {{RFC8613}}, and Group OSCORE {{I-D.ietf-core-oscore-groupcomm}}.
 
@@ -763,7 +765,7 @@ Also the guidelines in Section 2 suggest to have an inner observe option, regard
   Hashes could also be used in truncated form for that.
 
 # Acknowledgments # {#acknowldegment}
-{: numbered="no"}
+{:numbered="false"}
 
 The authors sincerely thank {{{Michael Richardson}}}, {{{Jim Schaad}}}, and {{{Göran Selander}}} for their comments and feedback.
 
