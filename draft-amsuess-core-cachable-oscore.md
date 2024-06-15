@@ -272,7 +272,7 @@ The Request-Hash option is identical in all its properties to the Request-Tag op
   equal to the request's Request-Hash option.
   The response is only valid if the value of its Request-Hash option is equal to the value of the Request-Hash option in the corresponding request.
 
-  Servers (including proxies) thus generally SHOULD NOT need to include the Request-Hash option explicitly in responses,
+  Servers (including proxies) thus generally should not need to include the Request-Hash option explicitly in responses,
   especially as a matter of bandwidth efficiency.
 
   A reason (and, currently, the only known) to actually include a Request-Hash option in a response
