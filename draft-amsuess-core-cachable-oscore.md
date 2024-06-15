@@ -557,6 +557,12 @@ IANA is asked to register the following entries in the "OSCORE Security Context 
 
 # Change log
 
+Since -08:
+
+* The Request-Hash option is not repeatable.
+
+* Clarifications and editorial improvements.
+
 Since -07:
 
 * Use of "Consensus Request" instead of "Deterministic Request" in one sentence.
