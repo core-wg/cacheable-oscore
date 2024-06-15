@@ -255,16 +255,11 @@ As a consequence, the proposed method takes the opposite approach, by considerin
 
 In order to transport the hash of the plain CoAP request, a new CoAP option is defined, which MUST be supported by clients and servers that support Deterministic Requests.
 
-The option is called Request-Hash. As summarized in {{request-hash-table}}, the Request-Hash option is elective, safe to forward, part of the cache key, and repeatable.
+The option is called Request-Hash and its properties are summarized in {{request-hash-table}}, which extends Table 4 of {{RFC7252}}. The option is Elective, Safe-to-Forward, part of the Cache-Key, and repeatable.
 
-~~~
-+------+---+---+---+---+--------------+--------+--------+---------+
-| No.  | C | U | N | R |     Name     | Format | Length | Default |
-+------+---+---+---+---+--------------+--------+--------+---------+
+| No.  | C | U | N | R | Name         | Format | Length | Default |
 | TBD1 |   |   |   | x | Request-Hash | opaque | any    | (none)  |
-+------+---+---+---+---+--------------+--------+--------+---------+
-~~~
-{: #request-hash-table title="Request-Hash Option" artwork-align="center"}
+{: #request-hash-table title="The Request-Hash Option (C=Critical, U=Unsafe, N=NoCacheKey, R=Repeatable)" align="center"}
 
 The Request-Hash option is identical in all its properties to the Request-Tag option defined in {{RFC9175}}, with the following exceptions:
 
@@ -519,16 +514,10 @@ This document has the following actions for IANA.
 
 IANA is asked to enter the following option numbers to the "CoAP Option Numbers" registry within the "Constrained RESTful Environments (CoRE) Parameters" registry group.
 
-~~~~~~~~~~~
-+--------+--------------+------------+
-| Number | Name         | Reference  |
-+--------+--------------+------------+
-|  TBD1  | Request-Hash | [RFC-XXXX] |
-+--------+--------------+------------+
-|  TBD2  | Padding      | [RFC-XXXX] |
-+--------+--------------+------------+
-~~~~~~~~~~~
-{: title="CoAP Option Numbers" artwork-align="center"}
+| Number | Name         | Reference                                |
+| TBD1   | Request-Hash | {{&SELF}} ({{ssec-request-hash-option}}) |
+| TBD2   | Padding      | {{&SELF}} ({{ssec-padding-option}})      |
+{: #iana-coap-option-numbers-table title="Registrations in the CoAP Option Numbers Registry" align="center"}
 
 \[
 
@@ -651,21 +640,15 @@ The option can be used with any CoAP transport, but is especially useful with OS
 
 Before choosing to pad a message by using the Padding option, application designers should consider whether they can arrange for common message variants to have the same length by picking a suitable content representation; the canonical example here is expressing "yes" and "no" with "y" and "n", respectively.
 
-## Definition of the Padding Option
+## Definition of the Padding Option ## {#ssec-padding-option}
 
-As summarized in {{padding-table}}, the Padding option is elective, safe to forward and not part of the cache key; these follow from the usage instructions. The option may be repeated, as that may be the only way to achieve a certain total length for the padded message.
+The option is called Padding and its properties are summarized in {{padding-table}}, which extends Table 4 of {{RFC7252}}. The option is Elective, Safe-to-Forward, not part of the Cache-Key, and repeatable. The option may be repeated, as that may be the only way to achieve a certain total length for the padded message.
 
-~~~
-+------+---+---+---+---+---------+--------+--------+---------+
-| No.  | C | U | N | R |  Name   | Format | Length | Default |
-+------+---+---+---+---+---------+--------+--------+---------+
+| No.  | C | U | N | R | Name    | Format | Length | Default |
 | TBD2 |   |   | x | x | Padding | opaque | any    | (none)  |
-+------+---+---+---+---+---------+--------+--------+---------+
-~~~
-{: #padding-table title="Padding Option" artwork-align="center"}
+{: #padding-table title="The Padding Option (C=Critical, U=Unsafe, N=NoCacheKey, R=Repeatable)" align="center"}
 
-When used with OSCORE, the Padding option is of Class E,
-which makes it indistinguishable from other Class E options or the payload to third parties.
+When used with OSCORE, the Padding option is of Class E, which makes it indistinguishable from other Class E options or the payload to third parties.
 
 ## Using and processing the Padding option
 
