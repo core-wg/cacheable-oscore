@@ -767,4 +767,4 @@ Also the guidelines in Section 2 suggest to have an inner observe option, regard
 
 The authors sincerely thank {{{Michael Richardson}}}, {{{Jim Schaad}}}, and {{{Göran Selander}}} for their comments and feedback.
 
-The work on this document has been partly supported by VINNOVA and the Celtic-Next project CRITISEC; and by the H2020 project SIFIS-Home (Grant agreement 952652).
+This work was supported by the Sweden's Innovation Agency VINNOVA within the EUREKA CELTIC-NEXT projects CRITISEC and CYPRESS; and by the H2020 project SIFIS-Home (Grant agreement 952652).
