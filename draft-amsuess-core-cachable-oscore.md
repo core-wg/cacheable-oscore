@@ -254,13 +254,15 @@ As a consequence, the proposed method takes the opposite approach, by considerin
 
 In order to transport the hash of the plain CoAP request, a new CoAP option is defined, which MUST be supported by clients and servers that support Deterministic Requests.
 
-The option is called Request-Hash and its properties are summarized in {{request-hash-table}}, which extends Table 4 of {{RFC7252}}. The option is Elective, Safe-to-Forward, part of the Cache-Key, and repeatable.
+The option is called Request-Hash and its properties are summarized in {{request-hash-table}}, which extends Table 4 of {{RFC7252}}. The option is Elective, Safe-to-Forward, part of the Cache-Key, and not repeatable.
 
 | No.  | C | U | N | R | Name         | Format | Length | Default |
-| TBD1 |   |   |   | x | Request-Hash | opaque | any    | (none)  |
+| TBD1 |   |   |   |   | Request-Hash | opaque | any    | (none)  |
 {: #request-hash-table title="The Request-Hash Option (C=Critical, U=Unsafe, N=NoCacheKey, R=Repeatable)" align="center"}
 
 The Request-Hash option is identical in all its properties to the Request-Tag option defined in {{RFC9175}}, with the following exceptions:
+
+* It is not repeatable.
 
 * It may be arbitrarily long.
 
