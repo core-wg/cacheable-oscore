@@ -286,7 +286,7 @@ The Request-Hash option is identical in all its properties to the Request-Tag op
 * A proxy MAY use any fresh cached response from the selected server to respond to a request with the same Request-Hash;
   this may save it some memory.
 
-  A proxy can add to or remove from a response the Request-Hash option with value from the request's Request-Hash option.
+  When responding to a request that includes a Request-Hash option, the proxy MAY add a Request-Hash option to the response, if the option is not already present in the response, or remove the Request-Hash option from the response, if the option is already present in the response. In either case, the Request-Hash option in the response MUST have the same value of the Request-Hash option in the request.
 
 * When used with a Deterministic Request, this option is created at message protection time by the sender, and used before message unprotection by the recipient. Therefore, in this use case, it is treated as Class U for OSCORE {{RFC8613}} in requests. In the same application, for responses, it is treated as Class I, and often elided from sending (but reconstructed at the receiver). Other uses of this option can put it into different classes for the OSCORE processing.
 
