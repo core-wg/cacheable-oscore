@@ -288,7 +288,7 @@ The Request-Hash option is identical in all its properties to the Request-Tag op
 
 * When used with a Deterministic Request, this option is created at message protection time by the sender, and used before message unprotection by the recipient. Therefore, in this use case, it is treated as Class U for OSCORE {{RFC8613}} in requests. In the same application, for responses, it is treated as Class I, and often elided from sending (but reconstructed at the receiver). Other uses of this option can put it into different classes for the OSCORE processing.
 
-This option achieves request-response binding described in {{oscore-nosourceauth}}.
+This option achieves the request-response binding described in {{oscore-nosourceauth}}.
 
 ## Use of Deterministic Requests {#ssec-use-deterministic-requests}
 
