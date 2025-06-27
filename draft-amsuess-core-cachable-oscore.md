@@ -936,7 +936,7 @@ Unprotected CoAP request (23 bytes):
   01 (Code: GET - 1 byte)
   9483 (Message ID - 2 bytes)
   f0aeef1c796812a0 (Token - 8 bytes)
-  ba 68656c6c6f576f726c64 (Uri-path:"helloWord" - 11 bytes)
+  ba 68656c6c6f576f726c64 (Uri-path:"helloWorld" - 11 bytes)
 ~~~~~~~~~~~
 
 The client protects the CoAP request above to produce a Deterministic Request. When doing so, the client does not include an inner Observe option.
@@ -1292,7 +1292,7 @@ Unprotected CoAP request (23 bytes):
   01 (Code: GET - 1 byte)
   9484 (Message ID - 2 bytes)
   28a1a5dc286ee601 (Token - 8 bytes)
-  ba 68656c6c6f576f726c64 (Uri-path:"helloWord" - 11 bytes)
+  ba 68656c6c6f576f726c64 (Uri-path:"helloWorld" - 11 bytes)
 ~~~~~~~~~~~
 
 &nbsp;
