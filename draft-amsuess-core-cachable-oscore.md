@@ -768,8 +768,6 @@ In the following, a CoAP Client C and a CoAP Server S are member of the same OSC
 
 Note that, while they are consistent with the presented example, the values of the Token and Message ID in the CoAP messages are only indicative, as they are subject to change throughout different message exchanges.
 
-When using the CBOR diagnostic notation or showing a binary serialization, line-breaks are used for readability purposes only.
-
 ## Setup
 
 The Group OSCORE Security Context specifies the following parameters.
