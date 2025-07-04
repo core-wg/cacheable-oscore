@@ -808,47 +808,6 @@ The Group OSCORE Security Context specifies the following parameters.
    0xdc
 ~~~~~~~~~~~
 
-* Client's Sender ID (1 byte):
-
-~~~~~~~~~~~
-   0x25
-~~~~~~~~~~~
-
-* Client's authentication credential as CCS (diagnostic notation):
-
-~~~~~~~~~~~
-   { 1: "coaps://tester1.example.com",
-     2: "myname",
-     3: "coaps://hello1.example.org",
-     4: 1879067471,
-     8: {
-          1: {
-                1: 1,
-                3: -8,
-               -1: 6,
-               -2: h'069e912b83963acc5941b63546867dec
-                     106e5b9051f2ee14f3bc5cc961acd43a'
-             }
-        }
-   }
-~~~~~~~~~~~
-
-* Client's authentication credential as CCS (serialization) (119 bytes):
-
-~~~~~~~~~~~
-   0xa501781b636f6170733a2f2f746573746572312e6578616d706c652e636f
-     6d02666d796e616d6503781a636f6170733a2f2f68656c6c6f312e657861
-     6d706c652e6f7267041a70004b4f08a101a4010103272006215820069e91
-     2b83963acc5941b63546867dec106e5b9051f2ee14f3bc5cc961acd43a
-~~~~~~~~~~~
-
-* Client's private key (32 bytes):
-
-~~~~~~~~~~~
-   0x64714d41a240b61d8d823502717ab088
-     c9f4af6fc9844553e4ad4c42cc735239
-~~~~~~~~~~~
-
 * Server's Sender ID (1 byte):
 
 ~~~~~~~~~~~
