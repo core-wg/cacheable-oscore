@@ -227,11 +227,9 @@ but considered starting points are:
   Only set it when there was a recent response with that ETag.
   When obtaining later blocks, do not send the known-stale ETag.
 
-* In block-wise transfers, maximally sized large inner blocks (szx=6) should be selected.
+* In block-wise transfers, maximally sized large inner blocks (szx=6) SHOULD be selected.
   This serves not only to align the clients on consistent cache entries,
-  but also helps amortize the additional data transferred in the per-message signatures. <!--
-MT: proposed  s/should be selected/SHOULD be selected
--->
+  but also helps amortize the additional data transferred in the per-message signatures.
 
   Outer block-wise transfer can then be used if these messages exceed a hop's efficiently usable MTU size.
 
