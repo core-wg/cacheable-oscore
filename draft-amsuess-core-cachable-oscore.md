@@ -167,7 +167,10 @@ This document also introduces the following new terms.
 
 # OSCORE Message Processing without Source Authentication {#oscore-nosourceauth}
 
-The request-response binding is achieved by the items (request_kid, request_piv) in OSCORE and by the items (request_kid, request_piv, request_kid_context) in Group OSCORE. Those items are present in both the request's and the response's AAD, and are hereafter referred to as "request_details".
+In OSCORE, the response is cryptographically bound to the request through CBOR items in their authenticated encryption's AAD (Additional Authenticated Data):
+"request_kid" and "request_piv".
+Group OSCORE adds "request_kid_context" to that list.
+Hereafter, those items are referred to as "request_details".
 
 The security of such binding depends on the server obtaining source authentication for the request:
 if this precondition is not fulfilled, a malicious group member could alter a request to the server (without altering the request_details above),
