@@ -187,8 +187,8 @@ but currently only offers suggestions:
 
 * The response can contain the full request. An option that allows doing that is presented in {{?I-D.bormann-core-responses}}.
 * The response can contain a cryptographic hash of the full request. This is used by the method specified in this document, as defined in {{ssec-request-hash-option}}.
-* The request_details above can be transported in a Class E option (encrypted and integrity protected) or a Class I option (unencrypted, but part of the AAD hence integrity protected).
-  The latter has the advantage that the option can be removed in transit and reconstructed at the receiver.
+<!-- * The request_details above can be transported in a Class E option (encrypted and integrity protected) or a Class I option (unencrypted, but part of the AAD hence integrity protected).
+  The latter has the advantage that the option can be removed in transit and reconstructed at the receiver. -->
 * Alternatively, the agreed-on request data can be placed in a different position in the AAD,
   or take part to the derivation of the OSCORE Security Context.
   In the latter case, care needs to be taken to never initialize a Security Context twice with the same input,
