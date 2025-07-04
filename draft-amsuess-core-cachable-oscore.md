@@ -772,17 +772,17 @@ Note that, while they are consistent with the presented example, the values of t
 
 The Group OSCORE Security Context specifies the following parameters.
 
-* AEAD Algorithm: AES-CCM-16-64-128
+* AEAD Algorithm: AES-CCM-16-64-128 (10)
 
-* HKDF Algorithm: HKDF SHA-256
+* HKDF Algorithm: HKDF SHA-256 (5)
 
-* Group Encryption Algorithm: AES-CCM-16-64-128
+* Group Encryption Algorithm: AES-CCM-16-64-128 (10)
 
-* Signature Algorithm: EdDSA (used with curve Ed25519)
+* Signature Algorithm: EdDSA (used with curve Ed25519) (-8, 6)
 
-* Pairwise Key Agreement Algorithm: ECDH-SS-HKDF-256 (used with curve X25519)
+* Pairwise Key Agreement Algorithm: ECDH-SS-HKDF-256 (used with curve X25519) (-27, 4)
 
-* Hash algorithm for Deterministic Requests: SHA-256
+* Hash algorithm for Deterministic Requests: SHA-256 (-16)
 
 * Master Secret (16 bytes):
 
