@@ -172,7 +172,8 @@ In OSCORE, the response is cryptographically bound to the request through CBOR i
 Group OSCORE adds "request_kid_context" to that list.
 Hereafter, those items are referred to as "request_details".
 
-The security of such binding depends on the server obtaining source authentication for the request:
+The security of such binding depends on the server obtaining source authentication for the request,
+and on that source matching the request_details:
 if this precondition is not fulfilled, a malicious group member could alter a request to the server (without altering the request_details above),
 and the client would still accept the response as if it were a response to its request.
 
