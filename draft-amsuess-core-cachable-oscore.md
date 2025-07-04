@@ -208,11 +208,14 @@ special consideration for any side channels like response size or timing is requ
 
 # Deterministic Requests # {#sec-deterministic-requests}
 
-This section defines a method for clients starting from a same plain CoAP request to independently build the same, corresponding Deterministic Request protected with Group OSCORE.
+This section defines a method for clients starting from a same intended CoAP request to independently build the same, corresponding Deterministic Request protected with Group OSCORE.
 
 ## Deterministic Unprotected Request {#sec-deterministic-requests-unprotected}
 
-Clients build the unprotected Deterministic Request in a way which is as much reproducible as possible.
+When clients build their unprotected request,
+they can already minimize variability
+and thus maximize reproducibility.
+
 This document does not set out full guidelines for minimizing the variation,
 but considered starting points are:
 
