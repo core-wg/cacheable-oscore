@@ -424,7 +424,7 @@ When preparing the response, the server performs the following actions.
 
 2. The server preliminarily sets the Request-Hash option with the full Request-Hash value, i.e., the same value of the Request-Hash option that was specified in the Deterministic Request.
 
-3. If the Deterministic Request included an inner Observe option but not an outer Observe option, the server MUST include an inner Observe option in the response.
+3. If the Deterministic Request included an inner Observe option but not an outer Observe option and the resource is observable, the server MUST include an inner Observe option in the response.
 
 4. The server MUST protect the response using the group mode of Group OSCORE, as defined in {{Section 7.3 of I-D.ietf-core-oscore-groupcomm}}. This is required to ensure that the client can verify the source authentication of the response, since the "pairwise" key used for producing the Deterministic Request is actually shared among all the group members.
 
