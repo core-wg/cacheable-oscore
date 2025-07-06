@@ -330,13 +330,13 @@ No such extension is needed for the management interface of the Group Manager, a
 
 In order to build a Deterministic Request, the client protects the plain CoAP request using the pairwise mode of Group OSCORE (see {{Section 8 of I-D.ietf-core-oscore-groupcomm}}), with the following alterations.
 
-1. When preparing the OSCORE option, the external_aad, and the AEAD nonce:
+1. When preparing the OSCORE option, the external_aad, the AEAD nonce:
 
    * The used Sender ID is the Deterministic Client's Sender ID.
 
-   * The used Partial IV is 0.
+   * The element 'sender_cred' in the aad_array takes the empty CBOR byte string (0x40).
 
-   When preparing the external_aad, the element 'sender_cred' in the aad_array takes the empty CBOR byte string (0x40).
+   * The used Partial IV is 0.
 
 2. The client uses the hash function indicated for the Deterministic Client, and computes a hash H over the following input: the Sender Key of the Deterministic Client, concatenated with the binary serialization of the aad_array from Step 1, concatenated with the COSE plaintext.
 
