@@ -324,6 +324,7 @@ The use of Deterministic Requests in an OSCORE group requires that the intereste
 Group members have to obtain this information from the Group Manager. A group member can do that, for instance, when obtaining the group keying material upon joining the OSCORE group, or later on as an active member by interacting with the Group Manager.
 
 The joining process based on the Group Manager defined in {{I-D.ietf-ace-key-groupcomm-oscore}} can be easily extended to support the provisioning of information about the Deterministic Client. Such an extension is defined in {{sec-obtaining-info}} of this document.
+No such extension is needed for the management interface of the Group Manager, as {{?I-D.ietf-ace-oscore-gm-admin}} already includes the relevant parameters.
 
 ### Client Processing of Deterministic Requests {#sssec-use-deterministic-requests-client-req}
 
