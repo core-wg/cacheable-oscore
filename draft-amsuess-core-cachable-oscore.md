@@ -92,11 +92,19 @@ The Constrained Application Protocol (CoAP) {{RFC7252}} supports also group comm
 
 Requests and responses protected with the group mode of Group OSCORE can be read by all group members, i.e., not only by the intended recipient(s), thus achieving group-level confidentiality.
 
-This allows a trusted intermediary proxy which is also a member of the OSCORE group to populate its cache with responses from origin servers. Later on, the proxy can possibly reply to a request in the group with a response from its cache, if recognized as an eligible server by the client.
+A core functionality of intermediary proxies is caching.
+With any security mechanism for CoAP, this presents operators with a trade-off between required trust and provided performance:
 
-However, an untrusted proxy which is not a member of the OSCORE group only sees protected responses as opaque, uncacheable ciphertext. In particular, different clients in the group that originate a same plain CoAP request would send different protected requests, as a result of their Group OSCORE processing. Such protected requests cannot yield a cache hit at the proxy, which makes the whole caching of protected responses pointless.
+* If an intermediary proxy is trusted, it can inspect traffic that is going through, cache it, and provide cached responses.
+  <!-- This can be realized in TLS or any other 1:1 scheme by handing broad certificates to proxies, or in Group OSCORE by sending the request in group mode and then inspecting whether the response is from origin or from the proxy –
+  but those details would just distract here. -->
 
-This document addresses this complication and enables cacheability of protected responses, also for proxies that are not members of the OSCORE group and are unaware of OSCORE in general. To this end, it builds on the concept of "consensus request" initially considered in {{I-D.ietf-core-observe-multicast-notifications}}, and defines "Deterministic Request" as a convenient incarnation of such concept.
+* An untrusted proxy, while possible with OSCORE (and group OSCORE),
+  sees different ciphertext for different requests even when they access the same resource,
+  and even if it could somehow produce a cache hit,
+  cached responses would be rejected by OSCORE's request-response matching.
+
+This document provides a way out of the trade-off situation: It enables cacheability of protected responses for proxies that are not members of the OSCORE group (and are unaware of OSCORE in general). To this end, it builds on the concept of "consensus request" initially considered in {{I-D.ietf-core-observe-multicast-notifications}}, and defines "Deterministic Request" as a convenient incarnation of such concept.
 
 All clients wishing to send a particular GET or FETCH request are able to deterministically compute the same protected request, using a variation of the pairwise mode of Group OSCORE. It follows that cache hits become possible at the proxy, which can thus serve clients in the group from its cache. Like in {{I-D.ietf-core-observe-multicast-notifications}}, this requires that clients and servers are already members of a suitable OSCORE group.
 
@@ -118,7 +126,10 @@ When firmware updates are delivered using CoAP, many similar devices fetch the s
 
 When relying on intermediaries to fan out the delivery of multicast data protected end-to-end as in {{I-D.ietf-core-observe-multicast-notifications}}, the use of protected Deterministic Requests as defined in this document allows for a more efficient setup, by reducing the amount of message exchanges and enabling early population of cache entries (see {{det-requests-for-notif}}).
 
-When relying on Information-Centric Networking (ICN) for multiparty dissemination of cacheable content, CoAP and CoAP proxies can be used to enable asynchronous group communication. This leverages CoAP proxies performing request aggregation, as well as response replication and cacheability {{ICN-paper}}. By restoring cacheability of OSCORE-protected responses, the Deterministic Requests defined in this document make it possible to attain dissemination of cacheable content in ICN-based deployments, also when the content is protected end-to-end.
+When building RESTful networks following the patterns of Information-Centric Networking (ICN),
+CoAP proxies take the role of forwarding nodes.
+Caching plays a large role in such networks,
+and cacheable OSCORE provides a compatible security mechanism {{ICN-paper}}.
 
 When DNS messages are transported over CoAP {{I-D.ietf-core-dns-over-coap}}, it is recommended to use OSCORE for protecting such messages. By restoring cacheability of OSCORE-protected responses, it becomes possible to benefit from the cache retrieval of such CoAP responses that particularly transport DNS messages.
 
@@ -156,9 +167,13 @@ This document also introduces the following new terms.
 
 # OSCORE Message Processing without Source Authentication {#oscore-nosourceauth}
 
-The request-response binding is achieved by the items (request_kid, request_piv) in OSCORE and by the items (request_kid, request_piv, request_kid_context) in Group OSCORE. Those items are present in both the request's and the response's AAD, and are hereafter referred to as "request_details".
+In OSCORE, the response is cryptographically bound to the request through CBOR items in their authenticated encryption's AAD (Additional Authenticated Data):
+"request_kid" and "request_piv".
+Group OSCORE adds "request_kid_context" to that list.
+Hereafter, those items are referred to as "request_details".
 
-The security of such binding depends on the server obtaining source authentication for the request:
+The security of such binding depends on the server obtaining source authentication for the request,
+and on that source matching the request_details:
 if this precondition is not fulfilled, a malicious group member could alter a request to the server (without altering the request_details above),
 and the client would still accept the response as if it were a response to its request.
 
@@ -173,8 +188,8 @@ but currently only offers suggestions:
 
 * The response can contain the full request. An option that allows doing that is presented in {{?I-D.bormann-core-responses}}.
 * The response can contain a cryptographic hash of the full request. This is used by the method specified in this document, as defined in {{ssec-request-hash-option}}.
-* The request_details above can be transported in a Class E option (encrypted and integrity protected) or a Class I option (unencrypted, but part of the AAD hence integrity protected).
-  The latter has the advantage that the option can be removed in transit and reconstructed at the receiver.
+<!-- * The request_details above can be transported in a Class E option (encrypted and integrity protected) or a Class I option (unencrypted, but part of the AAD hence integrity protected).
+  The latter has the advantage that the option can be removed in transit and reconstructed at the receiver. -->
 * Alternatively, the agreed-on request data can be placed in a different position in the AAD,
   or take part to the derivation of the OSCORE Security Context.
   In the latter case, care needs to be taken to never initialize a Security Context twice with the same input,
@@ -193,11 +208,14 @@ special consideration for any side channels like response size or timing is requ
 
 # Deterministic Requests # {#sec-deterministic-requests}
 
-This section defines a method for clients starting from a same plain CoAP request to independently build the same, corresponding Deterministic Request protected with Group OSCORE.
+This section defines a method for clients starting from a same intended CoAP request to independently build the same, corresponding Deterministic Request protected with Group OSCORE.
 
 ## Deterministic Unprotected Request {#sec-deterministic-requests-unprotected}
 
-Clients build the unprotected Deterministic Request in a way which is as much reproducible as possible.
+When clients build their unprotected request,
+they can already minimize variability
+and thus maximize reproducibility.
+
 This document does not set out full guidelines for minimizing the variation,
 but considered starting points are:
 
@@ -209,16 +227,15 @@ but considered starting points are:
   Only set it when there was a recent response with that ETag.
   When obtaining later blocks, do not send the known-stale ETag.
 
-* In block-wise transfers, maximally sized large inner blocks (szx=6) should be selected.
+* In block-wise transfers, maximally sized large inner blocks (szx=6) SHOULD be selected.
   This serves not only to align the clients on consistent cache entries,
-  but also helps amortize the additional data transferred in the per-message signatures. <!--
-MT: proposed  s/should be selected/SHOULD be selected
--->
+  but also helps amortize the additional data transferred in the per-message signatures.
 
   Outer block-wise transfer can then be used if these messages exceed a hop's efficiently usable MTU size.
 
   (If BERT {{?RFC8323}} is usable with OSCORE, its use is fine as well;
   in that case, the server picks a consistent block size for all clients anyway).
+  <!-- see https://github.com/core-wg/corrclar/pull/45 -->
 
 * The Padding option defined in {{sec-padding}} can be used to limit an adversary's ability to deduce the content and the target resource of Deterministic Requests from their length. In particular, all Deterministic Requests of the same class (ideally, all requests to a particular server) can be padded to reach the same total length, that should be agreed on among all users of the same OSCORE Security Context.
 
@@ -307,18 +324,19 @@ The use of Deterministic Requests in an OSCORE group requires that the intereste
 Group members have to obtain this information from the Group Manager. A group member can do that, for instance, when obtaining the group keying material upon joining the OSCORE group, or later on as an active member by interacting with the Group Manager.
 
 The joining process based on the Group Manager defined in {{I-D.ietf-ace-key-groupcomm-oscore}} can be easily extended to support the provisioning of information about the Deterministic Client. Such an extension is defined in {{sec-obtaining-info}} of this document.
+No such extension is needed for the management interface of the Group Manager, as {{?I-D.ietf-ace-oscore-gm-admin}} already includes the relevant parameters.
 
 ### Client Processing of Deterministic Requests {#sssec-use-deterministic-requests-client-req}
 
 In order to build a Deterministic Request, the client protects the plain CoAP request using the pairwise mode of Group OSCORE (see {{Section 8 of I-D.ietf-core-oscore-groupcomm}}), with the following alterations.
 
-1. When preparing the OSCORE option, the external_aad, and the AEAD nonce:
+1. When preparing the OSCORE option, the external_aad, the AEAD nonce:
 
    * The used Sender ID is the Deterministic Client's Sender ID.
 
-   * The used Partial IV is 0.
+   * The element 'sender_cred' in the aad_array takes the empty CBOR byte string (0x40).
 
-   When preparing the external_aad, the element 'sender_cred' in the aad_array takes the empty CBOR byte string (0x40).
+   * The used Partial IV is 0.
 
 2. The client uses the hash function indicated for the Deterministic Client, and computes a hash H over the following input: the Sender Key of the Deterministic Client, concatenated with the binary serialization of the aad_array from Step 1, concatenated with the COSE plaintext.
 
@@ -406,7 +424,7 @@ When preparing the response, the server performs the following actions.
 
 2. The server preliminarily sets the Request-Hash option with the full Request-Hash value, i.e., the same value of the Request-Hash option that was specified in the Deterministic Request.
 
-3. If the Deterministic Request included an inner Observe option but not an outer Observe option, the server MUST include an inner Observe option in the response.
+3. If the Deterministic Request included an inner Observe option but not an outer Observe option and the resource is observable, the server MUST include an inner Observe option in the response.
 
 4. The server MUST protect the response using the group mode of Group OSCORE, as defined in {{Section 7.3 of I-D.ietf-core-oscore-groupcomm}}. This is required to ensure that the client can verify the source authentication of the response, since the "pairwise" key used for producing the Deterministic Request is actually shared among all the group members.
 
@@ -790,15 +808,6 @@ MT: This second bullet point seems something that can already be said in the Sec
 
 # Unsorted Further Ideas
 
-* All or none of the Deterministic Requests should have an inner observe option.
-  Preferably none -- that makes messages shorter, and clients need to ignore that option either way when checking whether a Consensus Request matches their intended request.
-
-<!--
-MT: How can clients start an observation then? That would require an inner Observe option, right?
-
-Also the guidelines in Section 2 suggest to have an inner observe option, regardless the resource being actually observable.
--->
-
 * We could allow clients to elide all other options than Request-Hash, and elide the payload,
   if they have reason to believe that they can produce a cache hit with the abbreviated request alone.
 
@@ -809,7 +818,8 @@ Also the guidelines in Section 2 suggest to have an inner observe option, regard
 
   That may be more trouble than it's worth without a strong use case (say, of complex but converging FETCH requests).
 
-  Hashes could also be used in truncated form for that.
+  Hashes could also be used in truncated form for that
+  -- should we suggest SHA-256/128 as a default? (Its birthday paradox starts to kickin around 2^64 deterministic requests).
 
 # Test Vectors
 
