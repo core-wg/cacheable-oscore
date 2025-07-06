@@ -465,14 +465,39 @@ The same extension above applies also to the 'key' parameter included in a Key D
 With reference to the 'key' parameter included in a Signature Verification Data Response defined in {{Section 9.6 of I-D.ietf-ace-key-groupcomm-oscore}}, the Group_OSCORE_Input_Material object specified as its value contains also the 'det_senderId' parameter defined above.
 
 # Implementation Status
-
 {:removeinrfc}
+
+Note to RFC Editor: when deleting this section, please also delete RFC 7942 from the references of this document.
+
+{::boilerplate rfc7942info}
 
 ## Implementation in Californium
 
+* Responsible organization: RISE Research Institutes of Sweden AB
+
+* Implementation's name: Cacheable OSCORE for Eclipse Californium
+
+* Available at: https://github.com/rikard-sics/californium/tree/cacheable-oscore
+
+* Description: Implementation in Java, building on Eclipse Californium, see:
+
+  * https://github.com/eclipse-californium/californium
+
+  * http://eclipse.dev/californium/
+
+* Implementation's level of maturity: prototype
+
 * Version compatibility: -08 (which is the last time the wire format changed)
 
-* Contact point: Marco Tiloca
+* Licensing: according to the same dual license of Eclipse Californium, i.e., according to the "Eclipse Distribution License 1.0" and the "Eclipse Public License 2.0". See:
+
+  * https://github.com/eclipse-californium/californium/blob/main/LICENSE
+  * https://www.eclipse.org/org/documents/edl-v10.php
+  * https://www.eclipse.org/legal/epl-2.0/
+
+* Contact point: Marco Tiloca - marco.tiloca@ri.se
+
+* Last updated: 2025-06-27
 
 ## Implementation in aiocoap
 
