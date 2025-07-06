@@ -757,15 +757,6 @@ MT: This second bullet point seems something that can already be said in the Sec
 
 # Unsorted Further Ideas
 
-* All or none of the Deterministic Requests should have an inner observe option.
-  Preferably none -- that makes messages shorter, and clients need to ignore that option either way when checking whether a Consensus Request matches their intended request.
-
-<!--
-MT: How can clients start an observation then? That would require an inner Observe option, right?
-
-Also the guidelines in Section 2 suggest to have an inner observe option, regardless the resource being actually observable.
--->
-
 * We could allow clients to elide all other options than Request-Hash, and elide the payload,
   if they have reason to believe that they can produce a cache hit with the abbreviated request alone.
 
