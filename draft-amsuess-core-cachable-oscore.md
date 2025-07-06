@@ -624,6 +624,14 @@ IANA is asked to add the following entries in the "OSCORE Security Context Param
 
 # Change log
 
+Since -10:
+
+* Added test vectors.
+* Added implementation status section.
+* Removed unclear bullet about transporting request\_details.
+* Updated open questions, removing closed ones and suggesting SHA-256/128.
+* Editorial changes.
+
 Since -09:
 
 * Fixed registrations in the "OSCORE Security Context Parameters" registry.
