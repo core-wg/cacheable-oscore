@@ -767,7 +767,8 @@ MT: This second bullet point seems something that can already be said in the Sec
 
   That may be more trouble than it's worth without a strong use case (say, of complex but converging FETCH requests).
 
-  Hashes could also be used in truncated form for that.
+  Hashes could also be used in truncated form for that
+  -- should we suggest SHA-256/128 as a default? (Its birthday paradox starts to kickin around 2^64 deterministic requests).
 
 # Test Vectors
 
