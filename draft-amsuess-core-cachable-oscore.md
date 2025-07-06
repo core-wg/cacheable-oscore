@@ -464,6 +464,32 @@ The same extension above applies also to the 'key' parameter included in a Key D
 
 With reference to the 'key' parameter included in a Signature Verification Data Response defined in {{Section 9.6 of I-D.ietf-ace-key-groupcomm-oscore}}, the Group_OSCORE_Input_Material object specified as its value contains also the 'det_senderId' parameter defined above.
 
+# Implementation Status
+
+{:removeinrfc}
+
+## Implementation in Californium
+
+* Version compatibility: -08 (which is the last time the wire format changed)
+
+* Contact point: Marco Tiloca
+
+## Implementation in aiocoap
+
+* Implementation: aiocoap <https://christian.amsuess.com/tools/aiocoap/>
+
+* Description: General purpose unconstrained implementation of CoAP
+
+* Implementation maturity: Cacheable OSCORE is part of the regular release, but not well integrated in the security setup.
+
+* Version compatibility: -08 (which is the last time the wire format changed)
+
+* Licensing: MIT
+
+* Contact point: Christian Amsüss
+
+* Last updated: 2025-06-30
+
 # Security Considerations # {#sec-security-considerations}
 
 The same security considerations from {{RFC7252}}, {{I-D.ietf-core-groupcomm-bis}}, {{RFC8613}}, and {{I-D.ietf-core-oscore-groupcomm}} hold for this document.
