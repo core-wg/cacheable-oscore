@@ -4,16 +4,16 @@
 
 This is the working area for the IETF [CORE Working Group](https://datatracker.ietf.org/group/core/documents/) Internet-Draft, "Cacheable OSCORE".
 
-* [Editor's Copy](https://chrysn.github.io/cacheable-oscore/#go.draft-ietf-core-cacheable-oscore.html)
+* [Editor's Copy](https://core-wg.github.io/cacheable-oscore/#go.draft-ietf-core-cacheable-oscore.html)
 * [Datatracker Page](https://datatracker.ietf.org/doc/draft-ietf-core-cacheable-oscore)
 * [Working Group Draft](https://datatracker.ietf.org/doc/html/draft-ietf-core-cacheable-oscore)
-* [Compare Editor's Copy to Working Group Draft](https://chrysn.github.io/cacheable-oscore/#go.draft-ietf-core-cacheable-oscore.diff)
+* [Compare Editor's Copy to Working Group Draft](https://core-wg.github.io/cacheable-oscore/#go.draft-ietf-core-cacheable-oscore.diff)
 
 
 ## Contributing
 
 See the
-[guidelines for contributions](https://github.com/chrysn/cacheable-oscore/blob/main/CONTRIBUTING.md).
+[guidelines for contributions](https://github.com/core-wg/cacheable-oscore/blob/main/CONTRIBUTING.md).
 
 The contributing file also has tips on how to make contributions, if you
 don't already know how to do that.
