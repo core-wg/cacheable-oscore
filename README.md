@@ -1,12 +1,24 @@
-# Cachable OSCORE
+<!-- regenerate: on (set to off if you edit this file) -->
 
-This is the working area for the individual Internet-Draft, "Cachable OSCORE".
+# Cacheable OSCORE
 
-* [Editor's Copy](https://git@gitlab.com:chrysn.github.io/core-cachable-oscore/#go.draft-amsuess-core-cachable-oscore.html)
-* [Individual Draft](https://tools.ietf.org/html/draft-amsuess-core-cachable-oscore)
-* [Compare Editor's Copy to Individual Draft](https://git@gitlab.com:chrysn.github.io/core-cachable-oscore/#go.draft-amsuess-core-cachable-oscore.diff)
+This is the working area for the IETF [CORE Working Group](https://datatracker.ietf.org/group/core/documents/) Internet-Draft, "Cacheable OSCORE".
 
-## Building the Draft
+* [Editor's Copy](https://chrysn.github.io/cacheable-oscore/#go.draft-ietf-core-cacheable-oscore.html)
+* [Datatracker Page](https://datatracker.ietf.org/doc/draft-ietf-core-cacheable-oscore)
+* [Working Group Draft](https://datatracker.ietf.org/doc/html/draft-ietf-core-cacheable-oscore)
+* [Compare Editor's Copy to Working Group Draft](https://chrysn.github.io/cacheable-oscore/#go.draft-ietf-core-cacheable-oscore.diff)
+
+
+## Contributing
+
+See the
+[guidelines for contributions](https://github.com/chrysn/cacheable-oscore/blob/main/CONTRIBUTING.md).
+
+The contributing file also has tips on how to make contributions, if you
+don't already know how to do that.
+
+## Command Line Usage
 
 Formatted text and HTML versions of the draft can be built using `make`.
 
@@ -14,11 +26,6 @@ Formatted text and HTML versions of the draft can be built using `make`.
 $ make
 ```
 
-This requires that you have the necessary software installed.  See
-[the instructions](https://github.com/martinthomson/i-d-template/blob/master/doc/SETUP.md).
+Command line usage requires that you have the necessary software installed.  See
+[the instructions](https://github.com/martinthomson/i-d-template/blob/main/doc/SETUP.md).
 
-
-## Contributing
-
-See the
-[guidelines for contributions](https://github.com/git@gitlab.com:chrysn/core-cachable-oscore/blob/master/CONTRIBUTING.md).
