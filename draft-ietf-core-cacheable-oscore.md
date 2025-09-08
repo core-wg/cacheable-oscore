@@ -3,7 +3,7 @@ v: 3
 
 title: "Cacheable OSCORE"
 abbrev: "Cacheable OSCORE"
-docname: draft-amsuess-core-cachable-oscore-latest
+docname: draft-ietf-core-cacheable-oscore-latest
 ipr: trust200902
 
 cat: std
@@ -623,6 +623,10 @@ IANA is asked to add the following entries in the "OSCORE Security Context Param
 --- back
 
 # Change log
+
+Since draft-amsuess-core-cachable-oscore-11:
+
+* No changes; re-upload after working group adoption.
 
 Since -10:
 
