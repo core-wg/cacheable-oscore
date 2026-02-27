@@ -174,7 +174,7 @@ This document also introduces the following new terms.
 
 # OSCORE Message Processing without Source Authentication {#oscore-nosourceauth}
 
-In OSCORE, the response is cryptographically bound to the request through CBOR data items in their authenticated encryption's AAD (Additional Authenticated Data):
+In OSCORE, the response is cryptographically bound to the request through Concise Binary Object Representation (CBOR) data items {{RFC8949}} in their authenticated encryption's AAD (Additional Authenticated Data):
 "request_kid" and "request_piv".
 Group OSCORE adds "request_kid_context" to that list.
 Hereafter, those items are referred to as "request_details".
