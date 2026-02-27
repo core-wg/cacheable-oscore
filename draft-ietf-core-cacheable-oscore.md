@@ -167,7 +167,7 @@ When DNS messages are transported over CoAP {{I-D.ietf-core-dns-over-coap}}, it 
 
 {::boilerplate bcp14-tagged}
 
-Readers are expected to be familiar with terms and concepts of CoAP {{RFC7252}} and its method FETCH {{RFC8132}}, group communication for CoAP {{I-D.ietf-core-groupcomm-bis}}, COSE {{RFC9052}}{{RFC9053}}, OSCORE {{RFC8613}}, and Group OSCORE {{I-D.ietf-core-oscore-groupcomm}}.
+Readers are expected to be familiar with terms and concepts of CoAP {{RFC7252}} and its method FETCH {{RFC8132}}, group communication for CoAP {{I-D.ietf-core-groupcomm-bis}}, Concise Binary Object Representation (CBOR) {{RFC8949}}, CBOR Object Signing and Encryption (COSE) {{RFC9052}}{{RFC9053}}, OSCORE {{RFC8613}}, and Group OSCORE {{I-D.ietf-core-oscore-groupcomm}}.
 
 This document also introduces the following new terms.
 
@@ -197,7 +197,7 @@ This document also introduces the following new terms.
 
 # OSCORE Message Processing without Source Authentication {#oscore-nosourceauth}
 
-In OSCORE, the response is cryptographically bound to the request through Concise Binary Object Representation (CBOR) data items {{RFC8949}} in their authenticated encryption's AAD (Additional Authenticated Data):
+In OSCORE {{RFC8613}}, a response is cryptographically bound to the corresponding request through CBOR data items {{RFC8949}} in their authenticated encryption's Additional Authenticated Data (AAD):
 "request_kid" and "request_piv".
 Group OSCORE adds "request_kid_context" to that list.
 Hereafter, those items are referred to as "request_details".
@@ -223,7 +223,7 @@ but currently only offers suggestions:
 * The agreed-on request data can be placed in a different position in the AAD,
   or take part to the derivation of the (Group) OSCORE Security Context.
   In the latter case, care needs to be taken to never initialize a Security Context twice with the same input,
-  as that would lead to reuse of the AEAD nonce.
+  as that would lead to reuse of the Authenticated Encryption with Associated Data (AEAD) nonce.
 
 \[ Suggestion for any OSCORE v2: avoid request_details in the request's AAD as individual elements. Rather than having 'request_kid', 'request_piv' (and, in Group OSCORE, 'request_kid_context') as separate fields, they can better be something more pluggable.
 This would avoid the need to make up an option before processing, and would allow just plugging the (hash of the) request in there, as replacing the elements for the request_details. \]
@@ -261,10 +261,10 @@ but considered starting points are:
   This serves not only to align the clients on consistent cache entries,
   but also helps amortize the additional data transferred in the per-message signatures.
 
-  Outer block-wise transfer can then be used if these messages exceed a hop's efficiently usable MTU size.
+  Outer block-wise transfer can then be used if these messages exceed a hop's efficiently usable Maximum Transmission Unit (MTU) size.
 
-  (If BERT {{RFC8323}} is usable with OSCORE, its use is fine as well;
-  in that case, the server picks a consistent block size for all clients anyway).
+  If Block-wise Extension for Reliable Transport (BERT) {{RFC8323}} is usable with OSCORE, its use is fine as well;
+  in that case, the server picks a consistent block size for all clients anyway.
   <!-- see https://github.com/core-wg/corrclar/pull/45 -->
 
 * The CoAP Padding Option defined in {{sec-padding}} can be used to limit an adversary's ability to deduce the content and the target resource of Deterministic Requests from their length. In particular, all Deterministic Requests of the same class (ideally, all requests to a particular server) can be padded to reach the same total length, that should be agreed on among all users of the same Group OSCORE Security Context.
@@ -376,9 +376,9 @@ In order to build a Deterministic Request, the client protects the plain CoAP re
 
 3. The client derives the deterministic Pairwise Sender Key K as defined in {{Section 2.5.1 of I-D.ietf-core-oscore-groupcomm}}, with the following differences:
 
-   * The Sender Key of the Deterministic Client is used as the first argument of the HKDF.
+   * The Sender Key of the Deterministic Client is used as the first argument of the HMAC-based Key Derivation Function (HKDF).
 
-   * The hash H from Step 2 is used as the second argument of the HKDF, i.e., as a pseudo IKM-Sender computable by all the group members.
+   * The hash H from Step 2 is used as the second argument IKM-Sender of the HKDF, i.e., as a pseudo Input Keying Material (IKM) computable by all the group members.
 
       Note that an actual IKM-Sender cannot be obtained, since there is no authentication credential (and public key included therein) associated with the Deterministic Client to be used as Sender Authentication Credential and for computing an actual Diffie-Hellman Shared Secret.
 
@@ -502,7 +502,7 @@ If a server is a member of a CoAP group, and it fails to successfully decrypt an
 
 # Obtaining Information about the Deterministic Client {#sec-obtaining-info}
 
-This section extends the joining process defined in {{I-D.ietf-ace-key-groupcomm-oscore}} and based on the ACE framework for Authentication and Authorization {{RFC9200}}. Upon joining the OSCORE group, this enables a new group member to obtain from the Group Manager the required information about the Deterministic Client (see {{sssec-use-deterministic-requests-pre-conditions}}).
+This section extends the joining process defined in {{I-D.ietf-ace-key-groupcomm-oscore}} and based on the Authentication and Authorization for Constrained Environments (ACE) framework {{RFC9200}}. Upon joining the OSCORE group, this enables a new group member to obtain from the Group Manager the required information about the Deterministic Client (see {{sssec-use-deterministic-requests-pre-conditions}}).
 
 With reference to the 'key' parameter included in the Join Response defined in {{Section 6.3 of I-D.ietf-ace-key-groupcomm-oscore}}, the Group_OSCORE_Input_Material object specified as its value contains also the two additional parameters 'det_senderId' and 'det_hash_alg'. These are registered in {{ssec-iana-security-context-parameter-registry}} of this document and are defined as follows:
 
