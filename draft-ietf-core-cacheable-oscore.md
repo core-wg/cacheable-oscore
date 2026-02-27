@@ -84,6 +84,29 @@ informative:
     title: "Group Communication with OSCORE: RESTful Multiparty Access to a Data-Centric Web of Things"
     date: 2021-10
     target: https://ieeexplore.ieee.org/document/9525000
+  "DNS-CoAP-paper":
+    author:
+      -
+        ins: M. S. Lenders
+        name: Martine S. Lenders
+      -
+        ins: C. Amsüss
+        name: Christian Amsüss
+      -
+        ins: C. Gündogan
+        name: Cenk Gündogan
+      -
+        ins: M. Nawrocki
+        name: Marcin Nawrocki
+      -
+        ins: T. C. Schmidt
+        name: Thomas C. Schmidt
+      -
+        ins: M. Wählisch
+        name: Matthias Wählisch
+    title: "Securing Name Resolution in the IoT: DNS over CoAP"
+    date: 2023-09
+    target: https://doi.org/10.1145/3609423
 
 entity:
   SELF: "[RFC-XXXX]"
@@ -138,7 +161,7 @@ CoAP proxies take the role of forwarding nodes.
 Caching plays a large role in such networks,
 and cacheable OSCORE provides a compatible security mechanism {{ICN-paper}}.
 
-When DNS messages are transported over CoAP {{I-D.ietf-core-dns-over-coap}}, it is recommended to use OSCORE for protecting such messages. By restoring cacheability of OSCORE-protected responses, it becomes possible to benefit from the cache retrieval of such CoAP responses that particularly transport DNS messages.
+When DNS messages are transported over CoAP {{I-D.ietf-core-dns-over-coap}}, it is recommended to use OSCORE for protecting such messages {{DNS-CoAP-paper}}. By restoring cacheability of OSCORE-protected responses, it becomes possible to benefit from the cache retrieval of such CoAP responses that particularly transport DNS messages.
 
 ## Terminology ## {#terminology}
 
