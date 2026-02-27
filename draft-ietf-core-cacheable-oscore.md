@@ -358,7 +358,7 @@ Group members have to obtain this information from the Group Manager. A group me
 The joining process based on the Group Manager defined in {{I-D.ietf-ace-key-groupcomm-oscore}} can be easily extended to support the provisioning of information about the Deterministic Client. Such an extension is defined in {{sec-obtaining-info}} of the present document.
 No such extension is needed for the management interface of the Group Manager, as {{I-D.ietf-ace-oscore-gm-admin}} already includes the relevant parameters.
 
-### Client Processing of Deterministic Requests {#sssec-use-deterministic-requests-client-req}
+### Client Composition of Deterministic Requests {#sssec-use-deterministic-requests-client-req}
 
 In order to build a Deterministic Request, the client protects the plain CoAP request using the pairwise mode of Group OSCORE (see {{Section 8 of I-D.ietf-core-oscore-groupcomm}}), with the following alterations.
 
