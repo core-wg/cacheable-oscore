@@ -486,7 +486,7 @@ Upon receiving the response, the client performs the following actions.
 
 ### Deterministic Requests to Multiple Servers ### {#det-req-one-to-many}
 
-A Deterministic Request *can* be sent to a CoAP group, e.g., over UDP and IP multicast {{I-D.ietf-core-groupcomm-bis}}, thus targeting multiple servers at once.
+A Deterministic Request can be sent to a CoAP group, e.g., over UDP and IP multicast {{I-D.ietf-core-groupcomm-bis}}, thus targeting multiple servers at once.
 
 To simplify key derivation, such a Deterministic Request is still created in the same way as a one-to-one request and still protected with the pairwise mode of Group OSCORE, as defined in {{sssec-use-deterministic-requests-client-req}}.
 
