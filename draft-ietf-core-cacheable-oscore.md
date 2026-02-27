@@ -137,7 +137,7 @@ With any security mechanism for CoAP, this presents operators with a trade-off b
 
 This document provides a way out of the trade-off situation. In particular, it enables cacheability of protected responses for proxies that are not members of the OSCORE group and that are unaware of OSCORE and Group OSCORE in general. To this end, it builds on the concept of "consensus request" initially considered in {{I-D.ietf-core-observe-multicast-notifications}}, and it defines "Deterministic Request" as a convenient incarnation of such concept.
 
-All clients wishing to send a particular GET or FETCH request are able to deterministically compute the same protected request, using a variation of the pairwise mode of Group OSCORE (see {{Section 8 of I-D.ietf-core-oscore-groupcomm}}). It follows that cache hits become possible at the proxy, which can thus serve clients in the group from its cache. Like in {{I-D.ietf-core-observe-multicast-notifications}}, this requires that clients and servers are already members of a suitable OSCORE group.
+All clients wishing to send a particular request with the GET method or FETCH method {{RFC8132}} are able to deterministically compute the same protected request, using a variation of the pairwise mode of Group OSCORE (see {{Section 8 of I-D.ietf-core-oscore-groupcomm}}). It follows that cache hits become possible at the proxy, which can thus serve clients in the group from its cache. Like in {{I-D.ietf-core-observe-multicast-notifications}}, this requires that clients and servers are already members of a suitable OSCORE group.
 
 Cacheability of protected responses is useful also in applications where several clients wish to retrieve the same object from a single server.
 Some security properties of OSCORE are dispensed with, in order to gain other desirable properties.
@@ -392,7 +392,7 @@ In order to build a Deterministic Request, the client protects the plain CoAP re
 
 7. The client MUST NOT include an unprotected (outer) Observe Option if no observation is intended, even in case an Inner Observe Option was included at Step 5.
 
-8. The client MUST set 0.05 (FETCH) as the Outer Code of the protected request to make it usable for a proxy's cache, even if no observation is intended.
+8. The client MUST set 0.05 (FETCH) {{RFC8132}} as the Outer Code of the protected request to make it usable for a proxy's cache, even if no observation is intended.
 
 The result is the Deterministic Request to be sent.
 
