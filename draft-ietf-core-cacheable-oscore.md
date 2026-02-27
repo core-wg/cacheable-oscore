@@ -1222,6 +1222,6 @@ From there, the protected CoAP response (106 bytes):
 # Acknowledgments # {#acknowldegment}
 {:numbered="false"}
 
-The authors sincerely thank {{{Michael Richardson}}}, {{{Jim Schaad}}}, and {{{Göran Selander}}} for their comments and feedback.
+The authors sincerely thank {{{Martine Lenders}}}, {{{Michael Richardson}}}, {{{Jim Schaad}}}, and {{{Göran Selander}}} for their comments and feedback.
 
 This work was supported by the Sweden's Innovation Agency VINNOVA within the EUREKA CELTIC-NEXT projects CRITISEC and CYPRESS; and by the H2020 project SIFIS-Home (Grant agreement 952652).
