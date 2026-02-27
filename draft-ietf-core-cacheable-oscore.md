@@ -761,7 +761,7 @@ In the following, a CoAP Client C and a CoAP Server S are member of the same OSC
 
 Note that, while they are consistent with the presented example, the values of the Token and Message ID in the CoAP messages are only indicative, as they are subject to change throughout different message exchanges.
 
-The considered authentication credentials of the server and of the Group Manager are CWT Claims Sets (CCSs) {{RFC8392}}. Both authentication credentials as well as the aad_array used through the Group OSCORE processing are also expressed in CBOR extended diagnostic notation as defined in {{Section 8 of RFC8949}} and {{Section G of RFC8610}} ("diagnostic notation").
+The considered authentication credentials of the CoAP Server S and of the Group Manager are CWT Claims Sets (CCSs) {{RFC8392}}. Both authentication credentials as well as the aad_array used through the Group OSCORE processing are also expressed in CBOR extended diagnostic notation as defined in {{Section 8 of RFC8949}} and {{Section G of RFC8610}} ("diagnostic notation").
 
 ## Setup
 
