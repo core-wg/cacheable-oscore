@@ -35,7 +35,10 @@ normative:
   RFC7641:
   RFC7959:
   RFC8132:
+  RFC8392:
+  RFC8610:
   RFC8613:
+  RFC8949:
   RFC9052:
   RFC9053:
   RFC9175:
@@ -734,6 +737,8 @@ This appendix includes test vectors for an example where the method defined in t
 In the following, a CoAP Client C and a CoAP Server S are member of the same OSCORE group, and they exchange Deterministic Requests and corresponding responses.
 
 Note that, while they are consistent with the presented example, the values of the Token and Message ID in the CoAP messages are only indicative, as they are subject to change throughout different message exchanges.
+
+The considered authentication credentials of the server and of the Group Manager are CWT Claims Sets (CCSs) {{RFC8392}}. Both authentication credentials as well as the aad_array used through the Group OSCORE processing are also expressed in CBOR extended diagnostic notation as defined in {{Section 8 of RFC8949}} and {{Section G of RFC8610}} ("diagnostic notation").
 
 ## Setup
 
