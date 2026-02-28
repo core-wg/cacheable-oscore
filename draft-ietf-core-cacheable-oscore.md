@@ -113,7 +113,7 @@ entity:
 
 --- abstract
 
-Group communication with the Constrained Application Protocol (CoAP) can be protected end-to-end using Group Object Security for Constrained RESTful Environments (Group OSCORE), also across untrusted intermediary proxies. However, this sidesteps the proxies' abilities to cache responses from the origin server(s). This document restores cacheability of protected responses at proxies, by introducing consensus requests which any client in an OSCORE group can send to one server or multiple servers in the same group.
+When using the Constrained Application Protocol (CoAP), exchanged messages can be protected end-to-end also across untrusted intermediary proxies. This can be achieved with Object Security for Constrained RESTful Environments (OSCORE) or, in the case of group communication, with Group Object Security for Constrained RESTful Environments (Group OSCORE). However, this sidesteps the proxies' abilities to cache responses from the origin server(s). This document restores cacheability of end-end protected responses at proxies, by using Group OSCORE and introducing consensus requests, which any client in an OSCORE group can send to one server or multiple servers in the same group.
 
 --- middle
 
@@ -135,7 +135,7 @@ With any security mechanism for CoAP, the caching of responses at intermediaries
 
 By using Group OSCORE, this document provides a way out of the trade-off situation.
 
-In particular, it enables cacheability of protected responses for proxies that are not members of the OSCORE group and that are unaware of OSCORE and Group OSCORE in general. To this end, it builds on the concept of "consensus request" initially considered in {{I-D.ietf-core-observe-multicast-notifications}}, and it defines "Deterministic Request" as a convenient incarnation of such concept.
+In particular, this document enables cacheability of protected responses for proxies that are not members of the OSCORE group and that are unaware of OSCORE and Group OSCORE in general. To this end, it builds on the concept of "consensus request" initially considered in {{I-D.ietf-core-observe-multicast-notifications}}, and it defines "Deterministic Request" as a convenient incarnation of such concept.
 
 All clients wishing to send a particular request with the GET method or FETCH method {{RFC8132}} are able to deterministically compute the same protected request, using a variation of the pairwise mode of Group OSCORE (see {{Section 8 of I-D.ietf-core-oscore-groupcomm}}). It follows that cache hits become possible at the proxy, which can thus serve clients in the group from its cache. Like in {{I-D.ietf-core-observe-multicast-notifications}}, this requires that clients and servers are already members of a suitable OSCORE group.
 
@@ -1234,7 +1234,7 @@ From there, the protected CoAP response (106 bytes):
 
 ## Version -00 to -01 ## {#sec-00-01}
 
-* Revised first part of the introduction.
+* Revised abstract and first part of the introduction.
 
 * Updated references.
 
