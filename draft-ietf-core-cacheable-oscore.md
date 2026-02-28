@@ -1,8 +1,8 @@
 ---
 v: 3
 
-title: "Cacheable OSCORE"
-abbrev: "Cacheable OSCORE"
+title: "End-to-End Protected and Cacheable Responses for the Constrained Application Protocol (CoAP) using Group Object Security for Constrained RESTful Environments (Group OSCORE)"
+abbrev: "Group OSCORE Cacheable CoAP Responses"
 docname: draft-ietf-core-cacheable-oscore-latest
 ipr: trust200902
 
@@ -1233,6 +1233,8 @@ From there, the protected CoAP response (106 bytes):
 {:removeinrfc}
 
 ## Version -00 to -01 ## {#sec-00-01}
+
+* Updated title.
 
 * Revised abstract and first part of the introduction.
 
