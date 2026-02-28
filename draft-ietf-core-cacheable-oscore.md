@@ -113,29 +113,29 @@ entity:
 
 --- abstract
 
-Group communication with the Constrained Application Protocol (CoAP) can be secured end-to-end using Group Object Security for Constrained RESTful Environments (Group OSCORE), also across untrusted intermediary proxies. However, this sidesteps the proxies' abilities to cache responses from the origin server(s). This document restores cacheability of protected responses at proxies, by introducing consensus requests which any client in an OSCORE group can send to one server or multiple servers in the same group.
+Group communication with the Constrained Application Protocol (CoAP) can be protected end-to-end using Group Object Security for Constrained RESTful Environments (Group OSCORE), also across untrusted intermediary proxies. However, this sidesteps the proxies' abilities to cache responses from the origin server(s). This document restores cacheability of protected responses at proxies, by introducing consensus requests which any client in an OSCORE group can send to one server or multiple servers in the same group.
 
 --- middle
 
 # Introduction {#introduction}
 
-The Constrained Application Protocol (CoAP) {{RFC7252}} supports group communication, e.g., over UDP and IP multicast {{I-D.ietf-core-groupcomm-bis}}. In a group communication environment, exchanged messages can be secured end-to-end by using Group Object Security for Constrained RESTful Environments (Group OSCORE) {{I-D.ietf-core-oscore-groupcomm}}.
+The Constrained Application Protocol (CoAP) {{RFC7252}} supports intermediary proxies that perform requests on behalf of clients and relay back responses. A core functionality of intermediary proxies is the caching of responses.
 
-When protected with the group mode of Group OSCORE (see {{Section 7 of I-D.ietf-core-oscore-groupcomm}}), requests and responses exchanged in the OSCORE group can be read by all group members, i.e., not only by the intended recipient(s), thus achieving group-level confidentiality.
+Even in the presence of such intermediaries, exchanged CoAP messages can be protected end-to-end by using Object Security for Constrained RESTful Environments (OSCORE) {{RFC8613}}.
 
-A core functionality of intermediary proxies is caching.
-With any security mechanism for CoAP, this presents operators with a trade-off between required trust and provided performance:
+In a group communication environment {{I-D.ietf-core-groupcomm-bis}}, CoAP exchanged messages can be protected end-to-end by using Group Object Security for Constrained RESTful Environments (Group OSCORE) {{I-D.ietf-core-oscore-groupcomm}}. When protected with the group mode of Group OSCORE (see {{Section 7 of I-D.ietf-core-oscore-groupcomm}}), requests and responses exchanged in the OSCORE group can be read by all group members, i.e., not only by the intended recipient(s), thus achieving group-level confidentiality.
+
+With any security mechanism for CoAP, the caching of responses at intermediaries presents operators with a trade-off between required trust and provided performanc
 
 * If an intermediary proxy is trusted, the proxy can inspect traffic that is going through, cache it, and provide cached responses.
   <!-- This can be realized in TLS or any other 1:1 scheme by handing broad certificates to proxies, or in Group OSCORE by sending the request in group mode and then inspecting whether the response is from origin or from the proxy –
   but those details would just distract here. -->
 
-* An untrusted proxy, while possible with OSCORE {{RFC8613}} and Group OSCORE,
-  sees different ciphertexts for different requests even when those requests target the same resource.
-  Even if the proxy could somehow produce a cache hit,
-  cached responses would be rejected by the request-response matching of (Group) OSCORE.
+* An untrusted proxy, while possible with OSCORE and Group OSCORE, sees different ciphertexts for different requests even when those requests target the same resource. Even if the proxy could somehow produce a cache hit, cached responses would be rejected by the request-response matching of (Group) OSCORE.
 
-This document provides a way out of the trade-off situation. In particular, it enables cacheability of protected responses for proxies that are not members of the OSCORE group and that are unaware of OSCORE and Group OSCORE in general. To this end, it builds on the concept of "consensus request" initially considered in {{I-D.ietf-core-observe-multicast-notifications}}, and it defines "Deterministic Request" as a convenient incarnation of such concept.
+By using Group OSCORE, this document provides a way out of the trade-off situation.
+
+In particular, it enables cacheability of protected responses for proxies that are not members of the OSCORE group and that are unaware of OSCORE and Group OSCORE in general. To this end, it builds on the concept of "consensus request" initially considered in {{I-D.ietf-core-observe-multicast-notifications}}, and it defines "Deterministic Request" as a convenient incarnation of such concept.
 
 All clients wishing to send a particular request with the GET method or FETCH method {{RFC8132}} are able to deterministically compute the same protected request, using a variation of the pairwise mode of Group OSCORE (see {{Section 8 of I-D.ietf-core-oscore-groupcomm}}). It follows that cache hits become possible at the proxy, which can thus serve clients in the group from its cache. Like in {{I-D.ietf-core-observe-multicast-notifications}}, this requires that clients and servers are already members of a suitable OSCORE group.
 
@@ -1233,6 +1233,8 @@ From there, the protected CoAP response (106 bytes):
 {:removeinrfc}
 
 ## Version -00 to -01 ## {#sec-00-01}
+
+* Revised first part of the introduction.
 
 * Updated references.
 
