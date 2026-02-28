@@ -125,7 +125,7 @@ Even in the presence of such intermediaries, exchanged CoAP messages can be prot
 
 In a group communication environment {{I-D.ietf-core-groupcomm-bis}}, CoAP exchanged messages can be protected end-to-end by using Group Object Security for Constrained RESTful Environments (Group OSCORE) {{I-D.ietf-core-oscore-groupcomm}}. When protected with the group mode of Group OSCORE (see {{Section 7 of I-D.ietf-core-oscore-groupcomm}}), requests and responses exchanged in the OSCORE group can be read by all group members, i.e., not only by the intended recipient(s), thus achieving group-level confidentiality.
 
-With any security mechanism for CoAP, the caching of responses at intermediaries presents operators with a trade-off between required trust and provided performanc
+With any security mechanism for CoAP, the caching of responses at intermediaries presents operators with a trade-off between required trust and provided performance:
 
 * If an intermediary proxy is trusted, the proxy can inspect traffic that is going through, cache it, and provide cached responses.
   <!-- This can be realized in TLS or any other 1:1 scheme by handing broad certificates to proxies, or in Group OSCORE by sending the request in group mode and then inspecting whether the response is from origin or from the proxy –
