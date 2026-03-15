@@ -1,8 +1,8 @@
 <!-- regenerate: on (set to off if you edit this file) -->
 
-# Cacheable OSCORE
+# End-to-End Protected and Cacheable Responses for the Constrained Application Protocol (CoAP) using Group Object Security for Constrained RESTful Environments (Group OSCORE)
 
-This is the working area for the IETF [CORE Working Group](https://datatracker.ietf.org/group/core/documents/) Internet-Draft, "Cacheable OSCORE".
+This is the working area for the IETF [CORE Working Group](https://datatracker.ietf.org/group/core/documents/) Internet-Draft, "End-to-End Protected and Cacheable Responses for the Constrained Application Protocol (CoAP) using Group Object Security for Constrained RESTful Environments (Group OSCORE)".
 
 * [Editor's Copy](https://core-wg.github.io/cacheable-oscore/#go.draft-ietf-core-cacheable-oscore.html)
 * [Datatracker Page](https://datatracker.ietf.org/doc/draft-ietf-core-cacheable-oscore)
