@@ -390,7 +390,7 @@ In order to build a Deterministic Request, the client protects the plain CoAP re
 
 6. The client protects the request using the pairwise mode of Group OSCORE as defined in {{Section 8.3 of I-D.ietf-core-oscore-groupcomm}}, using the AEAD nonce from Step 1, the deterministic Pairwise Sender Key K from Step 3 as AEAD encryption key, and the finalized AAD.
 
-7. The client MUST NOT include an unprotected (outer) Observe Option if no observation is intended, even in case an Inner Observe Option was included at Step 5.
+7. The client MUST NOT include an unprotected (outer) Observe Option if no observation is intended, even in the case that an Inner Observe Option was included at Step 5.
 
 8. The client MUST set 0.05 (FETCH) {{RFC8132}} as the Outer Code of the protected request to make it usable for a proxy's cache, even if no observation is intended.
 
@@ -424,7 +424,7 @@ A server that does not support Deterministic Requests would not be able to creat
 
 5. The server decrypts and verifies the request using the pairwise mode of Group OSCORE as defined in {{Section 8.4 of I-D.ietf-core-oscore-groupcomm}} and the Recipient Context from Step 4, with the difference that the server does not perform replay checks against a Replay Window (see below).
 
-In case of successful verification, the server MUST also perform the following actions, before possibly delivering the request to the application.
+If the verification is successful, the server MUST also perform the following actions, before possibly delivering the request to the application.
 
 * Starting from the recovered plain CoAP request, the server MUST recompute the same hash that the client computed at Step 2 of {{sssec-use-deterministic-requests-client-req}}.
 
@@ -472,9 +472,9 @@ When preparing the response, the server performs the following actions.
 
 Upon receiving the response, the client performs the following actions.
 
-1. In case the response includes a 'kid' in the OSCORE Option, the client MUST verify it to be exactly the 'kid' of the server to which the Deterministic Request was sent, unless responses from multiple servers are expected (see {{det-req-one-to-many}}).
+1. If the response includes a 'kid' in the OSCORE Option, the client MUST verify it to be exactly the 'kid' of the server to which the Deterministic Request was sent, unless responses from multiple servers are expected (see {{det-req-one-to-many}}).
 
-2. In case the response does not include the Request-Hash Option, the client adds the Request-Hash Option to the response, setting the Option Value to the same Option Value of the Request-Hash Option that was included in the Deterministic Request.
+2. If the response does not include the Request-Hash Option, the client adds the Request-Hash Option to the response, setting the Option Value to the same Option Value of the Request-Hash Option that was included in the Deterministic Request.
 
    Otherwise, the client MUST reject the response if the Option Value of the Request-Hash Option is different from the Option Value of the Request-Hash Option that was included in the Deterministic Request.
 
@@ -498,7 +498,7 @@ When a server receives a request from the Deterministic Client as addressed to a
 
 Although it is normally optional for the server to include its Sender ID when replying to a request protected in pairwise mode, it is required in this case for allowing the client to retrieve the Recipient Context associated with the server originating the response.
 
-If a server is a member of a CoAP group, and it fails to successfully decrypt and verify an incoming Deterministic Request, then it is RECOMMENDED for that server to not reply with an error response, in case the server verifies that the Deterministic Request was sent to the CoAP group (e.g., to the associated IP multicast address) or in case the server is not able to verify that altogether.
+If a server is a member of a CoAP group, and it fails to successfully decrypt and verify an incoming Deterministic Request, then it is RECOMMENDED for that server to not reply with an error response, in the case that the server verifies that the Deterministic Request was sent to the CoAP group (e.g., to the associated IP multicast address) or in the case that the server is not able to verify that altogether.
 
 # Obtaining Information about the Deterministic Client {#sec-obtaining-info}
 
@@ -761,7 +761,7 @@ In the following, a CoAP Client C and a CoAP Server S are member of the same OSC
 
 Note that, while they are consistent with the presented example, the values of the Token and Message ID in the CoAP messages are only indicative, as they are subject to change throughout different message exchanges.
 
-The considered authentication credentials of the CoAP Server S and of the Group Manager are CWT Claims Sets (CCSs) {{RFC8392}}. Both authentication credentials as well as the aad_array used through the Group OSCORE processing are also expressed in CBOR extended diagnostic notation as defined in {{Section 8 of RFC8949}} and {{Section G of RFC8610}} ("diagnostic notation").
+The considered authentication credentials of the CoAP Server S and of the Group Manager are CWT Claims Sets (CCSs) {{RFC8392}}. Both authentication credentials as well as the aad_array used through the Group OSCORE processing are also expressed in CBOR extended diagnostic notation as defined in {{Section 8 of RFC8949}} and {{Section G of RFC8610}}.
 
 ## Setup
 
@@ -809,7 +809,7 @@ The Group OSCORE Security Context specifies the following parameters.
    0x52
 ~~~~~~~~~~~
 
-* Server's authentication credential as CCS (diagnostic notation):
+* Server's authentication credential as CCS (CBOR diagnostic notation):
 
 ~~~~~~~~~~~ cbor-diag
    { 1: "coaps://server.example.com",
@@ -844,7 +844,7 @@ The Group OSCORE Security Context specifies the following parameters.
      f62880ed497e27bdfd4685fa1a304f26
 ~~~~~~~~~~~
 
-* Group Manager's authentication credential as CCS (diagnostic notation):
+* Group Manager's authentication credential as CCS (CBOR diagnostic notation):
 
 ~~~~~~~~~~~ cbor-diag
    { 1: "coaps://mysite.example.com",
@@ -875,7 +875,7 @@ The Group OSCORE Security Context specifies the following parameters.
 
 ## Deterministic Request {#ssec-test-vectors-det-req-1}
 
-The client generates an unprotected CoAP GET request, which contains only the Uri-Path option with value "helloWorld". The request is Confirmable, with a Token length equal to 8 bytes.
+The client generates an unprotected CoAP GET request, which contains only the Uri-Path Option with value "helloWorld". The request is Confirmable, with a Token length equal to 8 bytes.
 
 Unprotected CoAP request (23 bytes):
 
@@ -886,10 +886,10 @@ Unprotected CoAP request (23 bytes):
   01 (Code: GET - 1 byte)
   9483 (Message ID - 2 bytes)
   f0aeef1c796812a0 (Token - 8 bytes)
-  ba 68656c6c6f576f726c64 (Uri-path:"helloWorld" - 11 bytes)
+  ba 68656c6c6f576f726c64 (Uri-path: "helloWorld" - 11 bytes)
 ~~~~~~~~~~~
 
-The client protects the CoAP request above to produce a Deterministic Request. When doing so, the client does not include an Inner Observe option.
+The client protects the CoAP request above to produce a Deterministic Request. When doing so, the client does not include an Inner Observe Option.
 
 &nbsp;
 
@@ -901,7 +901,7 @@ The following information is used to compute the Request-Hash value.
    0x761c3081b8d8329790a8b321b3b4c3a4
 ~~~~~~~~~~~
 
-* aad_array (diagnostic notation):
+* aad_array (CBOR diagnostic notation):
 
 ~~~~~~~~~~~ cbor-diag
    [1,
@@ -998,13 +998,13 @@ The following information is used to produce the protected Deterministic Request
 
 From the previous parameter, the following is derived:
 
-* OSCORE option value (6 bytes):
+* OSCORE Option value (6 bytes):
 
 ~~~~~~~~~~~
    0x190002dd11dc
 ~~~~~~~~~~~
 
-* Request-Hash option value (32 bytes):
+* Request-Hash Option value (32 bytes):
 
 ~~~~~~~~~~~
    0x404b3a7c9f8c878a0b5246cca71e3926
@@ -1024,15 +1024,15 @@ From there, the protected CoAP request as Deterministic Request (76 bytes):
   0b5246cca71e3926f0a8cebefdcabbc80e79579d5a1ee17dff65bcd5d5edf4
   13497bfdeec8975e2acafa702b45
 
-0x48 (version:1, type: CON, Token Length: 8 - 1 byte)
+0x48 (Version: 1, type: CON, Token Length: 8 - 1 byte)
   05 (Code: FETCH - 1 byte)
   9483 (Message ID - 2 bytes)
   f0aeef1c796812a0 (Token - 8 bytes)
-  96 190002dd11dc (OSCORE option - 7 bytes)
+  96 190002dd11dc (OSCORE Option - 7 bytes)
   ed 010e 13 404b3a7c9f8c878a0b5246cca71e3926f0a8cebefdcabbc8
-             0e79579d5a1ee17d (Request-Hash option - 36 bytes)
-  ff (payload marker - 1 byte)
-  65bcd5d5edf413497bfdeec8975e2acafa702b45 (payload - 20 bytes)
+             0e79579d5a1ee17d (Request-Hash Option - 36 bytes)
+  ff (Payload marker - 1 byte)
+  65bcd5d5edf413497bfdeec8975e2acafa702b45 (Payload - 20 bytes)
 ~~~~~~~~~~~
 
 ## Response to Deterministic Request
@@ -1045,15 +1045,15 @@ Unprotected CoAP response (61 bytes):
 0x68459483f0aeef1c796812a0d2010e10ed010913404b3a7c9f8c878a0b5246
   cca71e3926f0a8cebefdcabbc80e79579d5a1ee17dff2e2049443a203432
 
-0x68 (version: 1, type: ACK, Token Length: 8 - 1 byte)
+0x68 (Version: 1, type: ACK, Token Length: 8 - 1 byte)
   45 (Code: 2.05 - 1 byte)
   9483 (Message ID - 2 bytes)
   f0aeef1c796812a0 (Token - 8 bytes)
-  d2 01 0e10 (Max-Age:3600 - 4 bytes)
+  d2 01 0e10 (Max-Age Option: 3600 - 4 bytes)
   ed 0109 13 404b3a7c9f8c878a0b5246cca71e3926f0a8cebefdcabbc8
-             0e79579d5a1ee17d (Request-Hash - 36 bytes)
-  ff (payload marker - 1 byte)
-  2e2049443a203432 (payload - 8 bytes)
+             0e79579d5a1ee17d (Request-Hash Option - 36 bytes)
+  ff (Payload marker - 1 byte)
+  2e2049443a203432 (Payload - 8 bytes)
 ~~~~~~~~~~~
 
 The server protects the CoAP response above as follows. When doing so, the server: does not include an Inner Observe option; includes its own Sender ID in the 'kid' of the OSCORE option; elides the Request-Hash option from the response.
@@ -1080,7 +1080,7 @@ The following information is used to protect the response.
    0xdd11
 ~~~~~~~~~~~
 
-* aad_array (diagnostic notation):
+* aad_array (CBOR diagnostic notation):
 
 ~~~~~~~~~~~ cbor-diag
    [1,
@@ -1216,17 +1216,17 @@ From there, the protected CoAP response (106 bytes):
   25e58d2d777b105c06c5bade67d6262ca30712342a3275dd378a99e8f5ddfa
   5d257c5a4d77b5d681d73848ed
 
-0x68 (version:1, type: ACK, Token Length: 8 - 1 byte)
+0x68 (Version: 1, type: ACK, Token Length: 8 - 1 byte)
   45 (Code: 2.05 - 1 byte)
   9483 (Message ID - 2 bytes)
   f0aeef1c796812a0 (Token - 8 bytes)
-  93 290052 (OSCORE option - 4 bytes)
-  52 0e10 (Max age option - 3 bytes)
-  ff (payload marker - 1 byte)
+  93 290052 (OSCORE Option - 4 bytes)
+  52 0e10 (Max-Age Option: 3600 - 3 bytes)
+  ff (Payload marker - 1 byte)
   cbc7356c84c10b626fef8bd57ed2dfaeec175f8e44e1b29180
     6c0fb8b26be41b9266766ee4175644dfdb25e58d2d777b10
     5c06c5bade67d6262ca30712342a3275dd378a99e8f5ddfa
-    5d257c5a4d77b5d681d73848ed (payload - 86 bytes)
+    5d257c5a4d77b5d681d73848ed (Payload - 86 bytes)
 ~~~~~~~~~~~
 
 # Document Updates # {#sec-document-updates}
