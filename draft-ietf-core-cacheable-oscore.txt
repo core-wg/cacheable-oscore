@@ -5,8 +5,8 @@
 CoRE Working Group                                             C. Amsüss
 Internet-Draft                                                          
 Intended status: Standards Track                               M. Tiloca
-Expires: 16 September 2026                                       RISE AB
-                                                           15 March 2026
+Expires: 30 December 2026                                        RISE AB
+                                                            28 June 2026
 
 
     End-to-End Protected and Cacheable Responses for the Constrained
@@ -54,7 +54,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 September 2026.
+   This Internet-Draft will expire on 30 December 2026.
 
 Copyright Notice
 
@@ -110,7 +110,8 @@ Table of Contents
      F.2.  Deterministic Request
      F.3.  Response to Deterministic Request
    Appendix G.  Document Updates
-     G.1.  Version -00 to -01
+     G.1.  Version -01 to -02
+     G.2.  Version -00 to -01
    Acknowledgments
    Authors' Addresses
 
@@ -204,12 +205,11 @@ Table of Contents
    nodes.  Caching plays a large role in such networks, and cacheable
    OSCORE provides a compatible security mechanism [ICN-paper].
 
-   When DNS messages are transported over CoAP
-   [I-D.ietf-core-dns-over-coap], it is recommended to use OSCORE for
-   protecting such messages [DNS-CoAP-paper].  By restoring cacheability
-   of OSCORE-protected responses, it becomes possible to benefit from
-   the cache retrieval of such CoAP responses that particularly
-   transport DNS messages.
+   When DNS messages are transported over CoAP [RFC9953], it is
+   recommended to use OSCORE for protecting such messages
+   [DNS-CoAP-paper].  By restoring cacheability of OSCORE-protected
+   responses, it becomes possible to benefit from the cache retrieval of
+   such CoAP responses that particularly transport DNS messages.
 
 1.2.  Terminology
 
@@ -1282,32 +1282,25 @@ Table of Contents
               Tiloca, M., Höglund, R., Van der Stok, P., and F.
               Palombini, "Admin Interface for the OSCORE Group Manager",
               Work in Progress, Internet-Draft, draft-ietf-ace-oscore-
-              gm-admin-16, 12 March 2026,
+              gm-admin-17, 26 March 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-ace-
-              oscore-gm-admin-16>.
-
-   [I-D.ietf-core-dns-over-coap]
-              Lenders, M. S., Amsüss, C., Gündoğan, C., Schmidt, T. C.,
-              and M. Wählisch, "DNS over CoAP (DoC)", Work in Progress,
-              Internet-Draft, draft-ietf-core-dns-over-coap-20, 16
-              September 2025, <https://datatracker.ietf.org/doc/html/
-              draft-ietf-core-dns-over-coap-20>.
+              oscore-gm-admin-17>.
 
    [I-D.ietf-core-multicast-notifications-proxy]
               Tiloca, M., Höglund, R., Amsüss, C., and F. Palombini,
               "Using Proxies for Observe Notifications as CoAP Multicast
               Responses", Work in Progress, Internet-Draft, draft-ietf-
-              core-multicast-notifications-proxy-00, 20 October 2025,
+              core-multicast-notifications-proxy-01, 22 April 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-core-
-              multicast-notifications-proxy-00>.
+              multicast-notifications-proxy-01>.
 
    [I-D.ietf-core-observe-multicast-notifications]
               Tiloca, M., Höglund, R., Amsüss, C., and F. Palombini,
               "Observe Notifications as CoAP Multicast Responses", Work
               in Progress, Internet-Draft, draft-ietf-core-observe-
-              multicast-notifications-13, 20 October 2025,
+              multicast-notifications-14, 22 April 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-core-
-              observe-multicast-notifications-13>.
+              observe-multicast-notifications-14>.
 
    [I-D.ietf-core-responses]
               Bormann, C. and C. Amsüss, "CoAP: Non-traditional response
@@ -1338,6 +1331,11 @@ Table of Contents
               Constrained Environments Using the OAuth 2.0 Framework
               (ACE-OAuth)", RFC 9200, DOI 10.17487/RFC9200, August 2022,
               <https://www.rfc-editor.org/rfc/rfc9200>.
+
+   [RFC9953]  Lenders, M. S., Amsüss, C., Gündoğan, C., Schmidt, T. C.,
+              and M. Wählisch, "DNS over CoAP (DoC)", RFC 9953,
+              DOI 10.17487/RFC9953, March 2026,
+              <https://www.rfc-editor.org/rfc/rfc9953>.
 
    [SW-EPIV]  Lucas, G., "Star Wars", Lucasfilm Ltd. , 1977.
 
@@ -1959,7 +1957,13 @@ Appendix G.  Document Updates
 
    This section is to be removed before publishing as an RFC.
 
-G.1.  Version -00 to -01
+G.1.  Version -01 to -02
+
+   *  Updated references.
+
+   *  Editorial improvements.
+
+G.2.  Version -00 to -01
 
    *  Updated title.
 
@@ -1992,6 +1996,6 @@ Authors' Addresses
    Marco Tiloca
    RISE AB
    Isafjordsgatan 22
-   SE-16440 Stockholm Kista
+   SE-164 40 Kista
    Sweden
    Email: marco.tiloca@ri.se

@@ -10,22 +10,23 @@
 <meta content="
        When using the Constrained Application Protocol (CoAP), exchanged messages can be protected end-to-end also across untrusted intermediary proxies. This can be achieved with Object Security for Constrained RESTful Environments (OSCORE) or, in the case of group communication, with Group Object Security for Constrained RESTful Environments (Group OSCORE). However, this sidesteps the proxies' abilities to cache responses from the origin server(s). This document restores cacheability of end-end protected responses at proxies, by using Group OSCORE and introducing consensus requests, which any client in an OSCORE group can send to one server or multiple servers in the same group. 
     " name="description">
-<meta content="xml2rfc 3.31.0" name="generator">
+<meta content="xml2rfc 3.34.0" name="generator">
 <meta content="CoAP, OSCORE, multicast, caching, proxy" name="keyword">
 <meta content="draft-ietf-core-cacheable-oscore-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.31.0
-    Python 3.12.12
-    ConfigArgParse 1.7
+  xml2rfc 3.34.0
+    Python 3.14.5
+    ConfigArgParse 1.7.5
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
-    lxml 6.0.2
-    platformdirs 4.5.1
+    lxml 6.1.1
+    natsort 8.4.0
+    platformdirs 4.10.0
     pycountry 24.6.1
     PyYAML 6.0.3
-    requests 2.32.5
-    wcwidth 0.3.0
+    requests 2.33.1
+    wcwidth 0.8.1
 -->
 <link href="draft-ietf-core-cacheable-oscore.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1046,11 +1047,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Group OSCORE Cacheable CoAP Responses</td>
-<td class="right">March 2026</td>
+<td class="right">June 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Amsüss &amp; Tiloca</td>
-<td class="center">Expires 16 September 2026</td>
+<td class="center">Expires 30 December 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1063,12 +1064,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-core-cacheable-oscore-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-03-15" class="published">15 March 2026</time>
+<time datetime="2026-06-28" class="published">28 June 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-09-16">16 September 2026</time></dd>
+<dd class="expires"><time datetime="2026-12-30">30 December 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1116,7 +1117,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 16 September 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 30 December 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1273,7 +1274,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.15.1"><a href="#appendix-G" class="auto internal xref">Appendix G</a>.  <a href="#name-document-updates" class="internal xref">Document Updates</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.1">
-                <p id="section-toc.1-1.15.2.1.1"><a href="#appendix-G.1" class="auto internal xref">G.1</a>.  <a href="#name-version-00-to-01" class="internal xref">Version -00 to -01</a></p>
+                <p id="section-toc.1-1.15.2.1.1"><a href="#appendix-G.1" class="auto internal xref">G.1</a>.  <a href="#name-version-01-to-02" class="internal xref">Version -01 to -02</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.2">
+                <p id="section-toc.1-1.15.2.2.1"><a href="#appendix-G.2" class="auto internal xref">G.2</a>.  <a href="#name-version-00-to-01" class="internal xref">Version -00 to -01</a></p>
 </li>
             </ul>
 </li>
@@ -1331,7 +1335,7 @@ the technical implementation is split into two halves:<a href="#section-1-10" cl
 CoAP proxies take the role of forwarding nodes.
 Caching plays a large role in such networks,
 and cacheable OSCORE provides a compatible security mechanism <span>[<a href="#ICN-paper" class="cite xref">ICN-paper</a>]</span>.<a href="#section-1.1-3" class="pilcrow">¶</a></p>
-<p id="section-1.1-4">When DNS messages are transported over CoAP <span>[<a href="#I-D.ietf-core-dns-over-coap" class="cite xref">I-D.ietf-core-dns-over-coap</a>]</span>, it is recommended to use OSCORE for protecting such messages <span>[<a href="#DNS-CoAP-paper" class="cite xref">DNS-CoAP-paper</a>]</span>. By restoring cacheability of OSCORE-protected responses, it becomes possible to benefit from the cache retrieval of such CoAP responses that particularly transport DNS messages.<a href="#section-1.1-4" class="pilcrow">¶</a></p>
+<p id="section-1.1-4">When DNS messages are transported over CoAP <span>[<a href="#RFC9953" class="cite xref">RFC9953</a>]</span>, it is recommended to use OSCORE for protecting such messages <span>[<a href="#DNS-CoAP-paper" class="cite xref">DNS-CoAP-paper</a>]</span>. By restoring cacheability of OSCORE-protected responses, it becomes possible to benefit from the cache retrieval of such CoAP responses that particularly transport DNS messages.<a href="#section-1.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="terminology">
@@ -2182,19 +2186,15 @@ If a server produces responses in reply to a Deterministic Request and those res
 <dd class="break"></dd>
 <dt id="I-D.ietf-ace-oscore-gm-admin">[I-D.ietf-ace-oscore-gm-admin]</dt>
         <dd>
-<span class="refAuthor">Tiloca, M.</span>, <span class="refAuthor">Höglund, R.</span>, <span class="refAuthor">Van der Stok, P.</span>, and <span class="refAuthor">F. Palombini</span>, <span class="refTitle">"Admin Interface for the OSCORE Group Manager"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-ace-oscore-gm-admin-16</span>, <time datetime="2026-03-12" class="refDate">12 March 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-oscore-gm-admin-16">https://datatracker.ietf.org/doc/html/draft-ietf-ace-oscore-gm-admin-16</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="I-D.ietf-core-dns-over-coap">[I-D.ietf-core-dns-over-coap]</dt>
-        <dd>
-<span class="refAuthor">Lenders, M. S.</span>, <span class="refAuthor">Amsüss, C.</span>, <span class="refAuthor">Gündoğan, C.</span>, <span class="refAuthor">Schmidt, T. C.</span>, and <span class="refAuthor">M. Wählisch</span>, <span class="refTitle">"DNS over CoAP (DoC)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-core-dns-over-coap-20</span>, <time datetime="2025-09-16" class="refDate">16 September 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-dns-over-coap-20">https://datatracker.ietf.org/doc/html/draft-ietf-core-dns-over-coap-20</a>&gt;</span>. </dd>
+<span class="refAuthor">Tiloca, M.</span>, <span class="refAuthor">Höglund, R.</span>, <span class="refAuthor">Van der Stok, P.</span>, and <span class="refAuthor">F. Palombini</span>, <span class="refTitle">"Admin Interface for the OSCORE Group Manager"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-ace-oscore-gm-admin-17</span>, <time datetime="2026-03-26" class="refDate">26 March 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-oscore-gm-admin-17">https://datatracker.ietf.org/doc/html/draft-ietf-ace-oscore-gm-admin-17</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-core-multicast-notifications-proxy">[I-D.ietf-core-multicast-notifications-proxy]</dt>
         <dd>
-<span class="refAuthor">Tiloca, M.</span>, <span class="refAuthor">Höglund, R.</span>, <span class="refAuthor">Amsüss, C.</span>, and <span class="refAuthor">F. Palombini</span>, <span class="refTitle">"Using Proxies for Observe Notifications as CoAP Multicast Responses"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-core-multicast-notifications-proxy-00</span>, <time datetime="2025-10-20" class="refDate">20 October 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-multicast-notifications-proxy-00">https://datatracker.ietf.org/doc/html/draft-ietf-core-multicast-notifications-proxy-00</a>&gt;</span>. </dd>
+<span class="refAuthor">Tiloca, M.</span>, <span class="refAuthor">Höglund, R.</span>, <span class="refAuthor">Amsüss, C.</span>, and <span class="refAuthor">F. Palombini</span>, <span class="refTitle">"Using Proxies for Observe Notifications as CoAP Multicast Responses"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-core-multicast-notifications-proxy-01</span>, <time datetime="2026-04-22" class="refDate">22 April 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-multicast-notifications-proxy-01">https://datatracker.ietf.org/doc/html/draft-ietf-core-multicast-notifications-proxy-01</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-core-observe-multicast-notifications">[I-D.ietf-core-observe-multicast-notifications]</dt>
         <dd>
-<span class="refAuthor">Tiloca, M.</span>, <span class="refAuthor">Höglund, R.</span>, <span class="refAuthor">Amsüss, C.</span>, and <span class="refAuthor">F. Palombini</span>, <span class="refTitle">"Observe Notifications as CoAP Multicast Responses"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-core-observe-multicast-notifications-13</span>, <time datetime="2025-10-20" class="refDate">20 October 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-observe-multicast-notifications-13">https://datatracker.ietf.org/doc/html/draft-ietf-core-observe-multicast-notifications-13</a>&gt;</span>. </dd>
+<span class="refAuthor">Tiloca, M.</span>, <span class="refAuthor">Höglund, R.</span>, <span class="refAuthor">Amsüss, C.</span>, and <span class="refAuthor">F. Palombini</span>, <span class="refTitle">"Observe Notifications as CoAP Multicast Responses"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-core-observe-multicast-notifications-14</span>, <time datetime="2026-04-22" class="refDate">22 April 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-observe-multicast-notifications-14">https://datatracker.ietf.org/doc/html/draft-ietf-core-observe-multicast-notifications-14</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-core-responses">[I-D.ietf-core-responses]</dt>
         <dd>
@@ -2215,6 +2215,10 @@ If a server produces responses in reply to a Deterministic Request and those res
 <dt id="RFC9200">[RFC9200]</dt>
         <dd>
 <span class="refAuthor">Seitz, L.</span>, <span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Wahlstroem, E.</span>, <span class="refAuthor">Erdtman, S.</span>, and <span class="refAuthor">H. Tschofenig</span>, <span class="refTitle">"Authentication and Authorization for Constrained Environments Using the OAuth 2.0 Framework (ACE-OAuth)"</span>, <span class="seriesInfo">RFC 9200</span>, <span class="seriesInfo">DOI 10.17487/RFC9200</span>, <time datetime="2022-08" class="refDate">August 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9200">https://www.rfc-editor.org/rfc/rfc9200</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9953">[RFC9953]</dt>
+        <dd>
+<span class="refAuthor">Lenders, M. S.</span>, <span class="refAuthor">Amsüss, C.</span>, <span class="refAuthor">Gündoğan, C.</span>, <span class="refAuthor">Schmidt, T. C.</span>, and <span class="refAuthor">M. Wählisch</span>, <span class="refTitle">"DNS over CoAP (DoC)"</span>, <span class="seriesInfo">RFC 9953</span>, <span class="seriesInfo">DOI 10.17487/RFC9953</span>, <time datetime="2026-03" class="refDate">March 2026</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9953">https://www.rfc-editor.org/rfc/rfc9953</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="SW-EPIV">[SW-EPIV]</dt>
       <dd>
@@ -2316,9 +2320,9 @@ The client also verifies that the request URI is identical between the original 
 <a href="#appendix-C" class="section-number selfRef">Appendix C. </a><a href="#name-application-for-more-effici" class="section-name selfRef">Application for More Efficient End-to-End Protected Multicast Notifications</a>
       </h2>
 <p id="appendix-C-1">The specification <span>[<a href="#I-D.ietf-core-observe-multicast-notifications" class="cite xref">I-D.ietf-core-observe-multicast-notifications</a>]</span> defines how a CoAP server can serve all clients observing a same resource at once, by sending notifications over multicast. As described in <span>[<a href="#I-D.ietf-core-multicast-notifications-proxy" class="cite xref">I-D.ietf-core-multicast-notifications-proxy</a>]</span>, the approach supports the possible presence of intermediaries such as proxies, also if Group OSCORE is used to protect notifications end-to-end.<a href="#appendix-C-1" class="pilcrow">¶</a></p>
-<p id="appendix-C-2">However, comparing the "Example with a Proxy" in <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-multicast-notifications-proxy-00#section-6" class="relref">Section 6</a> of [<a href="#I-D.ietf-core-multicast-notifications-proxy" class="cite xref">I-D.ietf-core-multicast-notifications-proxy</a>]</span> and the "Example with a Proxy and with Group OSCORE" in <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-multicast-notifications-proxy-00#section-7" class="relref">Section 7</a> of [<a href="#I-D.ietf-core-multicast-notifications-proxy" class="cite xref">I-D.ietf-core-multicast-notifications-proxy</a>]</span> shows that, when using Group OSCORE, more requests need to reach the server. This is because every client originally protects its Observation request individually, and thus it needs a custom response served to obtain the Phantom Request as a Ticket Request.<a href="#appendix-C-2" class="pilcrow">¶</a></p>
+<p id="appendix-C-2">However, comparing the "Example with a Proxy" in <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-multicast-notifications-proxy-01#section-6" class="relref">Section 6</a> of [<a href="#I-D.ietf-core-multicast-notifications-proxy" class="cite xref">I-D.ietf-core-multicast-notifications-proxy</a>]</span> and the "Example with a Proxy and with Group OSCORE" in <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-multicast-notifications-proxy-01#section-7" class="relref">Section 7</a> of [<a href="#I-D.ietf-core-multicast-notifications-proxy" class="cite xref">I-D.ietf-core-multicast-notifications-proxy</a>]</span> shows that, when using Group OSCORE, more requests need to reach the server. This is because every client originally protects its Observation request individually, and thus it needs a custom response served to obtain the Phantom Request as a Ticket Request.<a href="#appendix-C-2" class="pilcrow">¶</a></p>
 <p id="appendix-C-3">If the clients send their requests as the same Deterministic Request, then the server can use these requests as Ticket Requests as well. Thus, there is no need for the server to provide a same Phantom Request to each client.<a href="#appendix-C-3" class="pilcrow">¶</a></p>
-<p id="appendix-C-4">Instead, the server can send a single, unprotected Informative Response - very much like in the example without Group OSCORE - hence setting the proxy up and optionally providing also the latest notification along the way. The proxy can thus be configured by the server following the first request from the clients, after which it has an active observation and a fresh cache entry in time for the second client to arrive. This is shown by the "Example with a Proxy and with Deterministic Requests" in <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-multicast-notifications-proxy-00#section-8" class="relref">Section 8</a> of [<a href="#I-D.ietf-core-multicast-notifications-proxy" class="cite xref">I-D.ietf-core-multicast-notifications-proxy</a>]</span>.<a href="#appendix-C-4" class="pilcrow">¶</a></p>
+<p id="appendix-C-4">Instead, the server can send a single, unprotected Informative Response - very much like in the example without Group OSCORE - hence setting the proxy up and optionally providing also the latest notification along the way. The proxy can thus be configured by the server following the first request from the clients, after which it has an active observation and a fresh cache entry in time for the second client to arrive. This is shown by the "Example with a Proxy and with Deterministic Requests" in <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-multicast-notifications-proxy-01#section-8" class="relref">Section 8</a> of [<a href="#I-D.ietf-core-multicast-notifications-proxy" class="cite xref">I-D.ietf-core-multicast-notifications-proxy</a>]</span>.<a href="#appendix-C-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="open-questions">
@@ -3022,29 +3026,44 @@ Hashes could also be used in a truncated form for that
 <a href="#appendix-G" class="section-number selfRef">Appendix G. </a><a href="#name-document-updates" class="section-name selfRef">Document Updates</a>
       </h2>
 <p id="appendix-G-1">This section is to be removed before publishing as an RFC.<a href="#appendix-G-1" class="pilcrow">¶</a></p>
-<div id="sec-00-01">
+<div id="sec-01-02">
 <section id="appendix-G.1">
-        <h3 id="name-version-00-to-01">
-<a href="#appendix-G.1" class="section-number selfRef">G.1. </a><a href="#name-version-00-to-01" class="section-name selfRef">Version -00 to -01</a>
+        <h3 id="name-version-01-to-02">
+<a href="#appendix-G.1" class="section-number selfRef">G.1. </a><a href="#name-version-01-to-02" class="section-name selfRef">Version -01 to -02</a>
         </h3>
 <ul class="normal">
 <li class="normal" id="appendix-G.1-1.1">
-            <p id="appendix-G.1-1.1.1">Updated title.<a href="#appendix-G.1-1.1.1" class="pilcrow">¶</a></p>
+            <p id="appendix-G.1-1.1.1">Updated references.<a href="#appendix-G.1-1.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-G.1-1.2">
-            <p id="appendix-G.1-1.2.1">Revised abstract and first part of the introduction.<a href="#appendix-G.1-1.2.1" class="pilcrow">¶</a></p>
+            <p id="appendix-G.1-1.2.1">Editorial improvements.<a href="#appendix-G.1-1.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-G.1-1.3">
-            <p id="appendix-G.1-1.3.1">Updated references.<a href="#appendix-G.1-1.3.1" class="pilcrow">¶</a></p>
+        </ul>
+</section>
+</div>
+<div id="sec-00-01">
+<section id="appendix-G.2">
+        <h3 id="name-version-00-to-01">
+<a href="#appendix-G.2" class="section-number selfRef">G.2. </a><a href="#name-version-00-to-01" class="section-name selfRef">Version -00 to -01</a>
+        </h3>
+<ul class="normal">
+<li class="normal" id="appendix-G.2-1.1">
+            <p id="appendix-G.2-1.1.1">Updated title.<a href="#appendix-G.2-1.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-G.1-1.4">
-            <p id="appendix-G.1-1.4.1">Suggested values for IANA registrations.<a href="#appendix-G.1-1.4.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-G.2-1.2">
+            <p id="appendix-G.2-1.2.1">Revised abstract and first part of the introduction.<a href="#appendix-G.2-1.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-G.1-1.5">
-            <p id="appendix-G.1-1.5.1">Removed changelog for the individual submission document.<a href="#appendix-G.1-1.5.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-G.2-1.3">
+            <p id="appendix-G.2-1.3.1">Updated references.<a href="#appendix-G.2-1.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-G.1-1.6">
-            <p id="appendix-G.1-1.6.1">Minor clarifications and editorial improvements.<a href="#appendix-G.1-1.6.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-G.2-1.4">
+            <p id="appendix-G.2-1.4.1">Suggested values for IANA registrations.<a href="#appendix-G.2-1.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-G.2-1.5">
+            <p id="appendix-G.2-1.5.1">Removed changelog for the individual submission document.<a href="#appendix-G.2-1.5.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-G.2-1.6">
+            <p id="appendix-G.2-1.6.1">Minor clarifications and editorial improvements.<a href="#appendix-G.2-1.6.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -3077,7 +3096,7 @@ Hashes could also be used in a truncated form for that
         <div dir="auto" class="left"><span class="fn nameRole">Marco Tiloca</span></div>
 <div dir="auto" class="left"><span class="org">RISE AB</span></div>
 <div dir="auto" class="left"><span class="street-address">Isafjordsgatan 22</span></div>
-<div dir="auto" class="left">SE-<span class="postal-code">16440 Stockholm</span> <span class="locality">Kista</span>
+<div dir="auto" class="left">SE-<span class="postal-code">164 40</span> <span class="locality">Kista</span>
 </div>
 <div dir="auto" class="left"><span class="country-name">Sweden</span></div>
 <div class="email">
