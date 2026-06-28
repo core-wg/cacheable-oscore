@@ -1660,7 +1660,7 @@ Note that an actual IKM-Sender cannot be obtained, since there is no authenticat
               <p id="section-3.4.2-2.6.1">The client protects the request using the pairwise mode of Group OSCORE as defined in <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-groupcomm-28#section-8.3" class="relref">Section 8.3</a> of [<a href="#I-D.ietf-core-oscore-groupcomm" class="cite xref">I-D.ietf-core-oscore-groupcomm</a>]</span>, using the AEAD nonce from Step 1, the deterministic Pairwise Sender Key K from Step 3 as AEAD encryption key, and the finalized AAD.<a href="#section-3.4.2-2.6.1" class="pilcrow">¶</a></p>
 </li>
             <li id="section-3.4.2-2.7">
-              <p id="section-3.4.2-2.7.1">The client <span class="bcp14">MUST NOT</span> include an unprotected (outer) Observe Option if no observation is intended, even in case an Inner Observe Option was included at Step 5.<a href="#section-3.4.2-2.7.1" class="pilcrow">¶</a></p>
+              <p id="section-3.4.2-2.7.1">The client <span class="bcp14">MUST NOT</span> include an unprotected (outer) Observe Option if no observation is intended, even in the case that an Inner Observe Option was included at Step 5.<a href="#section-3.4.2-2.7.1" class="pilcrow">¶</a></p>
 </li>
             <li id="section-3.4.2-2.8">
               <p id="section-3.4.2-2.8.1">The client <span class="bcp14">MUST</span> set 0.05 (FETCH) <span>[<a href="#RFC8132" class="cite xref">RFC8132</a>]</span> as the Outer Code of the protected request to make it usable for a proxy's cache, even if no observation is intended.<a href="#section-3.4.2-2.8.1" class="pilcrow">¶</a></p>
@@ -1706,7 +1706,7 @@ If the 'kid' parameter of the OSCORE Option specifies a different Sender ID than
               <p id="section-3.4.3-3.5.1">The server decrypts and verifies the request using the pairwise mode of Group OSCORE as defined in <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-groupcomm-28#section-8.4" class="relref">Section 8.4</a> of [<a href="#I-D.ietf-core-oscore-groupcomm" class="cite xref">I-D.ietf-core-oscore-groupcomm</a>]</span> and the Recipient Context from Step 4, with the difference that the server does not perform replay checks against a Replay Window (see below).<a href="#section-3.4.3-3.5.1" class="pilcrow">¶</a></p>
 </li>
           </ol>
-<p id="section-3.4.3-4">In case of successful verification, the server <span class="bcp14">MUST</span> also perform the following actions, before possibly delivering the request to the application.<a href="#section-3.4.3-4" class="pilcrow">¶</a></p>
+<p id="section-3.4.3-4">If the verification is successful, the server <span class="bcp14">MUST</span> also perform the following actions, before possibly delivering the request to the application.<a href="#section-3.4.3-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.4.3-5.1">
               <p id="section-3.4.3-5.1.1">Starting from the recovered plain CoAP request, the server <span class="bcp14">MUST</span> recompute the same hash that the client computed at Step 2 of <a href="#sssec-use-deterministic-requests-client-req" class="auto internal xref">Section 3.4.2</a>.<a href="#section-3.4.3-5.1.1" class="pilcrow">¶</a></p>
@@ -1765,10 +1765,10 @@ Note that the Request-Hash Option is treated as Class I here.<a href="#section-3
 <p id="section-3.4.4-6">Upon receiving the response, the client performs the following actions.<a href="#section-3.4.4-6" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-3.4.4-7">
 <li id="section-3.4.4-7.1">
-              <p id="section-3.4.4-7.1.1">In case the response includes a 'kid' in the OSCORE Option, the client <span class="bcp14">MUST</span> verify it to be exactly the 'kid' of the server to which the Deterministic Request was sent, unless responses from multiple servers are expected (see <a href="#det-req-one-to-many" class="auto internal xref">Section 3.4.5</a>).<a href="#section-3.4.4-7.1.1" class="pilcrow">¶</a></p>
+              <p id="section-3.4.4-7.1.1">If the response includes a 'kid' in the OSCORE Option, the client <span class="bcp14">MUST</span> verify it to be exactly the 'kid' of the server to which the Deterministic Request was sent, unless responses from multiple servers are expected (see <a href="#det-req-one-to-many" class="auto internal xref">Section 3.4.5</a>).<a href="#section-3.4.4-7.1.1" class="pilcrow">¶</a></p>
 </li>
             <li id="section-3.4.4-7.2">
-              <p id="section-3.4.4-7.2.1">In case the response does not include the Request-Hash Option, the client adds the Request-Hash Option to the response, setting the Option Value to the same Option Value of the Request-Hash Option that was included in the Deterministic Request.<a href="#section-3.4.4-7.2.1" class="pilcrow">¶</a></p>
+              <p id="section-3.4.4-7.2.1">If the response does not include the Request-Hash Option, the client adds the Request-Hash Option to the response, setting the Option Value to the same Option Value of the Request-Hash Option that was included in the Deterministic Request.<a href="#section-3.4.4-7.2.1" class="pilcrow">¶</a></p>
 <p id="section-3.4.4-7.2.2">
 Otherwise, the client <span class="bcp14">MUST</span> reject the response if the Option Value of the Request-Hash Option is different from the Option Value of the Request-Hash Option that was included in the Deterministic Request.<a href="#section-3.4.4-7.2.2" class="pilcrow">¶</a></p>
 </li>
@@ -1794,7 +1794,7 @@ Note that this deviates from <span><a href="https://rfc-editor.org/rfc/rfc8613#s
 <p id="section-3.4.5-4">[ Note: If it was protected with the group mode, the request hash would need to be fed into a group key derivation just for this corner case. Furthermore, there would need to be a signature in spite of no authentication credential (and public key included therein) associated with the Deterministic Client. ]<a href="#section-3.4.5-4" class="pilcrow">¶</a></p>
 <p id="section-3.4.5-5">When a server receives a request from the Deterministic Client as addressed to a CoAP group, the server proceeds as defined in <a href="#sssec-use-deterministic-requests-server-req" class="auto internal xref">Section 3.4.3</a>, with the difference that it <span class="bcp14">MUST</span> include its own Sender ID in the response, as the 'kid' parameter of the OSCORE Option.<a href="#section-3.4.5-5" class="pilcrow">¶</a></p>
 <p id="section-3.4.5-6">Although it is normally optional for the server to include its Sender ID when replying to a request protected in pairwise mode, it is required in this case for allowing the client to retrieve the Recipient Context associated with the server originating the response.<a href="#section-3.4.5-6" class="pilcrow">¶</a></p>
-<p id="section-3.4.5-7">If a server is a member of a CoAP group, and it fails to successfully decrypt and verify an incoming Deterministic Request, then it is <span class="bcp14">RECOMMENDED</span> for that server to not reply with an error response, in case the server verifies that the Deterministic Request was sent to the CoAP group (e.g., to the associated IP multicast address) or in case the server is not able to verify that altogether.<a href="#section-3.4.5-7" class="pilcrow">¶</a></p>
+<p id="section-3.4.5-7">If a server is a member of a CoAP group, and it fails to successfully decrypt and verify an incoming Deterministic Request, then it is <span class="bcp14">RECOMMENDED</span> for that server to not reply with an error response, in the case that the server verifies that the Deterministic Request was sent to the CoAP group (e.g., to the associated IP multicast address) or in the case that the server is not able to verify that altogether.<a href="#section-3.4.5-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2382,7 +2382,7 @@ Hashes could also be used in a truncated form for that
 <p id="appendix-F-1">This appendix includes test vectors for an example where the method defined in this document is used.<a href="#appendix-F-1" class="pilcrow">¶</a></p>
 <p id="appendix-F-2">In the following, a CoAP Client C and a CoAP Server S are member of the same OSCORE group, and they exchange Deterministic Requests and corresponding responses.<a href="#appendix-F-2" class="pilcrow">¶</a></p>
 <p id="appendix-F-3">Note that, while they are consistent with the presented example, the values of the Token and Message ID in the CoAP messages are only indicative, as they are subject to change throughout different message exchanges.<a href="#appendix-F-3" class="pilcrow">¶</a></p>
-<p id="appendix-F-4">The considered authentication credentials of the CoAP Server S and of the Group Manager are CWT Claims Sets (CCSs) <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span>. Both authentication credentials as well as the aad_array used through the Group OSCORE processing are also expressed in CBOR extended diagnostic notation as defined in <span><a href="https://rfc-editor.org/rfc/rfc8949#section-8" class="relref">Section 8</a> of [<a href="#RFC8949" class="cite xref">RFC8949</a>]</span> and <span><a href="https://rfc-editor.org/rfc/rfc8610#appendix-G" class="relref">Appendix G</a> of [<a href="#RFC8610" class="cite xref">RFC8610</a>]</span> ("diagnostic notation").<a href="#appendix-F-4" class="pilcrow">¶</a></p>
+<p id="appendix-F-4">The considered authentication credentials of the CoAP Server S and of the Group Manager are CWT Claims Sets (CCSs) <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span>. Both authentication credentials as well as the aad_array used through the Group OSCORE processing are also expressed in CBOR extended diagnostic notation as defined in <span><a href="https://rfc-editor.org/rfc/rfc8949#section-8" class="relref">Section 8</a> of [<a href="#RFC8949" class="cite xref">RFC8949</a>]</span> and <span><a href="https://rfc-editor.org/rfc/rfc8610#appendix-G" class="relref">Appendix G</a> of [<a href="#RFC8610" class="cite xref">RFC8610</a>]</span>.<a href="#appendix-F-4" class="pilcrow">¶</a></p>
 <div id="setup">
 <section id="appendix-F.1">
         <h3 id="name-setup">
@@ -2459,7 +2459,7 @@ Hashes could also be used in a truncated form for that
 </div>
 <ul class="normal">
 <li class="normal" id="appendix-F.1-12.1">
-            <p id="appendix-F.1-12.1.1">Server's authentication credential as CCS (diagnostic notation):<a href="#appendix-F.1-12.1.1" class="pilcrow">¶</a></p>
+            <p id="appendix-F.1-12.1.1">Server's authentication credential as CCS (CBOR diagnostic notation):<a href="#appendix-F.1-12.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <div class="lang-cbor-diag sourcecode" id="appendix-F.1-13">
@@ -2506,7 +2506,7 @@ Hashes could also be used in a truncated form for that
 </div>
 <ul class="normal">
 <li class="normal" id="appendix-F.1-18.1">
-            <p id="appendix-F.1-18.1.1">Group Manager's authentication credential as CCS (diagnostic notation):<a href="#appendix-F.1-18.1.1" class="pilcrow">¶</a></p>
+            <p id="appendix-F.1-18.1.1">Group Manager's authentication credential as CCS (CBOR diagnostic notation):<a href="#appendix-F.1-18.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <div class="lang-cbor-diag sourcecode" id="appendix-F.1-19">
@@ -2548,7 +2548,7 @@ Hashes could also be used in a truncated form for that
         <h3 id="name-deterministic-request">
 <a href="#appendix-F.2" class="section-number selfRef">F.2. </a><a href="#name-deterministic-request" class="section-name selfRef">Deterministic Request</a>
         </h3>
-<p id="appendix-F.2-1">The client generates an unprotected CoAP GET request, which contains only the Uri-Path option with value "helloWorld". The request is Confirmable, with a Token length equal to 8 bytes.<a href="#appendix-F.2-1" class="pilcrow">¶</a></p>
+<p id="appendix-F.2-1">The client generates an unprotected CoAP GET request, which contains only the Uri-Path Option with value "helloWorld". The request is Confirmable, with a Token length equal to 8 bytes.<a href="#appendix-F.2-1" class="pilcrow">¶</a></p>
 <p id="appendix-F.2-2">Unprotected CoAP request (23 bytes):<a href="#appendix-F.2-2" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-F.2-3">
 <pre>
@@ -2558,10 +2558,10 @@ Hashes could also be used in a truncated form for that
   01 (Code: GET - 1 byte)
   9483 (Message ID - 2 bytes)
   f0aeef1c796812a0 (Token - 8 bytes)
-  ba 68656c6c6f576f726c64 (Uri-path:"helloWorld" - 11 bytes)
+  ba 68656c6c6f576f726c64 (Uri-path: "helloWorld" - 11 bytes)
 </pre><a href="#appendix-F.2-3" class="pilcrow">¶</a>
 </div>
-<p id="appendix-F.2-4">The client protects the CoAP request above to produce a Deterministic Request. When doing so, the client does not include an Inner Observe option.<a href="#appendix-F.2-4" class="pilcrow">¶</a></p>
+<p id="appendix-F.2-4">The client protects the CoAP request above to produce a Deterministic Request. When doing so, the client does not include an Inner Observe Option.<a href="#appendix-F.2-4" class="pilcrow">¶</a></p>
 <p id="appendix-F.2-5"></p>
 <p id="appendix-F.2-6">The following information is used to compute the Request-Hash value.<a href="#appendix-F.2-6" class="pilcrow">¶</a></p>
 <ul class="normal">
@@ -2576,7 +2576,7 @@ Hashes could also be used in a truncated form for that
 </div>
 <ul class="normal">
 <li class="normal" id="appendix-F.2-9.1">
-            <p id="appendix-F.2-9.1.1">aad_array (diagnostic notation):<a href="#appendix-F.2-9.1.1" class="pilcrow">¶</a></p>
+            <p id="appendix-F.2-9.1.1">aad_array (CBOR diagnostic notation):<a href="#appendix-F.2-9.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <div class="lang-cbor-diag sourcecode" id="appendix-F.2-10">
@@ -2713,7 +2713,7 @@ Hashes could also be used in a truncated form for that
 <p id="appendix-F.2-34">From the previous parameter, the following is derived:<a href="#appendix-F.2-34" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-F.2-35.1">
-            <p id="appendix-F.2-35.1.1">OSCORE option value (6 bytes):<a href="#appendix-F.2-35.1.1" class="pilcrow">¶</a></p>
+            <p id="appendix-F.2-35.1.1">OSCORE Option value (6 bytes):<a href="#appendix-F.2-35.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <div class="alignLeft art-text artwork" id="appendix-F.2-36">
@@ -2723,7 +2723,7 @@ Hashes could also be used in a truncated form for that
 </div>
 <ul class="normal">
 <li class="normal" id="appendix-F.2-37.1">
-            <p id="appendix-F.2-37.1.1">Request-Hash option value (32 bytes):<a href="#appendix-F.2-37.1.1" class="pilcrow">¶</a></p>
+            <p id="appendix-F.2-37.1.1">Request-Hash Option value (32 bytes):<a href="#appendix-F.2-37.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <div class="alignLeft art-text artwork" id="appendix-F.2-38">
@@ -2749,15 +2749,15 @@ Hashes could also be used in a truncated form for that
   0b5246cca71e3926f0a8cebefdcabbc80e79579d5a1ee17dff65bcd5d5edf4
   13497bfdeec8975e2acafa702b45
 
-0x48 (version:1, type: CON, Token Length: 8 - 1 byte)
+0x48 (Version: 1, type: CON, Token Length: 8 - 1 byte)
   05 (Code: FETCH - 1 byte)
   9483 (Message ID - 2 bytes)
   f0aeef1c796812a0 (Token - 8 bytes)
-  96 190002dd11dc (OSCORE option - 7 bytes)
+  96 190002dd11dc (OSCORE Option - 7 bytes)
   ed 010e 13 404b3a7c9f8c878a0b5246cca71e3926f0a8cebefdcabbc8
-             0e79579d5a1ee17d (Request-Hash option - 36 bytes)
-  ff (payload marker - 1 byte)
-  65bcd5d5edf413497bfdeec8975e2acafa702b45 (payload - 20 bytes)
+             0e79579d5a1ee17d (Request-Hash Option - 36 bytes)
+  ff (Payload marker - 1 byte)
+  65bcd5d5edf413497bfdeec8975e2acafa702b45 (Payload - 20 bytes)
 </pre><a href="#appendix-F.2-42" class="pilcrow">¶</a>
 </div>
 </section>
@@ -2774,15 +2774,15 @@ Hashes could also be used in a truncated form for that
 0x68459483f0aeef1c796812a0d2010e10ed010913404b3a7c9f8c878a0b5246
   cca71e3926f0a8cebefdcabbc80e79579d5a1ee17dff2e2049443a203432
 
-0x68 (version: 1, type: ACK, Token Length: 8 - 1 byte)
+0x68 (Version: 1, type: ACK, Token Length: 8 - 1 byte)
   45 (Code: 2.05 - 1 byte)
   9483 (Message ID - 2 bytes)
   f0aeef1c796812a0 (Token - 8 bytes)
-  d2 01 0e10 (Max-Age:3600 - 4 bytes)
+  d2 01 0e10 (Max-Age Option: 3600 - 4 bytes)
   ed 0109 13 404b3a7c9f8c878a0b5246cca71e3926f0a8cebefdcabbc8
-             0e79579d5a1ee17d (Request-Hash - 36 bytes)
-  ff (payload marker - 1 byte)
-  2e2049443a203432 (payload - 8 bytes)
+             0e79579d5a1ee17d (Request-Hash Option - 36 bytes)
+  ff (Payload marker - 1 byte)
+  2e2049443a203432 (Payload - 8 bytes)
 </pre><a href="#appendix-F.3-3" class="pilcrow">¶</a>
 </div>
 <p id="appendix-F.3-4">The server protects the CoAP response above as follows. When doing so, the server: does not include an Inner Observe option; includes its own Sender ID in the 'kid' of the OSCORE option; elides the Request-Hash option from the response.<a href="#appendix-F.3-4" class="pilcrow">¶</a></p>
@@ -2820,7 +2820,7 @@ Hashes could also be used in a truncated form for that
 </div>
 <ul class="normal">
 <li class="normal" id="appendix-F.3-13.1">
-            <p id="appendix-F.3-13.1.1">aad_array (diagnostic notation):<a href="#appendix-F.3-13.1.1" class="pilcrow">¶</a></p>
+            <p id="appendix-F.3-13.1.1">aad_array (CBOR diagnostic notation):<a href="#appendix-F.3-13.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <div class="lang-cbor-diag sourcecode" id="appendix-F.3-14">
@@ -3003,17 +3003,17 @@ Hashes could also be used in a truncated form for that
   25e58d2d777b105c06c5bade67d6262ca30712342a3275dd378a99e8f5ddfa
   5d257c5a4d77b5d681d73848ed
 
-0x68 (version:1, type: ACK, Token Length: 8 - 1 byte)
+0x68 (Version: 1, type: ACK, Token Length: 8 - 1 byte)
   45 (Code: 2.05 - 1 byte)
   9483 (Message ID - 2 bytes)
   f0aeef1c796812a0 (Token - 8 bytes)
-  93 290052 (OSCORE option - 4 bytes)
-  52 0e10 (Max age option - 3 bytes)
-  ff (payload marker - 1 byte)
+  93 290052 (OSCORE Option - 4 bytes)
+  52 0e10 (Max-Age Option: 3600 - 3 bytes)
+  ff (Payload marker - 1 byte)
   cbc7356c84c10b626fef8bd57ed2dfaeec175f8e44e1b29180
     6c0fb8b26be41b9266766ee4175644dfdb25e58d2d777b10
     5c06c5bade67d6262ca30712342a3275dd378a99e8f5ddfa
-    5d257c5a4d77b5d681d73848ed (payload - 86 bytes)
+    5d257c5a4d77b5d681d73848ed (Payload - 86 bytes)
 </pre><a href="#appendix-F.3-43" class="pilcrow">¶</a>
 </div>
 </section>
