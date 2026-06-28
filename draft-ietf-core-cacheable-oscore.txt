@@ -9,9 +9,8 @@ Expires: 30 December 2026                                        RISE AB
                                                             28 June 2026
 
 
-    End-to-End Protected and Cacheable Responses for the Constrained
-Application Protocol (CoAP) using Group Object Security for Constrained
-                  RESTful Environments (Group OSCORE)
+  End-to-End Protected and Cacheable CoAP Responses using Group Object
+      Security for Constrained RESTful Environments (Group OSCORE)
                 draft-ietf-core-cacheable-oscore-latest
 
 Abstract
@@ -23,7 +22,7 @@ Abstract
    communication, with Group Object Security for Constrained RESTful
    Environments (Group OSCORE).  However, this sidesteps the proxies'
    abilities to cache responses from the origin server(s).  This
-   document restores cacheability of end-end protected responses at
+   document restores cacheability of end-to-end protected responses at
    proxies, by using Group OSCORE and introducing consensus requests,
    which any client in an OSCORE group can send to one server or
    multiple servers in the same group.
@@ -1958,6 +1957,8 @@ Appendix G.  Document Updates
    This section is to be removed before publishing as an RFC.
 
 G.1.  Version -01 to -02
+
+   *  Shortened title.
 
    *  Updated references.
 
