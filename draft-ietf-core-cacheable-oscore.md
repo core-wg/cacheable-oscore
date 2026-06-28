@@ -24,7 +24,7 @@ author:
   org: RISE AB
   street: Isafjordsgatan 22
   city: Kista
-  code: SE-16440 Stockholm
+  code: SE-164 40
   country: Sweden
   email: marco.tiloca@ri.se
 
@@ -56,9 +56,9 @@ informative:
   I-D.amsuess-lwig-oscore:
   I-D.ietf-core-observe-multicast-notifications:
   I-D.ietf-core-multicast-notifications-proxy:
-  I-D.ietf-core-dns-over-coap:
   I-D.ietf-core-responses:
   I-D.ietf-ace-oscore-gm-admin:
+  RFC9953:
   "SW-EPIV":
     author:
       -
@@ -161,7 +161,7 @@ CoAP proxies take the role of forwarding nodes.
 Caching plays a large role in such networks,
 and cacheable OSCORE provides a compatible security mechanism {{ICN-paper}}.
 
-When DNS messages are transported over CoAP {{I-D.ietf-core-dns-over-coap}}, it is recommended to use OSCORE for protecting such messages {{DNS-CoAP-paper}}. By restoring cacheability of OSCORE-protected responses, it becomes possible to benefit from the cache retrieval of such CoAP responses that particularly transport DNS messages.
+When DNS messages are transported over CoAP {{RFC9953}}, it is recommended to use OSCORE for protecting such messages {{DNS-CoAP-paper}}. By restoring cacheability of OSCORE-protected responses, it becomes possible to benefit from the cache retrieval of such CoAP responses that particularly transport DNS messages.
 
 ## Terminology ## {#terminology}
 
@@ -1231,6 +1231,12 @@ From there, the protected CoAP response (106 bytes):
 
 # Document Updates # {#sec-document-updates}
 {:removeinrfc}
+
+## Version -01 to -02 ## {#sec-01-02}
+
+* Updated references.
+
+* Editorial improvements.
 
 ## Version -00 to -01 ## {#sec-00-01}
 
