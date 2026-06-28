@@ -1,7 +1,7 @@
 ---
 v: 3
 
-title: "End-to-End Protected and Cacheable Responses for the Constrained Application Protocol (CoAP) using Group Object Security for Constrained RESTful Environments (Group OSCORE)"
+title: "End-to-End Protected and Cacheable CoAP Responses using Group Object Security for Constrained RESTful Environments (Group OSCORE)"
 abbrev: "Group OSCORE Cacheable CoAP Responses"
 docname: draft-ietf-core-cacheable-oscore-latest
 ipr: trust200902
@@ -113,7 +113,7 @@ entity:
 
 --- abstract
 
-When using the Constrained Application Protocol (CoAP), exchanged messages can be protected end-to-end also across untrusted intermediary proxies. This can be achieved with Object Security for Constrained RESTful Environments (OSCORE) or, in the case of group communication, with Group Object Security for Constrained RESTful Environments (Group OSCORE). However, this sidesteps the proxies' abilities to cache responses from the origin server(s). This document restores cacheability of end-end protected responses at proxies, by using Group OSCORE and introducing consensus requests, which any client in an OSCORE group can send to one server or multiple servers in the same group.
+When using the Constrained Application Protocol (CoAP), exchanged messages can be protected end-to-end also across untrusted intermediary proxies. This can be achieved with Object Security for Constrained RESTful Environments (OSCORE) or, in the case of group communication, with Group Object Security for Constrained RESTful Environments (Group OSCORE). However, this sidesteps the proxies' abilities to cache responses from the origin server(s). This document restores cacheability of end-to-end protected responses at proxies, by using Group OSCORE and introducing consensus requests, which any client in an OSCORE group can send to one server or multiple servers in the same group.
 
 --- middle
 
@@ -1233,6 +1233,8 @@ From there, the protected CoAP response (106 bytes):
 {:removeinrfc}
 
 ## Version -01 to -02 ## {#sec-01-02}
+
+* Shortened title.
 
 * Updated references.
 
