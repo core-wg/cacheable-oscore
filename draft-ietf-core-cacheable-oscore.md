@@ -365,7 +365,7 @@ With reference to the same realization of Group Manager, no such extension is ne
 
 ### Client Composition of Deterministic Requests {#sssec-use-deterministic-requests-client-req}
 
-In order to build a Deterministic Request, the client protects the plain CoAP request using the pairwise mode of Group OSCORE (see {{Section 8 of I-D.ietf-core-oscore-groupcomm}}), with the following alterations.
+In order to compose a Deterministic Request, the client protects the plain CoAP request using the pairwise mode of Group OSCORE (see {{Section 8 of I-D.ietf-core-oscore-groupcomm}}), with the following alterations.
 
 1. When preparing the OSCORE Option, the external_aad, and the AEAD nonce:
 
@@ -383,17 +383,17 @@ In order to build a Deterministic Request, the client protects the plain CoAP re
 
    * The Sender Key of the Deterministic Client is used as the first argument of the HMAC-based Key Derivation Function (HKDF).
 
-   * The hash H from Step 2 is used as the second argument IKM-Sender of the HKDF, i.e., as a pseudo Input Keying Material (IKM) computable by all the group members.
+   * The hash H from Step 2 is used as the second argument IKM-Sender of the HKDF, i.e., as a pseudo Input Keying Material (IKM) computable by all the group members that support the pairwise mode of Group OSCORE.
 
-      Note that an actual IKM-Sender cannot be obtained, since there is no authentication credential (and public key included therein) associated with the Deterministic Client to be used as Sender Authentication Credential and for computing an actual Diffie-Hellman Shared Secret.
+      Note that an actual IKM-Sender cannot be obtained, since there is no authentication credential (and public key included therein) associated with the Deterministic Client to be used as Sender Authentication Credential and for computing an actual shared secret.
 
-   * The Sender ID of the Deterministic Client is used as the value for the 'id' element of the 'info' parameter used as third argument of the HKDF.
+   * The Sender ID of the Deterministic Client is used as the value for the 'id' element of the 'info' parameter that is used as the third argument of the HKDF.
 
 4. The client includes a Request-Hash Option in the request to protect, with value set to the hash H from Step 2.
 
 5. The client MAY include an Inner Observe Option set to 0 (register) to be protected with Group OSCORE, even if no observation is intended {{RFC7641}} (see {{sec-deterministic-requests-unprotected}}).
 
-6. The client protects the request using the pairwise mode of Group OSCORE as defined in {{Section 8.3 of I-D.ietf-core-oscore-groupcomm}}, using the AEAD nonce from Step 1, the deterministic Pairwise Sender Key K from Step 3 as AEAD encryption key, and the finalized AAD.
+6. The client protects the request using the pairwise mode of Group OSCORE as defined in {{Section 8.3 of I-D.ietf-core-oscore-groupcomm}}, using the AEAD nonce from Step 1, the deterministic Pairwise Sender Key K from Step 3 as the AEAD encryption key, and the finalized AAD.
 
 7. The client MUST NOT include an unprotected (outer) Observe Option if no observation is intended, even in the case that an Inner Observe Option was included at Step 5.
 
@@ -403,7 +403,7 @@ The result is the Deterministic Request to be sent.
 
 Since the encryption key K is derived using material from the whole plain CoAP request, this (key, nonce) pair is only used for this very message, which is deterministically encrypted unless there is a hash collision between two Deterministic Requests.
 
-The deterministic encryption requires that the AEAD algorithm used is deterministic in itself. This is the case for all the AEAD algorithms currently registered with COSE in {{IANA.COSE.Algorithms}}. For future algorithms, a flag in the COSE registry is to be added.
+The deterministic encryption requires that the AEAD algorithm used is deterministic in itself. This is the case for all the AEAD algorithms currently registered with COSE in the "COSE Algorithms" registry {{IANA.COSE.Algorithms}}. For future algorithms, a flag in the that registry is to be added.
 
 Note that, while the process defined above is based on the pairwise mode of Group OSCORE, no information about the server takes part in the key derivation or is included in the AAD. This is intentional, since it allows sending a Deterministic Request to multiple servers at once (see {{det-req-one-to-many}}). On the other hand, it requires later checks at the client when verifying a response to a Deterministic Request (see {{ssec-use-deterministic-requests-response}}).
 
