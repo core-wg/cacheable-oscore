@@ -890,12 +890,6 @@ Table of Contents
    what happens.  This does not affect the use of Group OSCORE in other
    situations.
 
-   [ Note: If it was protected with the group mode, the request hash
-   would need to be fed into a group key derivation just for this corner
-   case.  Furthermore, there would need to be a signature in spite of no
-   authentication credential (and public key included therein)
-   associated with the Deterministic Client. ]
-
    When a server receives a request from the Deterministic Client as
    addressed to a CoAP group, the server proceeds as defined in
    Section 3.4.3, with the difference that it MUST include its own
