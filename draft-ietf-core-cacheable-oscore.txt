@@ -711,10 +711,10 @@ Table of Contents
        In such a case, the present step consists only in the
        (re-)derivation of the deterministic Pairwise Recipient Key K
        within the considered Recipient Context, to be used for
-       decrypting and verifying the present request.
+       decrypting and verifying the present Deterministic Request.
 
-   5.  The server decrypts and verifies the request using the pairwise
-       mode of Group OSCORE as defined in Section 8.4 of
+   5.  The server decrypts and verifies the Deterministic Request using
+       the pairwise mode of Group OSCORE as defined in Section 8.4 of
        [I-D.ietf-core-oscore-groupcomm] and the Recipient Context from
        Step 4, with the following differences:
 

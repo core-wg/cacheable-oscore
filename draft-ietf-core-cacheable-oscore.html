@@ -1714,10 +1714,10 @@ Note that an actual IKM-Recipient cannot be obtained, since there is no authenti
 <p id="section-3.4.3-3.4.3">
 Note that the server might already be storing a Recipient Context associated with the Deterministic Client, e.g., if that was established upon receiving a previous Deterministic Request in the OSCORE group, or already upon joining the OSCORE group.<a href="#section-3.4.3-3.4.3" class="pilcrow">¶</a></p>
 <p id="section-3.4.3-3.4.4">
-In such a case, the present step consists only in the (re-)derivation of the deterministic Pairwise Recipient Key K within the considered Recipient Context, to be used for decrypting and verifying the present request.<a href="#section-3.4.3-3.4.4" class="pilcrow">¶</a></p>
+In such a case, the present step consists only in the (re-)derivation of the deterministic Pairwise Recipient Key K within the considered Recipient Context, to be used for decrypting and verifying the present Deterministic Request.<a href="#section-3.4.3-3.4.4" class="pilcrow">¶</a></p>
 </li>
             <li id="section-3.4.3-3.5">
-              <p id="section-3.4.3-3.5.1">The server decrypts and verifies the request using the pairwise mode of Group OSCORE as defined in <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-groupcomm-28#section-8.4" class="relref">Section 8.4</a> of [<a href="#I-D.ietf-core-oscore-groupcomm" class="cite xref">I-D.ietf-core-oscore-groupcomm</a>]</span> and the Recipient Context from Step 4, with the following differences:<a href="#section-3.4.3-3.5.1" class="pilcrow">¶</a></p>
+              <p id="section-3.4.3-3.5.1">The server decrypts and verifies the Deterministic Request using the pairwise mode of Group OSCORE as defined in <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-groupcomm-28#section-8.4" class="relref">Section 8.4</a> of [<a href="#I-D.ietf-core-oscore-groupcomm" class="cite xref">I-D.ietf-core-oscore-groupcomm</a>]</span> and the Recipient Context from Step 4, with the following differences:<a href="#section-3.4.3-3.5.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.4.3-3.5.2.1">
                   <p id="section-3.4.3-3.5.2.1.1">When preparing the external_aad, the element 'sender_cred' in the aad_array takes the empty CBOR byte string (0x40).<a href="#section-3.4.3-3.5.2.1.1" class="pilcrow">¶</a></p>
