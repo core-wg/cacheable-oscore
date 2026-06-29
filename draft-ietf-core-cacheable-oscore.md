@@ -268,7 +268,7 @@ but considered starting points are:
   Instead, clients should only set it when there was a recent response conveying that ETag value.
   When using block-wise transfers {{RFC7959}} and obtaining later blocks, clients should not send the known-stale ETag value.
 
-* When using block-wise transfers {{RFC7959}}, maximally sized large Inner blocks (szx=6) SHOULD be selected.
+* When using block-wise transfers {{RFC7959}}, maximally sized large Inner blocks (szx=6) should be selected.
 
   This not only serves to align the clients on consistent cache entries,
   but it also helps amortize the additional data transferred in the per-message signatures of the corresponding responses, which are protected with the group mode of Group OSCORE.
