@@ -595,8 +595,7 @@ Table of Contents
 
        *  The hash H from Step 2 is used as the second argument IKM-
           Sender of the HKDF, i.e., as a pseudo Input Keying Material
-          (IKM) computable by all the group members that support the
-          pairwise mode of Group OSCORE.
+          (IKM) computable by all the group members.
 
           Note that an actual IKM-Sender cannot be obtained, since there
           is no authentication credential (and public key included

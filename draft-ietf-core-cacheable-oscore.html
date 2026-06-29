@@ -1638,7 +1638,7 @@ Note that the payload of the plain CoAP request (if any) is not self-delimiting,
                   <p id="section-3.4.2-2.3.2.1.1">The Sender Key of the Deterministic Client is used as the first argument of the HMAC-based Key Derivation Function (HKDF).<a href="#section-3.4.2-2.3.2.1.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-3.4.2-2.3.2.2">
-                  <p id="section-3.4.2-2.3.2.2.1">The hash H from Step 2 is used as the second argument IKM-Sender of the HKDF, i.e., as a pseudo Input Keying Material (IKM) computable by all the group members that support the pairwise mode of Group OSCORE.<a href="#section-3.4.2-2.3.2.2.1" class="pilcrow">¶</a></p>
+                  <p id="section-3.4.2-2.3.2.2.1">The hash H from Step 2 is used as the second argument IKM-Sender of the HKDF, i.e., as a pseudo Input Keying Material (IKM) computable by all the group members.<a href="#section-3.4.2-2.3.2.2.1" class="pilcrow">¶</a></p>
 <p id="section-3.4.2-2.3.2.2.2">
 Note that an actual IKM-Sender cannot be obtained, since there is no authentication credential (and public key included therein) associated with the Deterministic Client to be used as Sender Authentication Credential and for computing an actual shared secret.<a href="#section-3.4.2-2.3.2.2.2" class="pilcrow">¶</a></p>
 </li>
