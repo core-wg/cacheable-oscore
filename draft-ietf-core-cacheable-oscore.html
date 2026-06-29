@@ -1755,10 +1755,10 @@ These checks replace the otherwise present requirement that the server needs to 
 <p id="section-3.4.4-1">When preparing a response to a Deterministic Request, the server treats the Request-Hash Option as a Class I option. The value of the Request-Hash Option <span class="bcp14">MUST</span> be equal to the value of the Request-Hash Option that was specified in the corresponding Deterministic Request. Since the client is aware of the Request-Hash value to expect in the response, the server usually elides the Request-Hash Option from the actually transmitted response.<a href="#section-3.4.4-1" class="pilcrow">¶</a></p>
 <p id="section-3.4.4-2">Treating the Request-Hash Option as a Class I option creates the request-response binding, thus ensuring that no mismatched responses can be successfully unprotected and verified by the client (see <a href="#oscore-nosourceauth" class="auto internal xref">Section 2</a>).<a href="#section-3.4.4-2" class="pilcrow">¶</a></p>
 <p id="section-3.4.4-3">The client <span class="bcp14">MUST</span> reject a response to a Deterministic Request, if the value of the Request-Hash Option included in the response is not equal to the value that was specified in the Request-Hash Option of that Deterministic Request.<a href="#section-3.4.4-3" class="pilcrow">¶</a></p>
-<p id="section-3.4.4-4">When preparing the response, the server performs the following actions.<a href="#section-3.4.4-4" class="pilcrow">¶</a></p>
+<p id="section-3.4.4-4">In order to compose a response to a Deterministic Request, the server performs the following actions.<a href="#section-3.4.4-4" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-3.4.4-5">
 <li id="section-3.4.4-5.1">
-              <p id="section-3.4.4-5.1.1">The server includes in the response a Max-Age Option with value different from zero, thus making the Deterministic Request usable for the proxy cache.<a href="#section-3.4.4-5.1.1" class="pilcrow">¶</a></p>
+              <p id="section-3.4.4-5.1.1">When composing the plain CoAP response, the server <span class="bcp14">MUST</span> either omit an Inner Max-Age Option or include it with Option Value different from 0.<a href="#section-3.4.4-5.1.1" class="pilcrow">¶</a></p>
 </li>
             <li id="section-3.4.4-5.2">
               <p id="section-3.4.4-5.2.1">The server preliminarily sets the Request-Hash Option with the full Request-Hash value, i.e., the same value of the Request-Hash Option that was specified in the Deterministic Request.<a href="#section-3.4.4-5.2.1" class="pilcrow">¶</a></p>
@@ -1782,6 +1782,9 @@ Note that the Request-Hash Option is treated as Class I here.<a href="#section-3
 </li>
             <li id="section-3.4.4-5.8">
               <p id="section-3.4.4-5.8.1">If the Deterministic Request included an Inner Observe Option but not an Outer Observe Option, the server <span class="bcp14">MUST NOT</span> include an Outer Observe Option in the response.<a href="#section-3.4.4-5.8.1" class="pilcrow">¶</a></p>
+</li>
+            <li id="section-3.4.4-5.9">
+              <p id="section-3.4.4-5.9.1">The server <span class="bcp14">MUST</span> include an Outer Max-Age Option, setting the Option Value to the same Option Value of the Inner Max-Age Option, if present, or to the default value 60 otherwise (see <span><a href="https://rfc-editor.org/rfc/rfc7252#section-5.6.1" class="relref">Section 5.6.1</a> of [<a href="#RFC7252" class="cite xref">RFC7252</a>]</span>). This makes the Deterministic Request usable for the proxy cache.<a href="#section-3.4.4-5.9.1" class="pilcrow">¶</a></p>
 </li>
           </ol>
 <p id="section-3.4.4-6">Upon receiving the response, the client performs the following actions.<a href="#section-3.4.4-6" class="pilcrow">¶</a></p>
@@ -3073,7 +3076,15 @@ Hashes could also be used in a truncated form for that
             <p id="appendix-G.1-1.3.1">Updated references.<a href="#appendix-G.1-1.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-G.1-1.4">
-            <p id="appendix-G.1-1.4.1">Fixed/improved presentation of processing of Deterministic Request at the server.<a href="#appendix-G.1-1.4.1" class="pilcrow">¶</a></p>
+            <p id="appendix-G.1-1.4.1">Fixed/improved presentation of:<a href="#appendix-G.1-1.4.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-G.1-1.4.2.1">
+                <p id="appendix-G.1-1.4.2.1.1">Processing of a Deterministic Request at the server.<a href="#appendix-G.1-1.4.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="appendix-G.1-1.4.2.2">
+                <p id="appendix-G.1-1.4.2.2.1">Composition of the response to a Deterministic Request at the server.<a href="#appendix-G.1-1.4.2.2.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
 </li>
           <li class="normal" id="appendix-G.1-1.5">
             <p id="appendix-G.1-1.5.1">Minor clarifications and editorial improvements.<a href="#appendix-G.1-1.5.1" class="pilcrow">¶</a></p>
