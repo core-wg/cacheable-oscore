@@ -411,7 +411,7 @@ Note that, while the process defined above is based on the pairwise mode of Grou
 
 Upon receiving a Deterministic Request, a server performs the following actions.
 
-A server that does not support Deterministic Requests would not be able to create the necessary Recipient Context, and thus will fail decrypting and verifying the request.
+A server that does not support Deterministic Requests would not be able to derive the necessary Recipient Context at Step 4 below, and thus will fail decrypting and verifying the request.
 
 1. If not already available, the server retrieves the information about the Deterministic Client from the Group Manager and derives the Sender Key of the Deterministic Client.
 
@@ -421,19 +421,35 @@ A server that does not support Deterministic Requests would not be able to creat
 
 3. The server retrieves the hash H from the Request-Hash Option.
 
-4. The server derives a Recipient Context for processing the Deterministic Request. In particular:
+4. The server derives a Recipient Context associated with the Deterministic Client, to be used for processing the Deterministic Request. In particular:
 
-   - The Recipient ID is the Sender ID of the Deterministic Client.
+   * The Recipient ID is the Sender ID of the Deterministic Client.
 
-   - The Recipient Key is derived as the key K in Step 3 of {{sssec-use-deterministic-requests-client-req}}, with the hash H retrieved at Step 3 of the present {{sssec-use-deterministic-requests-server-req}}.
+   * The deterministic Pairwise Recipient Key K is derived as defined in {{Section 2.5.1 of I-D.ietf-core-oscore-groupcomm}}, with the following differences:
 
-5. The server decrypts and verifies the request using the pairwise mode of Group OSCORE as defined in {{Section 8.4 of I-D.ietf-core-oscore-groupcomm}} and the Recipient Context from Step 4, with the difference that the server does not perform replay checks against a Replay Window (see below).
+     - The Recipient Key associated with the Deterministic Client (i.e., the Sender Key of the Deterministic Client) is used as the first argument of the HMAC-based Key Derivation Function (HKDF).
+
+     - The hash H retrieved at Step 3 is used as the second argument IKM-Recipient of the HKDF, i.e., as a pseudo Input Keying Material (IKM).
+
+       Note that an actual IKM-Recipient cannot be obtained, since there is no authentication credential (and public key included therein) associated with the Deterministic Client to be used as Recipient Authentication Credential and for computing an actual shared secret.
+
+     - The Recipient ID is used as the value for the 'id' element of the 'info' parameter that is used as the third argument of the HKDF.
+
+   Note that the server might already be storing a Recipient Context associated with the Deterministic Client, e.g., if that was established upon receiving a previous Deterministic Request in the OSCORE group, or already upon joining the OSCORE group.
+
+   In such a case, the present step consists only in the (re-)derivation of the deterministic Pairwise Recipient Key K within the considered Recipient Context, to be used for decrypting and verifying the present request.
+
+5. The server decrypts and verifies the request using the pairwise mode of Group OSCORE as defined in {{Section 8.4 of I-D.ietf-core-oscore-groupcomm}} and the Recipient Context from Step 4, with the following differences:
+
+   * When preparing the external_aad, the element 'sender_cred' in the aad_array takes the empty CBOR byte string (0x40).
+
+   * The server does not perform replay checks against a Replay Window (see below).
 
 If the verification is successful, the server MUST also perform the following actions, before possibly delivering the request to the application.
 
-* Starting from the recovered plain CoAP request, the server MUST recompute the same hash that the client computed at Step 2 of {{sssec-use-deterministic-requests-client-req}}.
+* Starting from the recovered plain CoAP request, the server MUST recompute the same hash that the client computed at Step 2 of {{sssec-use-deterministic-requests-client-req}}, according to the same process.
 
-   If the recomputed hash value differs from the value retrieved from the Request-Hash Option at Step 3, the server MUST treat the request as invalid and MAY reply with an unprotected 4.00 (Bad Request) error response. The server MAY set an Outer Max-Age Option with value zero. The diagnostic payload MAY contain the string "Decryption failed".
+   If the recomputed hash value differs from the value retrieved from the Request-Hash Option at Step 3 of the present {{sssec-use-deterministic-requests-server-req}}, the server MUST treat the request as invalid and MAY reply with an unprotected 4.00 (Bad Request) error response. The server MAY set an Outer Max-Age Option with value zero. The diagnostic payload MAY contain the string "Decryption failed".
 
    This prevents an attacker that guessed a valid authentication tag for a given Request-Hash value to poison caches with incorrect responses.
 
@@ -1246,6 +1262,8 @@ From there, the protected CoAP response (106 bytes):
 * Removed some old Editor's notes.
 
 * Updated references.
+
+* Fixed/improved presentation of processing of Deterministic Request at the server.
 
 * Minor clarifications and editorial improvements.
 
