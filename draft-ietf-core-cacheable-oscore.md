@@ -495,13 +495,13 @@ In order to compose a response to a Deterministic Request, the server performs t
 
 Upon receiving the response, the client performs the following actions.
 
-1. If the response includes a 'kid' in the OSCORE Option, the client MUST verify it to be exactly the 'kid' of the server to which the Deterministic Request was sent, unless responses from multiple servers are expected (see {{det-req-one-to-many}}).
+1. If the response includes a 'kid' in the OSCORE Option, the client MUST verify it to be exactly the 'kid' of the server to which the Deterministic Request was sent, unless responses from multiple servers are expected (see {{det-req-one-to-many}}). If the verification fails, the client MUST reject the response.
 
 2. If the response does not include the Request-Hash Option, the client adds the Request-Hash Option to the response, setting the Option Value to the same Option Value of the Request-Hash Option that was included in the Deterministic Request.
 
    Otherwise, the client MUST reject the response if the Option Value of the Request-Hash Option is different from the Option Value of the Request-Hash Option that was included in the Deterministic Request.
 
-3. The client verifies the response using the group mode of Group OSCORE, as defined in {{Section 7.4 of I-D.ietf-core-oscore-groupcomm}}. In particular, the client verifies the countersignature in the response, based on the 'kid' either retrieved from the OSCORE Option of the response if present therein, or otherwise of the server to which the Deterministic Request was sent to. When verifying the response, the Request-Hash Option is treated as a Class I option.
+3. The client retrieves the Recipient Context to use for decrypting and verifying the response, based on the 'kid' either retrieved from the OSCORE Option of the response if present therein, or otherwise of the server to which the Deterministic Request was sent to. Then, the client decrypts and verifies the response using the group mode of Group OSCORE, as defined in {{Section 7.4 of I-D.ietf-core-oscore-groupcomm}}. When verifying the response, the Request-Hash Option is treated as a Class I option.
 
 4. If the Deterministic Request included an Inner Observe Option but not an Outer Observe option (see {{sec-deterministic-requests-unprotected}}), the client MUST silently ignore the Inner Observe Option in the response, which MUST NOT result in stopping the processing of the response.
 
@@ -1270,6 +1270,8 @@ From there, the protected CoAP response (106 bytes):
   * Processing of a Deterministic Request at the server.
 
   * Composition of the response to a Deterministic Request at the server.
+
+  * Processing of the response to a Deterministic Request at the client.
 
 * Minor clarifications and editorial improvements.
 
