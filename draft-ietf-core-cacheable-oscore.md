@@ -517,9 +517,15 @@ Note that this deviates from the recommendation in {{Section 7 of I-D.ietf-core-
 
 When a server receives a request from the Deterministic Client as addressed to a CoAP group, the server proceeds as defined in {{sssec-use-deterministic-requests-server-req}}, with the difference that it MUST include its own Sender ID in the response, as the 'kid' parameter of the OSCORE Option.
 
-Although it is normally optional for the server to include its Sender ID when replying to a request protected in pairwise mode, it is required in this case for allowing the client to retrieve the Recipient Context associated with the server originating the response.
+Although it is normally optional for the server to include its Sender ID when replying to a request that is protected with the pairwise mode, it is required in this case for allowing the client to retrieve the Recipient Context associated with the server originating the response.
 
 If a server is a member of a CoAP group, and it fails to successfully decrypt and verify an incoming Deterministic Request, then it is RECOMMENDED for that server to not reply with an error response, in the case that the server verifies that the Deterministic Request was sent to the CoAP group (e.g., to the associated IP multicast address) or in the case that the server is not able to verify that altogether.
+
+When the client receives a response to a Deterministic Request that it sent to a CoAP group, the client performs the same actions defined in {{ssec-use-deterministic-requests-response}}, with the following differences:
+
+* At Step 1, if the response does not include a 'kid' in the OSCORE Option, the client MUST reject the response. Otherwise, no verification of the 'kid' is performed.
+
+* At Step 3, the client retrieves the Recipient Context to use for decrypting and verifying the response, based on the 'kid' retrieved from the OSCORE Option of the response.
 
 # Obtaining Information about the Deterministic Client {#sec-obtaining-info}
 
