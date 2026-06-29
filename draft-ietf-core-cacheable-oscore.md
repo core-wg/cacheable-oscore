@@ -437,9 +437,9 @@ A server that does not support Deterministic Requests would not be able to deriv
 
    Note that the server might already be storing a Recipient Context associated with the Deterministic Client, e.g., if that was established upon receiving a previous Deterministic Request in the OSCORE group, or already upon joining the OSCORE group.
 
-   In such a case, the present step consists only in the (re-)derivation of the deterministic Pairwise Recipient Key K within the considered Recipient Context, to be used for decrypting and verifying the present request.
+   In such a case, the present step consists only in the (re-)derivation of the deterministic Pairwise Recipient Key K within the considered Recipient Context, to be used for decrypting and verifying the present Deterministic Request.
 
-5. The server decrypts and verifies the request using the pairwise mode of Group OSCORE as defined in {{Section 8.4 of I-D.ietf-core-oscore-groupcomm}} and the Recipient Context from Step 4, with the following differences:
+5. The server decrypts and verifies the Deterministic Request using the pairwise mode of Group OSCORE as defined in {{Section 8.4 of I-D.ietf-core-oscore-groupcomm}} and the Recipient Context from Step 4, with the following differences:
 
    * When preparing the external_aad, the element 'sender_cred' in the aad_array takes the empty CBOR byte string (0x40).
 
