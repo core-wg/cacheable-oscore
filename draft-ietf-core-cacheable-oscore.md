@@ -223,10 +223,10 @@ Source authentication of requests is thus a precondition for the secure use of O
 However, it is hard to provide when:
 
 * Requests are built exclusively using shared group keying material, like in the case of a Deterministic Client.
-* Requests are sent without source authentication, or their source authentication is not checked. (This was part of {{I-D.ietf-core-oscore-groupcomm}} in revisions before version -12)
+* Requests are sent without source authentication, or their source authentication is not checked.
 
-This document does not \[ yet? \] give full guidance on how to restore request-response binding for the general case,
-but it currently only offers suggestions:
+This document does not give full guidance on how to restore request-response binding for the general case,
+but it offers suggestions:
 
 * The response can contain the full request. An option that allows doing that is presented in {{I-D.ietf-core-responses}}.
 * The response can contain a cryptographic hash of the full request. This is used by the method specified in this document, as defined in {{ssec-request-hash-option}}.
@@ -236,9 +236,6 @@ but it currently only offers suggestions:
   or take part to the derivation of the (Group) OSCORE Security Context.
   In the latter case, care needs to be taken to never initialize a Security Context twice with the same input,
   as that would lead to reuse of the Authenticated Encryption with Associated Data (AEAD) nonce.
-
-\[ Suggestion for any OSCORE v2: avoid request_details in the request's AAD as individual elements. Rather than having 'request_kid', 'request_piv' (and, in Group OSCORE, 'request_kid_context') as separate fields, they can better be something more pluggable.
-This would avoid the need to make up an option before processing, and would allow just plugging the (hash of the) request in there, as replacing the elements for the request_details. \]
 
 Additional care has to be taken in ensuring that request_details that are not expressed in the request itself are captured. For instance, these include an indication of the Security Context through which the request is assumed to have been originated.
 
@@ -302,8 +299,6 @@ Any non-malleable cryptographically secure hash of sufficient length to make col
 A tempting possibility is to use a fixed (group) key, and use the hash as a deterministic AEAD nonce for each Deterministic Request through the Partial IV component (see {{Section 5.2 of RFC8613}}). However, the 40 bits available for the Partial IV are by far insufficient to ensure that the deterministic nonce is not reused across different Deterministic Requests. Even if the full deterministic AEAD nonce could be set, the sizes used by common algorithms would still be too small.
 
 Consequently, the method defined in this document takes the opposite approach, by considering a fixed deterministic AEAD nonce, while deriving a different deterministic encryption key for each Deterministic Request. That is, the hash computed over the plain CoAP request is taken as input to the key derivation. As an advantage, this approach does not require to transport the computed hash in the CoAP OSCORE Option.
-
-\[ Note: This has a further positive side effect arising with version -11 of draft-ietf-core-oscore-groupcomm. That is, since the full encoded OSCORE Option is part of the AAD, it avoids a circular dependency from feeding the AAD into the hash computation, which in turn needs crude workarounds like building the full AAD twice, or zeroing out the hash-to-be. \]
 
 ## The Request-Hash Option ## {#ssec-request-hash-option}
 
@@ -1247,6 +1242,8 @@ From there, the protected CoAP response (106 bytes):
 ## Version -01 to -02 ## {#sec-01-02}
 
 * Shortened title.
+
+* Removed some old Editor's notes.
 
 * Updated references.
 
