@@ -1758,7 +1758,7 @@ These checks replace the otherwise present requirement that the server needs to 
 <p id="section-3.4.4-4">In order to compose a response to a Deterministic Request, the server performs the following actions.<a href="#section-3.4.4-4" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-3.4.4-5">
 <li id="section-3.4.4-5.1">
-              <p id="section-3.4.4-5.1.1">When composing the plain CoAP response, the server <span class="bcp14">MUST</span> either omit an Inner Max-Age Option or include it with Option Value different from 0.<a href="#section-3.4.4-5.1.1" class="pilcrow">¶</a></p>
+              <p id="section-3.4.4-5.1.1">The server <span class="bcp14">MUST</span> either omit an Inner Max-Age Option or include it with Option Value different from 0.<a href="#section-3.4.4-5.1.1" class="pilcrow">¶</a></p>
 </li>
             <li id="section-3.4.4-5.2">
               <p id="section-3.4.4-5.2.1">The server preliminarily sets the Request-Hash Option with the full Request-Hash value, i.e., the same value of the Request-Hash Option that was specified in the Deterministic Request.<a href="#section-3.4.4-5.2.1" class="pilcrow">¶</a></p>
@@ -1775,7 +1775,7 @@ Note that the Request-Hash Option is treated as Class I here.<a href="#section-3
               <p id="section-3.4.4-5.5.1">The server <span class="bcp14">MUST</span> include its Sender Sequence Number as Partial IV in the response and use it to build the nonce to protect the response. This is required since the server does not perform replay protection on the Deterministic Request (see <a href="#ssec-use-deterministic-requests-response" class="auto internal xref">Section 3.4.4</a>).<a href="#section-3.4.4-5.5.1" class="pilcrow">¶</a></p>
 </li>
             <li id="section-3.4.4-5.6">
-              <p id="section-3.4.4-5.6.1">The server uses 2.05 (Content) as Outer Code of the response even though the response is not necessarily an Observe notification <span>[<a href="#RFC7641" class="cite xref">RFC7641</a>]</span>, in order to make the response cacheable.<a href="#section-3.4.4-5.6.1" class="pilcrow">¶</a></p>
+              <p id="section-3.4.4-5.6.1">The server <span class="bcp14">MUST</span> use 2.05 (Content) as Outer Code of the response even though the response is not necessarily an Observe notification <span>[<a href="#RFC7641" class="cite xref">RFC7641</a>]</span>, in order to make the response cacheable.<a href="#section-3.4.4-5.6.1" class="pilcrow">¶</a></p>
 </li>
             <li id="section-3.4.4-5.7">
               <p id="section-3.4.4-5.7.1">The server <span class="bcp14">SHOULD</span> remove the Request-Hash Option from the response before sending the response to the client, as per the general option mechanism defined in <a href="#ssec-request-hash-option" class="auto internal xref">Section 3.3</a>.<a href="#section-3.4.4-5.7.1" class="pilcrow">¶</a></p>
