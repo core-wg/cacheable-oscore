@@ -515,8 +515,6 @@ To simplify key derivation, such a Deterministic Request is still created in the
 
 Note that this deviates from the recommendation in {{Section 7 of I-D.ietf-core-oscore-groupcomm}}, since the Deterministic Request in this case is indeed intended to multiple recipients, but yet it is protected with the pairwise mode. However, this is limited to a very specific situation, where the client and servers both know exactly what happens. This does not affect the use of Group OSCORE in other situations.
 
-\[ Note: If it was protected with the group mode, the request hash would need to be fed into a group key derivation just for this corner case. Furthermore, there would need to be a signature in spite of no authentication credential (and public key included therein) associated with the Deterministic Client. \]
-
 When a server receives a request from the Deterministic Client as addressed to a CoAP group, the server proceeds as defined in {{sssec-use-deterministic-requests-server-req}}, with the difference that it MUST include its own Sender ID in the response, as the 'kid' parameter of the OSCORE Option.
 
 Although it is normally optional for the server to include its Sender ID when replying to a request protected in pairwise mode, it is required in this case for allowing the client to retrieve the Recipient Context associated with the server originating the response.
