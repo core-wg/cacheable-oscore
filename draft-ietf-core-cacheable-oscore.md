@@ -473,7 +473,7 @@ MT: Is there any possible reason in this application of the Request-Hash option 
 
 In order to compose a response to a Deterministic Request, the server performs the following actions.
 
-1. When composing the plain CoAP response, the server MUST either omit an Inner Max-Age Option or include it with Option Value different from 0.
+1. The server MUST either omit an Inner Max-Age Option or include it with Option Value different from 0.
 
 2. The server preliminarily sets the Request-Hash Option with the full Request-Hash value, i.e., the same value of the Request-Hash Option that was specified in the Deterministic Request.
 
@@ -485,7 +485,7 @@ In order to compose a response to a Deterministic Request, the server performs t
 
 5. The server MUST include its Sender Sequence Number as Partial IV in the response and use it to build the nonce to protect the response. This is required since the server does not perform replay protection on the Deterministic Request (see {{ssec-use-deterministic-requests-response}}).
 
-6. The server uses 2.05 (Content) as Outer Code of the response even though the response is not necessarily an Observe notification {{RFC7641}}, in order to make the response cacheable.
+6. The server MUST use 2.05 (Content) as Outer Code of the response even though the response is not necessarily an Observe notification {{RFC7641}}, in order to make the response cacheable.
 
 7. The server SHOULD remove the Request-Hash Option from the response before sending the response to the client, as per the general option mechanism defined in {{ssec-request-hash-option}}.
 
