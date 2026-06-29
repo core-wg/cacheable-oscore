@@ -560,7 +560,7 @@ Table of Contents
 
 3.4.2.  Client Composition of Deterministic Requests
 
-   In order to build a Deterministic Request, the client protects the
+   In order to compose a Deterministic Request, the client protects the
    plain CoAP request using the pairwise mode of Group OSCORE (see
    Section 8 of [I-D.ietf-core-oscore-groupcomm]), with the following
    alterations.
@@ -595,17 +595,18 @@ Table of Contents
 
        *  The hash H from Step 2 is used as the second argument IKM-
           Sender of the HKDF, i.e., as a pseudo Input Keying Material
-          (IKM) computable by all the group members.
+          (IKM) computable by all the group members that support the
+          pairwise mode of Group OSCORE.
 
           Note that an actual IKM-Sender cannot be obtained, since there
           is no authentication credential (and public key included
           therein) associated with the Deterministic Client to be used
           as Sender Authentication Credential and for computing an
-          actual Diffie-Hellman Shared Secret.
+          actual shared secret.
 
        *  The Sender ID of the Deterministic Client is used as the value
-          for the 'id' element of the 'info' parameter used as third
-          argument of the HKDF.
+          for the 'id' element of the 'info' parameter that is used as
+          the third argument of the HKDF.
 
    4.  The client includes a Request-Hash Option in the request to
        protect, with value set to the hash H from Step 2.
@@ -617,8 +618,8 @@ Table of Contents
    6.  The client protects the request using the pairwise mode of Group
        OSCORE as defined in Section 8.3 of
        [I-D.ietf-core-oscore-groupcomm], using the AEAD nonce from Step
-       1, the deterministic Pairwise Sender Key K from Step 3 as AEAD
-       encryption key, and the finalized AAD.
+       1, the deterministic Pairwise Sender Key K from Step 3 as the
+       AEAD encryption key, and the finalized AAD.
 
    7.  The client MUST NOT include an unprotected (outer) Observe Option
        if no observation is intended, even in the case that an Inner
@@ -637,8 +638,9 @@ Table of Contents
 
    The deterministic encryption requires that the AEAD algorithm used is
    deterministic in itself.  This is the case for all the AEAD
-   algorithms currently registered with COSE in [IANA.COSE.Algorithms].
-   For future algorithms, a flag in the COSE registry is to be added.
+   algorithms currently registered with COSE in the "COSE Algorithms"
+   registry [IANA.COSE.Algorithms].  For future algorithms, a flag in
+   the that registry is to be added.
 
    Note that, while the process defined above is based on the pairwise
    mode of Group OSCORE, no information about the server takes part in

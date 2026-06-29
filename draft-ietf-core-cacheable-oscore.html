@@ -1610,7 +1610,7 @@ With reference to the same realization of Group Manager, no such extension is ne
           <h4 id="name-client-composition-of-deter">
 <a href="#section-3.4.2" class="section-number selfRef">3.4.2. </a><a href="#name-client-composition-of-deter" class="section-name selfRef">Client Composition of Deterministic Requests</a>
           </h4>
-<p id="section-3.4.2-1">In order to build a Deterministic Request, the client protects the plain CoAP request using the pairwise mode of Group OSCORE (see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-groupcomm-28#section-8" class="relref">Section 8</a> of [<a href="#I-D.ietf-core-oscore-groupcomm" class="cite xref">I-D.ietf-core-oscore-groupcomm</a>]</span>), with the following alterations.<a href="#section-3.4.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.4.2-1">In order to compose a Deterministic Request, the client protects the plain CoAP request using the pairwise mode of Group OSCORE (see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-groupcomm-28#section-8" class="relref">Section 8</a> of [<a href="#I-D.ietf-core-oscore-groupcomm" class="cite xref">I-D.ietf-core-oscore-groupcomm</a>]</span>), with the following alterations.<a href="#section-3.4.2-1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-3.4.2-2">
 <li id="section-3.4.2-2.1">
               <p id="section-3.4.2-2.1.1">When preparing the OSCORE Option, the external_aad, and the AEAD nonce:<a href="#section-3.4.2-2.1.1" class="pilcrow">¶</a></p>
@@ -1638,12 +1638,12 @@ Note that the payload of the plain CoAP request (if any) is not self-delimiting,
                   <p id="section-3.4.2-2.3.2.1.1">The Sender Key of the Deterministic Client is used as the first argument of the HMAC-based Key Derivation Function (HKDF).<a href="#section-3.4.2-2.3.2.1.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-3.4.2-2.3.2.2">
-                  <p id="section-3.4.2-2.3.2.2.1">The hash H from Step 2 is used as the second argument IKM-Sender of the HKDF, i.e., as a pseudo Input Keying Material (IKM) computable by all the group members.<a href="#section-3.4.2-2.3.2.2.1" class="pilcrow">¶</a></p>
+                  <p id="section-3.4.2-2.3.2.2.1">The hash H from Step 2 is used as the second argument IKM-Sender of the HKDF, i.e., as a pseudo Input Keying Material (IKM) computable by all the group members that support the pairwise mode of Group OSCORE.<a href="#section-3.4.2-2.3.2.2.1" class="pilcrow">¶</a></p>
 <p id="section-3.4.2-2.3.2.2.2">
-Note that an actual IKM-Sender cannot be obtained, since there is no authentication credential (and public key included therein) associated with the Deterministic Client to be used as Sender Authentication Credential and for computing an actual Diffie-Hellman Shared Secret.<a href="#section-3.4.2-2.3.2.2.2" class="pilcrow">¶</a></p>
+Note that an actual IKM-Sender cannot be obtained, since there is no authentication credential (and public key included therein) associated with the Deterministic Client to be used as Sender Authentication Credential and for computing an actual shared secret.<a href="#section-3.4.2-2.3.2.2.2" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-3.4.2-2.3.2.3">
-                  <p id="section-3.4.2-2.3.2.3.1">The Sender ID of the Deterministic Client is used as the value for the 'id' element of the 'info' parameter used as third argument of the HKDF.<a href="#section-3.4.2-2.3.2.3.1" class="pilcrow">¶</a></p>
+                  <p id="section-3.4.2-2.3.2.3.1">The Sender ID of the Deterministic Client is used as the value for the 'id' element of the 'info' parameter that is used as the third argument of the HKDF.<a href="#section-3.4.2-2.3.2.3.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
@@ -1654,7 +1654,7 @@ Note that an actual IKM-Sender cannot be obtained, since there is no authenticat
               <p id="section-3.4.2-2.5.1">The client <span class="bcp14">MAY</span> include an Inner Observe Option set to 0 (register) to be protected with Group OSCORE, even if no observation is intended <span>[<a href="#RFC7641" class="cite xref">RFC7641</a>]</span> (see <a href="#sec-deterministic-requests-unprotected" class="auto internal xref">Section 3.1</a>).<a href="#section-3.4.2-2.5.1" class="pilcrow">¶</a></p>
 </li>
             <li id="section-3.4.2-2.6">
-              <p id="section-3.4.2-2.6.1">The client protects the request using the pairwise mode of Group OSCORE as defined in <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-groupcomm-28#section-8.3" class="relref">Section 8.3</a> of [<a href="#I-D.ietf-core-oscore-groupcomm" class="cite xref">I-D.ietf-core-oscore-groupcomm</a>]</span>, using the AEAD nonce from Step 1, the deterministic Pairwise Sender Key K from Step 3 as AEAD encryption key, and the finalized AAD.<a href="#section-3.4.2-2.6.1" class="pilcrow">¶</a></p>
+              <p id="section-3.4.2-2.6.1">The client protects the request using the pairwise mode of Group OSCORE as defined in <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-groupcomm-28#section-8.3" class="relref">Section 8.3</a> of [<a href="#I-D.ietf-core-oscore-groupcomm" class="cite xref">I-D.ietf-core-oscore-groupcomm</a>]</span>, using the AEAD nonce from Step 1, the deterministic Pairwise Sender Key K from Step 3 as the AEAD encryption key, and the finalized AAD.<a href="#section-3.4.2-2.6.1" class="pilcrow">¶</a></p>
 </li>
             <li id="section-3.4.2-2.7">
               <p id="section-3.4.2-2.7.1">The client <span class="bcp14">MUST NOT</span> include an unprotected (outer) Observe Option if no observation is intended, even in the case that an Inner Observe Option was included at Step 5.<a href="#section-3.4.2-2.7.1" class="pilcrow">¶</a></p>
@@ -1665,7 +1665,7 @@ Note that an actual IKM-Sender cannot be obtained, since there is no authenticat
           </ol>
 <p id="section-3.4.2-3">The result is the Deterministic Request to be sent.<a href="#section-3.4.2-3" class="pilcrow">¶</a></p>
 <p id="section-3.4.2-4">Since the encryption key K is derived using material from the whole plain CoAP request, this (key, nonce) pair is only used for this very message, which is deterministically encrypted unless there is a hash collision between two Deterministic Requests.<a href="#section-3.4.2-4" class="pilcrow">¶</a></p>
-<p id="section-3.4.2-5">The deterministic encryption requires that the AEAD algorithm used is deterministic in itself. This is the case for all the AEAD algorithms currently registered with COSE in <span>[<a href="#IANA.COSE.Algorithms" class="cite xref">IANA.COSE.Algorithms</a>]</span>. For future algorithms, a flag in the COSE registry is to be added.<a href="#section-3.4.2-5" class="pilcrow">¶</a></p>
+<p id="section-3.4.2-5">The deterministic encryption requires that the AEAD algorithm used is deterministic in itself. This is the case for all the AEAD algorithms currently registered with COSE in the "COSE Algorithms" registry <span>[<a href="#IANA.COSE.Algorithms" class="cite xref">IANA.COSE.Algorithms</a>]</span>. For future algorithms, a flag in the that registry is to be added.<a href="#section-3.4.2-5" class="pilcrow">¶</a></p>
 <p id="section-3.4.2-6">Note that, while the process defined above is based on the pairwise mode of Group OSCORE, no information about the server takes part in the key derivation or is included in the AAD. This is intentional, since it allows sending a Deterministic Request to multiple servers at once (see <a href="#det-req-one-to-many" class="auto internal xref">Section 3.4.5</a>). On the other hand, it requires later checks at the client when verifying a response to a Deterministic Request (see <a href="#ssec-use-deterministic-requests-response" class="auto internal xref">Section 3.4.4</a>).<a href="#section-3.4.2-6" class="pilcrow">¶</a></p>
 </section>
 </div>
