@@ -1403,11 +1403,11 @@ However, it is hard to provide when:<a href="#section-2-3" class="pilcrow">¶</a
           <p id="section-2-4.1.1">Requests are built exclusively using shared group keying material, like in the case of a Deterministic Client.<a href="#section-2-4.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-2-4.2">
-          <p id="section-2-4.2.1">Requests are sent without source authentication, or their source authentication is not checked. (This was part of <span>[<a href="#I-D.ietf-core-oscore-groupcomm" class="cite xref">I-D.ietf-core-oscore-groupcomm</a>]</span> in revisions before version -12)<a href="#section-2-4.2.1" class="pilcrow">¶</a></p>
+          <p id="section-2-4.2.1">Requests are sent without source authentication, or their source authentication is not checked.<a href="#section-2-4.2.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-2-5">This document does not [ yet? ] give full guidance on how to restore request-response binding for the general case,
-but it currently only offers suggestions:<a href="#section-2-5" class="pilcrow">¶</a></p>
+<p id="section-2-5">This document does not give full guidance on how to restore request-response binding for the general case,
+but it offers suggestions:<a href="#section-2-5" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-2-6.1">
           <p id="section-2-6.1.1">The response can contain the full request. An option that allows doing that is presented in <span>[<a href="#I-D.ietf-core-responses" class="cite xref">I-D.ietf-core-responses</a>]</span>.<a href="#section-2-6.1.1" class="pilcrow">¶</a></p>
@@ -1422,13 +1422,11 @@ In the latter case, care needs to be taken to never initialize a Security Contex
 as that would lead to reuse of the Authenticated Encryption with Associated Data (AEAD) nonce.<a href="#section-2-6.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-2-7">[ Suggestion for any OSCORE v2: avoid request_details in the request's AAD as individual elements. Rather than having 'request_kid', 'request_piv' (and, in Group OSCORE, 'request_kid_context') as separate fields, they can better be something more pluggable.
-This would avoid the need to make up an option before processing, and would allow just plugging the (hash of the) request in there, as replacing the elements for the request_details. ]<a href="#section-2-7" class="pilcrow">¶</a></p>
-<p id="section-2-8">Additional care has to be taken in ensuring that request_details that are not expressed in the request itself are captured. For instance, these include an indication of the Security Context through which the request is assumed to have been originated.<a href="#section-2-8" class="pilcrow">¶</a></p>
-<p id="section-2-9">Requests without source authentication have to be processed assuming only the minimal possible privilege of the requester, e.g., consistent with the privileges of the Deterministic Client considered in this document (see <a href="#terminology" class="auto internal xref">Section 1.2</a>).
+<p id="section-2-7">Additional care has to be taken in ensuring that request_details that are not expressed in the request itself are captured. For instance, these include an indication of the Security Context through which the request is assumed to have been originated.<a href="#section-2-7" class="pilcrow">¶</a></p>
+<p id="section-2-8">Requests without source authentication have to be processed assuming only the minimal possible privilege of the requester, e.g., consistent with the privileges of the Deterministic Client considered in this document (see <a href="#terminology" class="auto internal xref">Section 1.2</a>).
 If a response to such a request is originated and it contains data more sensitive than that
 (which might be justified, if the response is protected for an authorized group member using the pairwise mode of Group OSCORE),
-special consideration for any side channels like response size or timing is required.<a href="#section-2-9" class="pilcrow">¶</a></p>
+special consideration for any side channels like response size or timing is required.<a href="#section-2-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-deterministic-requests">
@@ -1459,7 +1457,7 @@ Instead, clients should only set it when there was a recent response conveying t
 When using block-wise transfers <span>[<a href="#RFC7959" class="cite xref">RFC7959</a>]</span> and obtaining later blocks, clients should not send the known-stale ETag value.<a href="#section-3.1-3.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.1-3.3">
-            <p id="section-3.1-3.3.1">When using block-wise transfers <span>[<a href="#RFC7959" class="cite xref">RFC7959</a>]</span>, maximally sized large Inner blocks (szx=6) <span class="bcp14">SHOULD</span> be selected.<a href="#section-3.1-3.3.1" class="pilcrow">¶</a></p>
+            <p id="section-3.1-3.3.1">When using block-wise transfers <span>[<a href="#RFC7959" class="cite xref">RFC7959</a>]</span>, maximally sized large Inner blocks (szx=6) should be selected.<a href="#section-3.1-3.3.1" class="pilcrow">¶</a></p>
 <p id="section-3.1-3.3.2">
 This not only serves to align the clients on consistent cache entries,
 but it also helps amortize the additional data transferred in the per-message signatures of the corresponding responses, which are protected with the group mode of Group OSCORE.<a href="#section-3.1-3.3.2" class="pilcrow">¶</a></p>
@@ -1496,7 +1494,6 @@ which is something that Deterministic Requests simply cannot provide anyway.<a h
 Any non-malleable cryptographically secure hash of sufficient length to make collisions sufficiently unlikely is suitable for this purpose.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
 <p id="section-3.2-3">A tempting possibility is to use a fixed (group) key, and use the hash as a deterministic AEAD nonce for each Deterministic Request through the Partial IV component (see <span><a href="https://rfc-editor.org/rfc/rfc8613#section-5.2" class="relref">Section 5.2</a> of [<a href="#RFC8613" class="cite xref">RFC8613</a>]</span>). However, the 40 bits available for the Partial IV are by far insufficient to ensure that the deterministic nonce is not reused across different Deterministic Requests. Even if the full deterministic AEAD nonce could be set, the sizes used by common algorithms would still be too small.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
 <p id="section-3.2-4">Consequently, the method defined in this document takes the opposite approach, by considering a fixed deterministic AEAD nonce, while deriving a different deterministic encryption key for each Deterministic Request. That is, the hash computed over the plain CoAP request is taken as input to the key derivation. As an advantage, this approach does not require to transport the computed hash in the CoAP OSCORE Option.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
-<p id="section-3.2-5">[ Note: This has a further positive side effect arising with version -11 of draft-ietf-core-oscore-groupcomm. That is, since the full encoded OSCORE Option is part of the AAD, it avoids a circular dependency from feeding the AAD into the hash computation, which in turn needs crude workarounds like building the full AAD twice, or zeroing out the hash-to-be. ]<a href="#section-3.2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="ssec-request-hash-option">
@@ -3045,10 +3042,13 @@ Hashes could also be used in a truncated form for that
             <p id="appendix-G.1-1.1.1">Shortened title.<a href="#appendix-G.1-1.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-G.1-1.2">
-            <p id="appendix-G.1-1.2.1">Updated references.<a href="#appendix-G.1-1.2.1" class="pilcrow">¶</a></p>
+            <p id="appendix-G.1-1.2.1">Removed some old Editor's notes.<a href="#appendix-G.1-1.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-G.1-1.3">
-            <p id="appendix-G.1-1.3.1">Minor clarifications and editorial improvements.<a href="#appendix-G.1-1.3.1" class="pilcrow">¶</a></p>
+            <p id="appendix-G.1-1.3.1">Updated references.<a href="#appendix-G.1-1.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-G.1-1.4">
+            <p id="appendix-G.1-1.4.1">Minor clarifications and editorial improvements.<a href="#appendix-G.1-1.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>

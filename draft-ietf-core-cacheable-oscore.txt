@@ -300,12 +300,10 @@ Table of Contents
       like in the case of a Deterministic Client.
 
    *  Requests are sent without source authentication, or their source
-      authentication is not checked.  (This was part of
-      [I-D.ietf-core-oscore-groupcomm] in revisions before version -12)
+      authentication is not checked.
 
-   This document does not [ yet? ] give full guidance on how to restore
-   request-response binding for the general case, but it currently only
-   offers suggestions:
+   This document does not give full guidance on how to restore request-
+   response binding for the general case, but it offers suggestions:
 
    *  The response can contain the full request.  An option that allows
       doing that is presented in [I-D.ietf-core-responses].
@@ -320,15 +318,6 @@ Table of Contents
       never initialize a Security Context twice with the same input, as
       that would lead to reuse of the Authenticated Encryption with
       Associated Data (AEAD) nonce.
-
-   [ Suggestion for any OSCORE v2: avoid request_details in the
-   request's AAD as individual elements.  Rather than having
-   'request_kid', 'request_piv' (and, in Group OSCORE,
-   'request_kid_context') as separate fields, they can better be
-   something more pluggable.  This would avoid the need to make up an
-   option before processing, and would allow just plugging the (hash of
-   the) request in there, as replacing the elements for the
-   request_details. ]
 
    Additional care has to be taken in ensuring that request_details that
    are not expressed in the request itself are captured.  For instance,
@@ -380,7 +369,7 @@ Table of Contents
       send the known-stale ETag value.
 
    *  When using block-wise transfers [RFC7959], maximally sized large
-      Inner blocks (szx=6) SHOULD be selected.
+      Inner blocks (szx=6) should be selected.
 
       This not only serves to align the clients on consistent cache
       entries, but it also helps amortize the additional data
@@ -450,13 +439,6 @@ Table of Contents
    CoAP request is taken as input to the key derivation.  As an
    advantage, this approach does not require to transport the computed
    hash in the CoAP OSCORE Option.
-
-   [ Note: This has a further positive side effect arising with version
-   -11 of draft-ietf-core-oscore-groupcomm.  That is, since the full
-   encoded OSCORE Option is part of the AAD, it avoids a circular
-   dependency from feeding the AAD into the hash computation, which in
-   turn needs crude workarounds like building the full AAD twice, or
-   zeroing out the hash-to-be. ]
 
 3.3.  The Request-Hash Option
 
@@ -1986,6 +1968,8 @@ Appendix G.  Document Updates
 G.1.  Version -01 to -02
 
    *  Shortened title.
+
+   *  Removed some old Editor's notes.
 
    *  Updated references.
 
