@@ -1051,7 +1051,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Amsüss &amp; Tiloca</td>
-<td class="center">Expires 30 December 2026</td>
+<td class="center">Expires 31 December 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1064,12 +1064,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-core-cacheable-oscore-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-06-28" class="published">28 June 2026</time>
+<time datetime="2026-06-29" class="published">29 June 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-12-30">30 December 2026</time></dd>
+<dd class="expires"><time datetime="2026-12-31">31 December 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1117,7 +1117,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 30 December 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 31 December 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1298,7 +1298,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
       </h2>
 <p id="section-1-1">The Constrained Application Protocol (CoAP) <span>[<a href="#RFC7252" class="cite xref">RFC7252</a>]</span> supports intermediary proxies that perform requests on behalf of clients and relay back responses. A core functionality of intermediary proxies is the caching of responses.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">Even in the presence of such intermediaries, exchanged CoAP messages can be protected end-to-end by using Object Security for Constrained RESTful Environments (OSCORE) <span>[<a href="#RFC8613" class="cite xref">RFC8613</a>]</span>.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">In a group communication environment <span>[<a href="#I-D.ietf-core-groupcomm-bis" class="cite xref">I-D.ietf-core-groupcomm-bis</a>]</span>, CoAP exchanged messages can be protected end-to-end by using Group Object Security for Constrained RESTful Environments (Group OSCORE) <span>[<a href="#I-D.ietf-core-oscore-groupcomm" class="cite xref">I-D.ietf-core-oscore-groupcomm</a>]</span>. When protected with the group mode of Group OSCORE (see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-groupcomm-28#section-7" class="relref">Section 7</a> of [<a href="#I-D.ietf-core-oscore-groupcomm" class="cite xref">I-D.ietf-core-oscore-groupcomm</a>]</span>), requests and responses exchanged in the OSCORE group can be read by all group members, i.e., not only by the intended recipient(s), thus achieving group-level confidentiality.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-3">In a group communication environment <span>[<a href="#I-D.ietf-core-groupcomm-bis" class="cite xref">I-D.ietf-core-groupcomm-bis</a>]</span>, CoAP exchanged messages can be protected end-to-end by using Group Object Security for Constrained RESTful Environments (Group OSCORE) <span>[<a href="#I-D.ietf-core-oscore-groupcomm" class="cite xref">I-D.ietf-core-oscore-groupcomm</a>]</span>. When protected with the group mode of Group OSCORE (see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-groupcomm-28#section-7" class="relref">Section 7</a> of [<a href="#I-D.ietf-core-oscore-groupcomm" class="cite xref">I-D.ietf-core-oscore-groupcomm</a>]</span>), requests and responses exchanged in the OSCORE group can be decrypted by any member of the group, i.e., not only by the intended recipient(s), thus achieving group-level data confidentiality.<a href="#section-1-3" class="pilcrow">¶</a></p>
 <p id="section-1-4">With any security mechanism for CoAP, the caching of responses at intermediaries presents operators with a trade-off between required trust and provided performance:<a href="#section-1-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-1-5.1">
@@ -1309,10 +1309,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </li>
       </ul>
 <p id="section-1-6">By using Group OSCORE, this document provides a way out of the trade-off situation.<a href="#section-1-6" class="pilcrow">¶</a></p>
-<p id="section-1-7">In particular, this document enables cacheability of protected responses for proxies that are not members of the OSCORE group and that are unaware of OSCORE and Group OSCORE in general. To this end, it builds on the concept of "consensus request" initially considered in <span>[<a href="#I-D.ietf-core-observe-multicast-notifications" class="cite xref">I-D.ietf-core-observe-multicast-notifications</a>]</span>, and it defines "Deterministic Request" as a convenient incarnation of such concept.<a href="#section-1-7" class="pilcrow">¶</a></p>
+<p id="section-1-7">In particular, this document enables effective cacheability of protected responses for proxies that are not members of the OSCORE group and that are unaware of OSCORE and Group OSCORE in general. To this end, it builds on the concept of "consensus request" initially considered in <span>[<a href="#I-D.ietf-core-observe-multicast-notifications" class="cite xref">I-D.ietf-core-observe-multicast-notifications</a>]</span>, and it defines "Deterministic Request" as a convenient incarnation of such concept.<a href="#section-1-7" class="pilcrow">¶</a></p>
 <p id="section-1-8">All clients wishing to send a particular request with the GET method or FETCH method <span>[<a href="#RFC8132" class="cite xref">RFC8132</a>]</span> are able to deterministically compute the same protected request, using a variation of the pairwise mode of Group OSCORE (see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-groupcomm-28#section-8" class="relref">Section 8</a> of [<a href="#I-D.ietf-core-oscore-groupcomm" class="cite xref">I-D.ietf-core-oscore-groupcomm</a>]</span>). It follows that cache hits become possible at the proxy, which can thus serve clients in the group from its cache. Like in <span>[<a href="#I-D.ietf-core-observe-multicast-notifications" class="cite xref">I-D.ietf-core-observe-multicast-notifications</a>]</span>, this requires that clients and servers are already members of a suitable OSCORE group.<a href="#section-1-8" class="pilcrow">¶</a></p>
 <p id="section-1-9">Cacheability of protected responses is useful also in applications where several clients wish to retrieve the same object from a single server.
-Some security properties of OSCORE are dispensed with, in order to gain other desirable properties.<a href="#section-1-9" class="pilcrow">¶</a></p>
+Some security properties of Group OSCORE are dispensed with, in order to gain other desirable properties.<a href="#section-1-9" class="pilcrow">¶</a></p>
 <p id="section-1-10">In order to clearly handle the protocol's security properties
 and to broaden applicability to group situations outside the deterministic case,
 the technical implementation is split into two halves:<a href="#section-1-10" class="pilcrow">¶</a></p>
@@ -1321,7 +1321,7 @@ the technical implementation is split into two halves:<a href="#section-1-10" cl
           <p id="section-1-11.1.1">Maintaining request-response bindings in the absence of request source authentication; and<a href="#section-1-11.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-1-11.2">
-          <p id="section-1-11.2.1">Building and processing of Deterministic Requests, which have no source authentication and thus require the former.<a href="#section-1-11.2.1" class="pilcrow">¶</a></p>
+          <p id="section-1-11.2.1">Composition and processing of Deterministic Requests, which have no source authentication and thus require the former.<a href="#section-1-11.2.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <div id="use-cases">
@@ -1352,13 +1352,13 @@ appear in all capitals, as shown here.<a href="#section-1.2-1" class="pilcrow">�
 <ul class="normal">
 <li class="normal" id="section-1.2-4.1">
             <p id="section-1.2-4.1.1">Consensus Request: a CoAP request that multiple clients use to repeatedly access a particular resource.
-In this document, it exclusively refers to requests protected with Group OSCORE to a resource hosted at one or more servers in the OSCORE group.<a href="#section-1.2-4.1.1" class="pilcrow">¶</a></p>
+In this document, it exclusively refers to requests protected with Group OSCORE that target a resource hosted at one or more servers in an OSCORE group.<a href="#section-1.2-4.1.1" class="pilcrow">¶</a></p>
 <p id="section-1.2-4.1.2">
 A Consensus Request has all the properties relevant to caching, but its transport dependent properties (e.g., Token or Message ID) are not defined. Thus, different requests on the wire can be said to "be the same Consensus Request" even if they have different Tokens or source addresses.<a href="#section-1.2-4.1.2" class="pilcrow">¶</a></p>
 <p id="section-1.2-4.1.3">
 The Consensus Request is the reference for request-response binding.
- In general, a client processing a response to a Consensus Request did not generate (and thus sign) the consensus request.
- The client not only needs to decrypt the Consensus Request to understand a corresponding response (for example to tell which path was requested),
+ In general, a client processing a response to a Consensus Request did not generate (and thus sign) the Consensus Request.
+ The client not only needs to decrypt the Consensus Request to understand a corresponding response (for example, to tell which resource path was requested),
  but it also needs to verify that this is the only Consensus Request that could elicit this response.<a href="#section-1.2-4.1.3" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-1.2-4.2">
@@ -1372,11 +1372,11 @@ The Group Manager responsible for the OSCORE group (see <span><a href="https://d
           <li class="normal" id="section-1.2-4.4">
             <p id="section-1.2-4.4.1">Ticket Request: a Consensus Request generated by the server itself.<a href="#section-1.2-4.4.1" class="pilcrow">¶</a></p>
 <p id="section-1.2-4.4.2">
-This term is not used in the main document, but is useful in comparison with other applications of Consensus Requests
+This term is not used in the remaining of the main document body, but it is useful in comparison with other applications of Consensus Requests
 that are generated in a different way than as Deterministic Requests.
 The prototypical Ticket Request is the Phantom Request defined in <span>[<a href="#I-D.ietf-core-observe-multicast-notifications" class="cite xref">I-D.ietf-core-observe-multicast-notifications</a>]</span>.<a href="#section-1.2-4.4.2" class="pilcrow">¶</a></p>
 <p id="section-1.2-4.4.3">
-In <a href="#sec-ticket-requests" class="auto internal xref">Appendix B</a>, the term is used to bridge the gap with that document.<a href="#section-1.2-4.4.3" class="pilcrow">¶</a></p>
+In <a href="#sec-ticket-requests" class="auto internal xref">Appendix B</a>, this term is used to bridge the gap with that document.<a href="#section-1.2-4.4.3" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -1390,13 +1390,13 @@ In <a href="#sec-ticket-requests" class="auto internal xref">Appendix B</a>, the
       </h2>
 <p id="section-2-1">In OSCORE <span>[<a href="#RFC8613" class="cite xref">RFC8613</a>]</span>, a response is cryptographically bound to the corresponding request through CBOR data items <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span> in their authenticated encryption's Additional Authenticated Data (AAD):
 "request_kid" and "request_piv".
-Group OSCORE adds "request_kid_context" to that list.
+Building on the same construct, Group OSCORE adds "request_kid_context" to that list.
 Hereafter, those items are referred to as "request_details".<a href="#section-2-1" class="pilcrow">¶</a></p>
 <p id="section-2-2">The security of such binding depends on the server obtaining source authentication for the request,
 and on that source matching the request_details.
 If this precondition is not fulfilled, a malicious group member could alter a request to the server (without altering the request_details above),
 and the client would still accept the response as if it were a response to its request.<a href="#section-2-2" class="pilcrow">¶</a></p>
-<p id="section-2-3">Source authentication is thus a precondition for the secure use of OSCORE and Group OSCORE.
+<p id="section-2-3">Source authentication of requests is thus a precondition for the secure use of OSCORE and Group OSCORE.
 However, it is hard to provide when:<a href="#section-2-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-2-4.1">
@@ -1407,7 +1407,7 @@ However, it is hard to provide when:<a href="#section-2-3" class="pilcrow">¶</a
 </li>
       </ul>
 <p id="section-2-5">This document does not [ yet? ] give full guidance on how to restore request-response binding for the general case,
-but currently only offers suggestions:<a href="#section-2-5" class="pilcrow">¶</a></p>
+but it currently only offers suggestions:<a href="#section-2-5" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-2-6.1">
           <p id="section-2-6.1.1">The response can contain the full request. An option that allows doing that is presented in <span>[<a href="#I-D.ietf-core-responses" class="cite xref">I-D.ietf-core-responses</a>]</span>.<a href="#section-2-6.1.1" class="pilcrow">¶</a></p>
@@ -1425,10 +1425,9 @@ as that would lead to reuse of the Authenticated Encryption with Associated Data
 <p id="section-2-7">[ Suggestion for any OSCORE v2: avoid request_details in the request's AAD as individual elements. Rather than having 'request_kid', 'request_piv' (and, in Group OSCORE, 'request_kid_context') as separate fields, they can better be something more pluggable.
 This would avoid the need to make up an option before processing, and would allow just plugging the (hash of the) request in there, as replacing the elements for the request_details. ]<a href="#section-2-7" class="pilcrow">¶</a></p>
 <p id="section-2-8">Additional care has to be taken in ensuring that request_details that are not expressed in the request itself are captured. For instance, these include an indication of the Security Context through which the request is assumed to have been originated.<a href="#section-2-8" class="pilcrow">¶</a></p>
-<p id="section-2-9">Requests without source authentication have to be processed assuming only the minimal possible privilege of the requester
-[ which is currently described as the authorization of the Deterministic Client, and may be moved up here in later versions of this document ].
-If a response to such a request is built and it contains data more sensitive than that
-(which might be justified if the response is protected for an authorized group member in pairwise mode),
+<p id="section-2-9">Requests without source authentication have to be processed assuming only the minimal possible privilege of the requester, e.g., consistent with the privileges of the Deterministic Client considered in this document (see <a href="#terminology" class="auto internal xref">Section 1.2</a>).
+If a response to such a request is originated and it contains data more sensitive than that
+(which might be justified, if the response is protected for an authorized group member using the pairwise mode of Group OSCORE),
 special consideration for any side channels like response size or timing is required.<a href="#section-2-9" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1437,13 +1436,13 @@ special consideration for any side channels like response size or timing is requ
       <h2 id="name-deterministic-requests">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-deterministic-requests" class="section-name selfRef">Deterministic Requests</a>
       </h2>
-<p id="section-3-1">This section defines a method for clients starting from a same intended CoAP request to independently build the same, corresponding Deterministic Request protected with Group OSCORE.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-1">This section defines a method for clients starting from a same intended CoAP request to independently compose the same, corresponding Deterministic Request protected with Group OSCORE.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <div id="sec-deterministic-requests-unprotected">
 <section id="section-3.1">
         <h3 id="name-deterministic-unprotected-r">
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-deterministic-unprotected-r" class="section-name selfRef">Deterministic Unprotected Request</a>
         </h3>
-<p id="section-3.1-1">When clients build their unprotected request,
+<p id="section-3.1-1">When clients compose their unprotected request,
 they can already minimize variability
 and thus maximize reproducibility.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.1-2">This document does not set out full guidelines for minimizing the variation,
@@ -1460,30 +1459,31 @@ Instead, clients should only set it when there was a recent response conveying t
 When using block-wise transfers <span>[<a href="#RFC7959" class="cite xref">RFC7959</a>]</span> and obtaining later blocks, clients should not send the known-stale ETag value.<a href="#section-3.1-3.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.1-3.3">
-            <p id="section-3.1-3.3.1">When using block-wise transfers <span>[<a href="#RFC7959" class="cite xref">RFC7959</a>]</span>, maximally sized large Inner blocks (szx=6) <span class="bcp14">SHOULD</span> be selected.
-This serves not only to align the clients on consistent cache entries,
-but also helps amortize the additional data transferred in the per-message signatures.<a href="#section-3.1-3.3.1" class="pilcrow">¶</a></p>
+            <p id="section-3.1-3.3.1">When using block-wise transfers <span>[<a href="#RFC7959" class="cite xref">RFC7959</a>]</span>, maximally sized large Inner blocks (szx=6) <span class="bcp14">SHOULD</span> be selected.<a href="#section-3.1-3.3.1" class="pilcrow">¶</a></p>
 <p id="section-3.1-3.3.2">
-Outer block-wise transfer can then be used if these messages exceed a hop's efficiently usable Maximum Transmission Unit (MTU) size.<a href="#section-3.1-3.3.2" class="pilcrow">¶</a></p>
+This not only serves to align the clients on consistent cache entries,
+but it also helps amortize the additional data transferred in the per-message signatures of the corresponding responses, which are protected with the group mode of Group OSCORE.<a href="#section-3.1-3.3.2" class="pilcrow">¶</a></p>
 <p id="section-3.1-3.3.3">
-If Block-wise Extension for Reliable Transport (BERT) <span>[<a href="#RFC8323" class="cite xref">RFC8323</a>]</span> is usable with OSCORE, its use is fine as well;
-in that case, the server picks a consistent block size for all clients anyway.<a href="#section-3.1-3.3.3" class="pilcrow">¶</a></p>
+Outer block-wise transfer can then be used if these messages exceed a hop's efficiently usable Maximum Transmission Unit (MTU) size.<a href="#section-3.1-3.3.3" class="pilcrow">¶</a></p>
+<p id="section-3.1-3.3.4">
+If Block-wise Extension for Reliable Transport (BERT) <span>[<a href="#RFC8323" class="cite xref">RFC8323</a>]</span> is usable with Group OSCORE, its use is fine as well.
+In that case, the server picks a consistent block size for all clients anyway.<a href="#section-3.1-3.3.4" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.1-3.4">
-            <p id="section-3.1-3.4.1">The CoAP Padding Option defined in <a href="#sec-padding" class="auto internal xref">Appendix A</a> can be used to limit an adversary's ability to deduce the content and the target resource of Deterministic Requests from their length. In particular, all Deterministic Requests of the same class (ideally, all requests to a particular server) can be padded to reach the same total length, that should be agreed on among all users of the same Group OSCORE Security Context.<a href="#section-3.1-3.4.1" class="pilcrow">¶</a></p>
+            <p id="section-3.1-3.4.1">The CoAP Padding Option defined in <a href="#sec-padding" class="auto internal xref">Appendix A</a> can be used to limit an adversary's ability to deduce the content and the target resource of Deterministic Requests from their length.<a href="#section-3.1-3.4.1" class="pilcrow">¶</a></p>
+<p id="section-3.1-3.4.2">
+In particular, all Deterministic Requests of the same class (ideally, all requests to a particular server) can be padded to reach the same total length, which would need to be agreed on among all users of the same Group OSCORE Security Context.<a href="#section-3.1-3.4.2" class="pilcrow">¶</a></p>
 </li>
-        </ul>
-<ul class="normal">
-<li class="normal" id="section-3.1-4.1">
-            <p id="section-3.1-4.1.1">Clients should not send a protected (inner) CoAP Echo Option <span>[<a href="#RFC9175" class="cite xref">RFC9175</a>]</span> in Deterministic Requests.<a href="#section-3.1-4.1.1" class="pilcrow">¶</a></p>
-<p id="section-3.1-4.1.2">
+          <li class="normal" id="section-3.1-3.5">
+            <p id="section-3.1-3.5.1">Clients should not send a protected (inner) CoAP Echo Option <span>[<a href="#RFC9175" class="cite xref">RFC9175</a>]</span> in Deterministic Requests.<a href="#section-3.1-3.5.1" class="pilcrow">¶</a></p>
+<p id="section-3.1-3.5.2">
 In combination with Deterministic Requests, this limits the use of the Echo Option to its inclusion as an unprotected (outer) Echo Option,
 and thus to testing the reachability of the client.
 However, this is not practically limiting, since the use as an Inner option would be to prove freshness,
-which is something that Deterministic Requests simply cannot provide anyway.<a href="#section-3.1-4.1.2" class="pilcrow">¶</a></p>
+which is something that Deterministic Requests simply cannot provide anyway.<a href="#section-3.1-3.5.2" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-3.1-5">These guidelines only serve to ensure that cache entries are utilized. Failure to follow these guidelines has no more severe consequences than decreasing the utility and effectiveness of a cache.<a href="#section-3.1-5" class="pilcrow">¶</a></p>
+<p id="section-3.1-4">These guidelines only serve to ensure that cache entries are utilized. Failure to follow these guidelines has no more severe consequences than decreasing the utility and effectiveness of a cache.<a href="#section-3.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="ssec-deterministic-requests-design">
@@ -1495,7 +1495,7 @@ which is something that Deterministic Requests simply cannot provide anyway.<a h
 <p id="section-3.2-2">Diversity can conceptually be enforced by applying a cryptographic hash function to the complete input of the encryption operation over the plain CoAP request (i.e., the AAD and the plaintext of the COSE object), and then using the result as source of uniqueness.
 Any non-malleable cryptographically secure hash of sufficient length to make collisions sufficiently unlikely is suitable for this purpose.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
 <p id="section-3.2-3">A tempting possibility is to use a fixed (group) key, and use the hash as a deterministic AEAD nonce for each Deterministic Request through the Partial IV component (see <span><a href="https://rfc-editor.org/rfc/rfc8613#section-5.2" class="relref">Section 5.2</a> of [<a href="#RFC8613" class="cite xref">RFC8613</a>]</span>). However, the 40 bits available for the Partial IV are by far insufficient to ensure that the deterministic nonce is not reused across different Deterministic Requests. Even if the full deterministic AEAD nonce could be set, the sizes used by common algorithms would still be too small.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
-<p id="section-3.2-4">Consequently, the proposed method takes the opposite approach, by considering a fixed deterministic AEAD nonce, while deriving a different deterministic encryption key for each Deterministic Request. That is, the hash computed over the plain CoAP request is taken as input to the key derivation. As an advantage, this approach does not require to transport the computed hash in the CoAP OSCORE Option.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
+<p id="section-3.2-4">Consequently, the method defined in this document takes the opposite approach, by considering a fixed deterministic AEAD nonce, while deriving a different deterministic encryption key for each Deterministic Request. That is, the hash computed over the plain CoAP request is taken as input to the key derivation. As an advantage, this approach does not require to transport the computed hash in the CoAP OSCORE Option.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
 <p id="section-3.2-5">[ Note: This has a further positive side effect arising with version -11 of draft-ietf-core-oscore-groupcomm. That is, since the full encoded OSCORE Option is part of the AAD, it avoids a circular dependency from feeding the AAD into the hash computation, which in turn needs crude workarounds like building the full AAD twice, or zeroing out the hash-to-be. ]<a href="#section-3.2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1553,7 +1553,7 @@ Implementations can limit the length of the Option Value to that of the longest 
           <li class="normal" id="section-3.3-5.3">
             <p id="section-3.3-5.3.1">It may be present in responses.<a href="#section-3.3-5.3.1" class="pilcrow">¶</a></p>
 <p id="section-3.3-5.3.2">
-Editor's note: Does this affect any other properties?<a href="#section-3.3-5.3.2" class="pilcrow">¶</a></p>
+[ Editor's note: Does this affect any other properties? ]<a href="#section-3.3-5.3.2" class="pilcrow">¶</a></p>
 <p id="section-3.3-5.3.3">
 A response's Request-Hash Option is, as a matter of default value,
 equal to the request's Request-Hash Option.
@@ -1564,13 +1564,13 @@ especially as a matter of bandwidth efficiency.<a href="#section-3.3-5.3.4" clas
 <p id="section-3.3-5.3.5">
 A reason (and, currently, the only known) to actually include a Request-Hash option in a response
 is the possible use of non-traditional responses as described in <span>[<a href="#I-D.ietf-core-responses" class="cite xref">I-D.ietf-core-responses</a>]</span>,
-which in terms of that document are non-matching to the request (and thus easily usable).
+which, in terms of that document, are non-matching to the request (and thus easily usable).
 The Request-Hash Option included in the response allows populating caches (see below) and enables the decryption and verification of a response that is sent as a reply to a Consensus Request.
 In the context of non-traditional responses, the value of the Request-Hash Option in the request corresponding to a response can be inferred from the value of the Request-Hash Option in the response.<a href="#section-3.3-5.3.5" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.3-5.4">
             <p id="section-3.3-5.4.1">A proxy <span class="bcp14">MAY</span> use any fresh cached response from the selected server to reply to a request with the same Request-Hash;
-this may save it some memory.<a href="#section-3.3-5.4.1" class="pilcrow">¶</a></p>
+this can save it some memory.<a href="#section-3.3-5.4.1" class="pilcrow">¶</a></p>
 <p id="section-3.3-5.4.2">
 When replying to a request that includes a Request-Hash Option, the proxy <span class="bcp14">MAY</span> add a Request-Hash Option to the response if the option is not already present in the response, or remove the Request-Hash Option from the response if the option is already present in the response. In either case, the Request-Hash Option in the response <span class="bcp14">MUST</span> have the same value that the Request-Hash Option has in the corresponding request.<a href="#section-3.3-5.4.2" class="pilcrow">¶</a></p>
 </li>
@@ -1604,8 +1604,8 @@ The Sender ID of the Deterministic Client is immutable throughout the lifetime o
 </li>
           </ul>
 <p id="section-3.4.1-3">Group members have to obtain this information from the Group Manager. A group member can do that, for instance, when obtaining the group keying material upon joining the OSCORE group, or later on as an active member by interacting with the Group Manager.<a href="#section-3.4.1-3" class="pilcrow">¶</a></p>
-<p id="section-3.4.1-4">The joining process based on the Group Manager defined in <span>[<a href="#I-D.ietf-ace-key-groupcomm-oscore" class="cite xref">I-D.ietf-ace-key-groupcomm-oscore</a>]</span> can be easily extended to support the provisioning of information about the Deterministic Client. Such an extension is defined in <a href="#sec-obtaining-info" class="auto internal xref">Section 4</a> of the present document.
-No such extension is needed for the management interface of the Group Manager, as <span>[<a href="#I-D.ietf-ace-oscore-gm-admin" class="cite xref">I-D.ietf-ace-oscore-gm-admin</a>]</span> already includes the relevant parameters.<a href="#section-3.4.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.4.1-4">The joining process based on the realization of Group Manager defined in <span>[<a href="#I-D.ietf-ace-key-groupcomm-oscore" class="cite xref">I-D.ietf-ace-key-groupcomm-oscore</a>]</span> can be easily extended to support the provisioning of information about the Deterministic Client. Such an extension is defined in <a href="#sec-obtaining-info" class="auto internal xref">Section 4</a> of the present document.
+With reference to the same realization of Group Manager, no such extension is needed for its management interface defined in <span>[<a href="#I-D.ietf-ace-oscore-gm-admin" class="cite xref">I-D.ietf-ace-oscore-gm-admin</a>]</span>, which already includes the relevant parameters.<a href="#section-3.4.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sssec-use-deterministic-requests-client-req">
@@ -1668,7 +1668,7 @@ Note that an actual IKM-Sender cannot be obtained, since there is no authenticat
           </ol>
 <p id="section-3.4.2-3">The result is the Deterministic Request to be sent.<a href="#section-3.4.2-3" class="pilcrow">¶</a></p>
 <p id="section-3.4.2-4">Since the encryption key K is derived using material from the whole plain CoAP request, this (key, nonce) pair is only used for this very message, which is deterministically encrypted unless there is a hash collision between two Deterministic Requests.<a href="#section-3.4.2-4" class="pilcrow">¶</a></p>
-<p id="section-3.4.2-5">The deterministic encryption requires that the AEAD algorithm used is deterministic in itself. This is the case for all the AEAD algorithms currently registered with COSE in <span>[<a href="#COSE.Algorithms" class="cite xref">COSE.Algorithms</a>]</span>. For future algorithms, a flag in the COSE registry is to be added.<a href="#section-3.4.2-5" class="pilcrow">¶</a></p>
+<p id="section-3.4.2-5">The deterministic encryption requires that the AEAD algorithm used is deterministic in itself. This is the case for all the AEAD algorithms currently registered with COSE in <span>[<a href="#IANA.COSE.Algorithms" class="cite xref">IANA.COSE.Algorithms</a>]</span>. For future algorithms, a flag in the COSE registry is to be added.<a href="#section-3.4.2-5" class="pilcrow">¶</a></p>
 <p id="section-3.4.2-6">Note that, while the process defined above is based on the pairwise mode of Group OSCORE, no information about the server takes part in the key derivation or is included in the AAD. This is intentional, since it allows sending a Deterministic Request to multiple servers at once (see <a href="#det-req-one-to-many" class="auto internal xref">Section 3.4.5</a>). On the other hand, it requires later checks at the client when verifying a response to a Deterministic Request (see <a href="#ssec-use-deterministic-requests-response" class="auto internal xref">Section 3.4.4</a>).<a href="#section-3.4.2-6" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1813,7 +1813,7 @@ Note that this deviates from <span><a href="https://rfc-editor.org/rfc/rfc8613#s
           <p id="section-4-3.1.1">The 'det_senderId' parameter, if present, has as value the OSCORE Sender ID assigned to the Deterministic Client by the Group Manager. This parameter <span class="bcp14">MUST</span> be present if the OSCORE group uses Deterministic Requests as defined in this document. Otherwise, this parameter <span class="bcp14">MUST NOT</span> be present.<a href="#section-4-3.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-4-3.2">
-          <p id="section-4-3.2.1">The 'det_hash_alg' parameter, if present, has as value the hash algorithm to use for computing the hash of a plain CoAP request, when producing the associated Deterministic Request. This parameter takes values from the "Value" column of the "COSE Algorithms" Registry <span>[<a href="#COSE.Algorithms" class="cite xref">COSE.Algorithms</a>]</span>. This parameter <span class="bcp14">MUST</span> be present if the OSCORE group uses Deterministic Requests as defined in this document. Otherwise, this parameter <span class="bcp14">MUST NOT</span> be present.<a href="#section-4-3.2.1" class="pilcrow">¶</a></p>
+          <p id="section-4-3.2.1">The 'det_hash_alg' parameter, if present, has as value the hash algorithm to use for computing the hash of a plain CoAP request, when producing the associated Deterministic Request. This parameter takes values from the "Value" column of the "COSE Algorithms" Registry <span>[<a href="#IANA.COSE.Algorithms" class="cite xref">IANA.COSE.Algorithms</a>]</span>. This parameter <span class="bcp14">MUST</span> be present if the OSCORE group uses Deterministic Requests as defined in this document. Otherwise, this parameter <span class="bcp14">MUST NOT</span> be present.<a href="#section-4-3.2.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="section-4-4">The same extension above applies also to the 'key' parameter included in a Key Distribution Response (see Sections <a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-key-groupcomm-oscore-21#section-9.1.1" class="relref">9.1.1</a> and <a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-key-groupcomm-oscore-21#section-9.1.2" class="relref">9.1.2</a> of <span>[<a href="#I-D.ietf-ace-key-groupcomm-oscore" class="cite xref">I-D.ietf-ace-key-groupcomm-oscore</a>]</span>).<a href="#section-4-4" class="pilcrow">¶</a></p>
@@ -1939,7 +1939,7 @@ to use this information as they see fit".<a href="#section-5-5" class="pilcrow">
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
 <p id="section-6-1">The same security considerations from <span>[<a href="#RFC7252" class="cite xref">RFC7252</a>]</span>, <span>[<a href="#I-D.ietf-core-groupcomm-bis" class="cite xref">I-D.ietf-core-groupcomm-bis</a>]</span>, <span>[<a href="#RFC8613" class="cite xref">RFC8613</a>]</span>, and <span>[<a href="#I-D.ietf-core-oscore-groupcomm" class="cite xref">I-D.ietf-core-oscore-groupcomm</a>]</span> hold for this document.<a href="#section-6-1" class="pilcrow">¶</a></p>
-<p id="section-6-2">The following elaborates on how, compared to Group OSCORE, Deterministic Requests dispense with some of the OSCORE security properties, by just so much as to make caching possible.<a href="#section-6-2" class="pilcrow">¶</a></p>
+<p id="section-6-2">The following elaborates on how, compared to <span>[<a href="#I-D.ietf-core-oscore-groupcomm" class="cite xref">I-D.ietf-core-oscore-groupcomm</a>]</span>, Deterministic Requests dispense with some of the Group OSCORE security properties, by just so much as to make caching possible.<a href="#section-6-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-6-3.1">
           <p id="section-6-3.1.1">A Deterministic Request is intrinsically designed to be replayed, as intended to be identically sent multiple times by multiple clients to the same server(s).<a href="#section-6-3.1.1" class="pilcrow">¶</a></p>
@@ -1951,10 +1951,10 @@ This builds on the following considerations:<a href="#section-6-3.1.3" class="pi
 <li class="normal" id="section-6-3.1.4.1">
               <p id="section-6-3.1.4.1.1">For a given request, the level of tolerance to replay risk is specific to the resource it operates upon (and therefore only known to the origin server). In general, if processing a request does not have state-changing side effects, the consequences of replay are not significant.<a href="#section-6-3.1.4.1.1" class="pilcrow">¶</a></p>
 <p id="section-6-3.1.4.1.2">
-Just like for what concerns the lack of source authentication (see below), the server must verify that the received Deterministic Request (more precisely, its handler) is side-effect free. The distinct semantics of the CoAP request methods can help the server make that assessment.<a href="#section-6-3.1.4.1.2" class="pilcrow">¶</a></p>
+Just like for what concerns the lack of source authentication (see below), the server <span class="bcp14">MUST</span> verify that the received Deterministic Request (more precisely, its handler) is side-effect free. The distinct semantics of the CoAP request methods can help the server make that assessment.<a href="#section-6-3.1.4.1.2" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-6-3.1.4.2">
-              <p id="section-6-3.1.4.2.1">Consistently with the point above, a server can choose whether it will process a Deterministic Request on a per-resource basis. It is <span class="bcp14">RECOMMENDED</span> that origin servers allow resources to explicitly configure whether Deterministic Requests are appropriate to receive, as still limited to requests that are safe to be processed in the REST sense, i.e., they do not have state-changing side effects.<a href="#section-6-3.1.4.2.1" class="pilcrow">¶</a></p>
+              <p id="section-6-3.1.4.2.1">Consistent with the point above, a server can choose whether it will process a Deterministic Request on a per-resource basis. It is <span class="bcp14">RECOMMENDED</span> that origin servers allow resources to explicitly configure whether Deterministic Requests are appropriate to receive, as still limited to requests that are safe to be processed in the REST sense, i.e., they do not have state-changing side effects.<a href="#section-6-3.1.4.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </li>
@@ -1974,7 +1974,7 @@ However, a valid response to a Deterministic Request still contains two freshnes
         <li class="normal" id="section-6-3.3">
           <p id="section-6-3.3.1">Source authentication of Deterministic Requests is lost.<a href="#section-6-3.3.1" class="pilcrow">¶</a></p>
 <p id="section-6-3.3.2">
-Instead, the server must verify that the Deterministic Request (more precisely, its handler) is side-effect free. The distinct semantics of the CoAP request methods can help the server make that assessment.<a href="#section-6-3.3.2" class="pilcrow">¶</a></p>
+Instead, the server <span class="bcp14">MUST</span> verify that the Deterministic Request (more precisely, its handler) is side-effect free. The distinct semantics of the CoAP request methods can help the server make that assessment.<a href="#section-6-3.3.2" class="pilcrow">¶</a></p>
 <p id="section-6-3.3.3">
 Just like for what concerns the acceptance of replayed Deterministic Requests (see above), the server can choose whether it will process a Deterministic Request on a per-resource basis.<a href="#section-6-3.3.3" class="pilcrow">¶</a></p>
 </li>
@@ -1986,7 +1986,7 @@ An intermediary can determine that two Deterministic Requests from different cli
 If a server produces responses in reply to a Deterministic Request and those responses vary in size, the server can use the Padding Option defined in <a href="#sec-padding" class="auto internal xref">Appendix A</a> in order to hide when the response is changing.<a href="#section-6-3.4.3" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-6-4">[ More on the verification of the Deterministic Request ]<a href="#section-6-4" class="pilcrow">¶</a></p>
+<p id="section-6-4">[ Editor's note: more on the verification of the Deterministic Request ]<a href="#section-6-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana">
@@ -2001,7 +2001,7 @@ If a server produces responses in reply to a Deterministic Request and those res
         <h3 id="name-coap-option-numbers-registr">
 <a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-coap-option-numbers-registr" class="section-name selfRef">CoAP Option Numbers Registry</a>
         </h3>
-<p id="section-7.1-1">IANA is asked to add the following entries in the "CoAP Option Numbers" registry within the "Constrained RESTful Environments (CoRE) Parameters" registry group.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
+<p id="section-7.1-1">IANA is asked to add the following entries in the "CoAP Option Numbers" registry <span>[<a href="#IANA.CoAP.Option.Numbers" class="cite xref">IANA.CoAP.Option.Numbers</a>]</span> within the "Constrained RESTful Environments (CoRE) Parameters" registry group.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
 <span id="name-registrations-in-the-coap-o"></span><div id="iana-coap-option-numbers-table">
 <table class="center" id="table-2">
           <caption>
@@ -2029,12 +2029,13 @@ If a server produces responses in reply to a Deterministic Request and those res
           </tbody>
         </table>
 </div>
-<p id="section-7.1-3">[<a href="#section-7.1-3" class="pilcrow">¶</a></p>
-<p id="section-7.1-4">For the Request-Hash Option, the number suggested to IANA is 548.<a href="#section-7.1-4" class="pilcrow">¶</a></p>
-<p id="section-7.1-5">For the Padding Option, the option number is picked to be the highest number in the "Expert Review" range; the high option number allows it to follow practically all other options, and thus to be set when the final unpadded message length including all options is known. Therefore, the number suggested to IANA is 64988.<a href="#section-7.1-5" class="pilcrow">¶</a></p>
-<p id="section-7.1-6">Applications that make use of the "Experimental use" range and want to preserve that property are invited to pick the largest suitable experimental number (65532).<a href="#section-7.1-6" class="pilcrow">¶</a></p>
-<p id="section-7.1-7">Note that unless other high options are used, this means that padding a message adds an overhead of at least 3 bytes, i.e., 1 byte for the Option Delta/Length and two more bytes for the extended Option Delta (see <span><a href="https://rfc-editor.org/rfc/rfc7252#section-3.1" class="relref">Section 3.1</a> of [<a href="#RFC7252" class="cite xref">RFC7252</a>]</span>). This is considered acceptable overhead, given that the application has already chosen to prefer the privacy gains of padding over wire transfer length.<a href="#section-7.1-7" class="pilcrow">¶</a></p>
-<p id="section-7.1-8">]<a href="#section-7.1-8" class="pilcrow">¶</a></p>
+<p id="section-7.1-3">Note to RFC Editor: Please remove the text following this note and within the present <a href="#iana-coap-options" class="auto internal xref">Section 7.1</a>. Then, please delete this note.<a href="#section-7.1-3" class="pilcrow">¶</a></p>
+<p id="section-7.1-4">[<a href="#section-7.1-4" class="pilcrow">¶</a></p>
+<p id="section-7.1-5">For the Request-Hash Option, the number suggested to IANA is 548.<a href="#section-7.1-5" class="pilcrow">¶</a></p>
+<p id="section-7.1-6">For the Padding Option, the option number is picked to be the highest number in the "Expert Review" range; the high option number allows it to follow practically all other options, and thus to be set when the final unpadded message length including all options is known. Therefore, the number suggested to IANA is 64988.<a href="#section-7.1-6" class="pilcrow">¶</a></p>
+<p id="section-7.1-7">Applications that make use of the "Experimental use" range and want to preserve that property are invited to pick the largest suitable experimental number (65532).<a href="#section-7.1-7" class="pilcrow">¶</a></p>
+<p id="section-7.1-8">Note that unless other high options are used, this means that padding a message adds an overhead of at least 3 bytes, i.e., 1 byte for the Option Delta/Length and two more bytes for the extended Option Delta (see <span><a href="https://rfc-editor.org/rfc/rfc7252#section-3.1" class="relref">Section 3.1</a> of [<a href="#RFC7252" class="cite xref">RFC7252</a>]</span>). This is considered acceptable overhead, given that the application has already chosen to prefer the privacy gains of padding over wire transfer length.<a href="#section-7.1-8" class="pilcrow">¶</a></p>
+<p id="section-7.1-9">]<a href="#section-7.1-9" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="ssec-iana-security-context-parameter-registry">
@@ -2042,7 +2043,7 @@ If a server produces responses in reply to a Deterministic Request and those res
         <h3 id="name-oscore-security-context-par">
 <a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-oscore-security-context-par" class="section-name selfRef">OSCORE Security Context Parameters Registry</a>
         </h3>
-<p id="section-7.2-1">IANA is asked to add the following entries in the "OSCORE Security Context Parameters" registry within the "Authentication and Authorization for Constrained Environments (ACE)" registry group.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
+<p id="section-7.2-1">IANA is asked to add the following entries in the "OSCORE Security Context Parameters" registry <span>[<a href="#IANA.OSCORE.Sec.Ctx.Parameters" class="cite xref">IANA.OSCORE.Sec.Ctx.Parameters</a>]</span> within the "Authentication and Authorization for Constrained Environments (ACE)" registry group.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-7.2-2.1">
             <p id="section-7.2-2.1.1">Name: det_senderId<a href="#section-7.2-2.1.1" class="pilcrow">¶</a></p>
@@ -2075,7 +2076,7 @@ If a server produces responses in reply to a Deterministic Request and those res
             <p id="section-7.2-4.3.1">CBOR Type: text string / integer<a href="#section-7.2-4.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.2-4.4">
-            <p id="section-7.2-4.4.1">Registry: <span>[<a href="#COSE.Algorithms" class="cite xref">COSE.Algorithms</a>]</span> Values (Hash)<a href="#section-7.2-4.4.1" class="pilcrow">¶</a></p>
+            <p id="section-7.2-4.4.1">Registry: <span>[<a href="#IANA.COSE.Algorithms" class="cite xref">IANA.COSE.Algorithms</a>]</span> Values (Hash)<a href="#section-7.2-4.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.2-4.5">
             <p id="section-7.2-4.5.1">Description: Hash algorithm to use in an OSCORE group when producing a Deterministic Request<a href="#section-7.2-4.5.1" class="pilcrow">¶</a></p>
@@ -2099,10 +2100,6 @@ If a server produces responses in reply to a Deterministic Request and those res
 <a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
         </h3>
 <dl class="references">
-<dt id="COSE.Algorithms">[COSE.Algorithms]</dt>
-        <dd>
-<span class="refAuthor">IANA</span>, <span class="refTitle">"COSE Algorithms"</span>, <span>&lt;<a href="https://www.iana.org/assignments/cose/cose.xhtml#algorithms">https://www.iana.org/assignments/cose/cose.xhtml#algorithms</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="I-D.ietf-core-groupcomm-bis">[I-D.ietf-core-groupcomm-bis]</dt>
         <dd>
 <span class="refAuthor">Dijk, E.</span> and <span class="refAuthor">M. Tiloca</span>, <span class="refTitle">"Group Communication for the Constrained Application Protocol (CoAP)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-core-groupcomm-bis-18</span>, <time datetime="2026-02-10" class="refDate">10 February 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-groupcomm-bis-18">https://datatracker.ietf.org/doc/html/draft-ietf-core-groupcomm-bis-18</a>&gt;</span>. </dd>
@@ -2110,6 +2107,18 @@ If a server produces responses in reply to a Deterministic Request and those res
 <dt id="I-D.ietf-core-oscore-groupcomm">[I-D.ietf-core-oscore-groupcomm]</dt>
         <dd>
 <span class="refAuthor">Tiloca, M.</span>, <span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Palombini, F.</span>, <span class="refAuthor">Mattsson, J. P.</span>, and <span class="refAuthor">R. Höglund</span>, <span class="refTitle">"Group Object Security for Constrained RESTful Environments (Group OSCORE)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-core-oscore-groupcomm-28</span>, <time datetime="2025-12-23" class="refDate">23 December 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-groupcomm-28">https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-groupcomm-28</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="IANA.CoAP.Option.Numbers">[IANA.CoAP.Option.Numbers]</dt>
+        <dd>
+<span class="refAuthor">IANA</span>, <span class="refTitle">"CoAP Option Numbers"</span>, <span>&lt;<a href="https://www.iana.org/assignments/core-parameters/core-parameters.xhtml#option-numbers">https://www.iana.org/assignments/core-parameters/core-parameters.xhtml#option-numbers</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="IANA.COSE.Algorithms">[IANA.COSE.Algorithms]</dt>
+        <dd>
+<span class="refAuthor">IANA</span>, <span class="refTitle">"COSE Algorithms"</span>, <span>&lt;<a href="https://www.iana.org/assignments/cose/cose.xhtml#algorithms">https://www.iana.org/assignments/cose/cose.xhtml#algorithms</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="IANA.OSCORE.Sec.Ctx.Parameters">[IANA.OSCORE.Sec.Ctx.Parameters]</dt>
+        <dd>
+<span class="refAuthor">IANA</span>, <span class="refTitle">"OSCORE Security Context Parameters"</span>, <span>&lt;<a href="https://www.iana.org/assignments/ace/ace.xhtml#oscore-security-context-parameters">https://www.iana.org/assignments/ace/ace.xhtml#oscore-security-context-parameters</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
         <dd>
@@ -2749,7 +2758,7 @@ Hashes could also be used in a truncated form for that
   0b5246cca71e3926f0a8cebefdcabbc80e79579d5a1ee17dff65bcd5d5edf4
   13497bfdeec8975e2acafa702b45
 
-0x48 (Version: 1, type: CON, Token Length: 8 - 1 byte)
+0x48 (Version: 1, Type: CON, Token Length: 8 - 1 byte)
   05 (Code: FETCH - 1 byte)
   9483 (Message ID - 2 bytes)
   f0aeef1c796812a0 (Token - 8 bytes)
@@ -2774,7 +2783,7 @@ Hashes could also be used in a truncated form for that
 0x68459483f0aeef1c796812a0d2010e10ed010913404b3a7c9f8c878a0b5246
   cca71e3926f0a8cebefdcabbc80e79579d5a1ee17dff2e2049443a203432
 
-0x68 (Version: 1, type: ACK, Token Length: 8 - 1 byte)
+0x68 (Version: 1, Type: ACK, Token Length: 8 - 1 byte)
   45 (Code: 2.05 - 1 byte)
   9483 (Message ID - 2 bytes)
   f0aeef1c796812a0 (Token - 8 bytes)
@@ -2785,7 +2794,7 @@ Hashes could also be used in a truncated form for that
   2e2049443a203432 (Payload - 8 bytes)
 </pre><a href="#appendix-F.3-3" class="pilcrow">¶</a>
 </div>
-<p id="appendix-F.3-4">The server protects the CoAP response above as follows. When doing so, the server: does not include an Inner Observe option; includes its own Sender ID in the 'kid' of the OSCORE option; elides the Request-Hash option from the response.<a href="#appendix-F.3-4" class="pilcrow">¶</a></p>
+<p id="appendix-F.3-4">The server protects the CoAP response above as follows. When doing so, the server: does not include an Inner Observe option; includes its own Sender ID in the 'kid' of the OSCORE option; elides the Request-Hash Option from the response.<a href="#appendix-F.3-4" class="pilcrow">¶</a></p>
 <p id="appendix-F.3-5"></p>
 <p id="appendix-F.3-6">The following information is used to protect the response.<a href="#appendix-F.3-6" class="pilcrow">¶</a></p>
 <ul class="normal">
@@ -2919,7 +2928,7 @@ Hashes could also be used in a truncated form for that
 <p id="appendix-F.3-26">From the previous parameter, the following is derived:<a href="#appendix-F.3-26" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-F.3-27.1">
-            <p id="appendix-F.3-27.1.1">OSCORE option value (3 bytes):<a href="#appendix-F.3-27.1.1" class="pilcrow">¶</a></p>
+            <p id="appendix-F.3-27.1.1">OSCORE Option value (3 bytes):<a href="#appendix-F.3-27.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <div class="alignLeft art-text artwork" id="appendix-F.3-28">
@@ -2929,7 +2938,7 @@ Hashes could also be used in a truncated form for that
 </div>
 <ul class="normal">
 <li class="normal" id="appendix-F.3-29.1">
-            <p id="appendix-F.3-29.1.1">Request-Hash option value (32 bytes):<a href="#appendix-F.3-29.1.1" class="pilcrow">¶</a></p>
+            <p id="appendix-F.3-29.1.1">Request-Hash Option value (32 bytes):<a href="#appendix-F.3-29.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <div class="alignLeft art-text artwork" id="appendix-F.3-30">
@@ -2972,7 +2981,7 @@ Hashes could also be used in a truncated form for that
 </div>
 <ul class="normal">
 <li class="normal" id="appendix-F.3-37.1">
-            <p id="appendix-F.3-37.1.1">Signature Keystream (64 bytes):<a href="#appendix-F.3-37.1.1" class="pilcrow">¶</a></p>
+            <p id="appendix-F.3-37.1.1">Signature keystream (64 bytes):<a href="#appendix-F.3-37.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <div class="alignLeft art-text artwork" id="appendix-F.3-38">
@@ -2984,7 +2993,7 @@ Hashes could also be used in a truncated form for that
 </div>
 <ul class="normal">
 <li class="normal" id="appendix-F.3-39.1">
-            <p id="appendix-F.3-39.1.1">Encrypted Signature (64 bytes):<a href="#appendix-F.3-39.1.1" class="pilcrow">¶</a></p>
+            <p id="appendix-F.3-39.1.1">Encrypted signature (64 bytes):<a href="#appendix-F.3-39.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <div class="alignLeft art-text artwork" id="appendix-F.3-40">
@@ -3003,7 +3012,7 @@ Hashes could also be used in a truncated form for that
   25e58d2d777b105c06c5bade67d6262ca30712342a3275dd378a99e8f5ddfa
   5d257c5a4d77b5d681d73848ed
 
-0x68 (Version: 1, type: ACK, Token Length: 8 - 1 byte)
+0x68 (Version: 1, Type: ACK, Token Length: 8 - 1 byte)
   45 (Code: 2.05 - 1 byte)
   9483 (Message ID - 2 bytes)
   f0aeef1c796812a0 (Token - 8 bytes)
@@ -3039,7 +3048,7 @@ Hashes could also be used in a truncated form for that
             <p id="appendix-G.1-1.2.1">Updated references.<a href="#appendix-G.1-1.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-G.1-1.3">
-            <p id="appendix-G.1-1.3.1">Editorial improvements.<a href="#appendix-G.1-1.3.1" class="pilcrow">¶</a></p>
+            <p id="appendix-G.1-1.3.1">Minor clarifications and editorial improvements.<a href="#appendix-G.1-1.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
