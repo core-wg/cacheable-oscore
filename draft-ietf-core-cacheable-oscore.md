@@ -471,9 +471,9 @@ The client MUST reject a response to a Deterministic Request, if the value of th
 MT: Is there any possible reason in this application of the Request-Hash option to not elide it the from the response?
 -->
 
-When preparing the response, the server performs the following actions.
+In order to compose a response to a Deterministic Request, the server performs the following actions.
 
-1. The server includes in the response a Max-Age Option with value different from zero, thus making the Deterministic Request usable for the proxy cache.
+1. When composing the plain CoAP response, the server MUST either omit an Inner Max-Age Option or include it with Option Value different from 0.
 
 2. The server preliminarily sets the Request-Hash Option with the full Request-Hash value, i.e., the same value of the Request-Hash Option that was specified in the Deterministic Request.
 
@@ -490,6 +490,8 @@ When preparing the response, the server performs the following actions.
 7. The server SHOULD remove the Request-Hash Option from the response before sending the response to the client, as per the general option mechanism defined in {{ssec-request-hash-option}}.
 
 8. If the Deterministic Request included an Inner Observe Option but not an Outer Observe Option, the server MUST NOT include an Outer Observe Option in the response.
+
+9. The server MUST include an Outer Max-Age Option, setting the Option Value to the same Option Value of the Inner Max-Age Option, if present, or to the default value 60 otherwise (see {{Section 5.6.1 of RFC7252}}). This makes the Deterministic Request usable for the proxy cache.
 
 Upon receiving the response, the client performs the following actions.
 
@@ -1263,7 +1265,11 @@ From there, the protected CoAP response (106 bytes):
 
 * Updated references.
 
-* Fixed/improved presentation of processing of Deterministic Request at the server.
+* Fixed/improved presentation of:
+
+  * Processing of a Deterministic Request at the server.
+
+  * Composition of the response to a Deterministic Request at the server.
 
 * Minor clarifications and editorial improvements.
 
