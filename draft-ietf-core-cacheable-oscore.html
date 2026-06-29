@@ -1790,7 +1790,7 @@ Note that the Request-Hash Option is treated as Class I here.<a href="#section-3
 <p id="section-3.4.4-6">Upon receiving the response, the client performs the following actions.<a href="#section-3.4.4-6" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-3.4.4-7">
 <li id="section-3.4.4-7.1">
-              <p id="section-3.4.4-7.1.1">If the response includes a 'kid' in the OSCORE Option, the client <span class="bcp14">MUST</span> verify it to be exactly the 'kid' of the server to which the Deterministic Request was sent, unless responses from multiple servers are expected (see <a href="#det-req-one-to-many" class="auto internal xref">Section 3.4.5</a>).<a href="#section-3.4.4-7.1.1" class="pilcrow">¶</a></p>
+              <p id="section-3.4.4-7.1.1">If the response includes a 'kid' in the OSCORE Option, the client <span class="bcp14">MUST</span> verify it to be exactly the 'kid' of the server to which the Deterministic Request was sent, unless responses from multiple servers are expected (see <a href="#det-req-one-to-many" class="auto internal xref">Section 3.4.5</a>). If the verification fails, the client <span class="bcp14">MUST</span> reject the response.<a href="#section-3.4.4-7.1.1" class="pilcrow">¶</a></p>
 </li>
             <li id="section-3.4.4-7.2">
               <p id="section-3.4.4-7.2.1">If the response does not include the Request-Hash Option, the client adds the Request-Hash Option to the response, setting the Option Value to the same Option Value of the Request-Hash Option that was included in the Deterministic Request.<a href="#section-3.4.4-7.2.1" class="pilcrow">¶</a></p>
@@ -1798,7 +1798,7 @@ Note that the Request-Hash Option is treated as Class I here.<a href="#section-3
 Otherwise, the client <span class="bcp14">MUST</span> reject the response if the Option Value of the Request-Hash Option is different from the Option Value of the Request-Hash Option that was included in the Deterministic Request.<a href="#section-3.4.4-7.2.2" class="pilcrow">¶</a></p>
 </li>
             <li id="section-3.4.4-7.3">
-              <p id="section-3.4.4-7.3.1">The client verifies the response using the group mode of Group OSCORE, as defined in <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-groupcomm-28#section-7.4" class="relref">Section 7.4</a> of [<a href="#I-D.ietf-core-oscore-groupcomm" class="cite xref">I-D.ietf-core-oscore-groupcomm</a>]</span>. In particular, the client verifies the countersignature in the response, based on the 'kid' either retrieved from the OSCORE Option of the response if present therein, or otherwise of the server to which the Deterministic Request was sent to. When verifying the response, the Request-Hash Option is treated as a Class I option.<a href="#section-3.4.4-7.3.1" class="pilcrow">¶</a></p>
+              <p id="section-3.4.4-7.3.1">The client retrieves the Recipient Context to use for decrypting and verifying the response, based on the 'kid' either retrieved from the OSCORE Option of the response if present therein, or otherwise of the server to which the Deterministic Request was sent to. Then, the client decrypts and verifies the response using the group mode of Group OSCORE, as defined in <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-groupcomm-28#section-7.4" class="relref">Section 7.4</a> of [<a href="#I-D.ietf-core-oscore-groupcomm" class="cite xref">I-D.ietf-core-oscore-groupcomm</a>]</span>. When verifying the response, the Request-Hash Option is treated as a Class I option.<a href="#section-3.4.4-7.3.1" class="pilcrow">¶</a></p>
 </li>
             <li id="section-3.4.4-7.4">
               <p id="section-3.4.4-7.4.1">If the Deterministic Request included an Inner Observe Option but not an Outer Observe option (see <a href="#sec-deterministic-requests-unprotected" class="auto internal xref">Section 3.1</a>), the client <span class="bcp14">MUST</span> silently ignore the Inner Observe Option in the response, which <span class="bcp14">MUST NOT</span> result in stopping the processing of the response.<a href="#section-3.4.4-7.4.1" class="pilcrow">¶</a></p>
@@ -3083,6 +3083,9 @@ Hashes could also be used in a truncated form for that
 </li>
               <li class="normal" id="appendix-G.1-1.4.2.2">
                 <p id="appendix-G.1-1.4.2.2.1">Composition of the response to a Deterministic Request at the server.<a href="#appendix-G.1-1.4.2.2.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="appendix-G.1-1.4.2.3">
+                <p id="appendix-G.1-1.4.2.3.1">Processing of the response to a Deterministic Request at the client.<a href="#appendix-G.1-1.4.2.3.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
