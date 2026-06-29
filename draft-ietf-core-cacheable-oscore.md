@@ -383,7 +383,7 @@ In order to compose a Deterministic Request, the client protects the plain CoAP 
 
    * The Sender Key of the Deterministic Client is used as the first argument of the HMAC-based Key Derivation Function (HKDF).
 
-   * The hash H from Step 2 is used as the second argument IKM-Sender of the HKDF, i.e., as a pseudo Input Keying Material (IKM) computable by all the group members that support the pairwise mode of Group OSCORE.
+   * The hash H from Step 2 is used as the second argument IKM-Sender of the HKDF, i.e., as a pseudo Input Keying Material (IKM) computable by all the group members.
 
       Note that an actual IKM-Sender cannot be obtained, since there is no authentication credential (and public key included therein) associated with the Deterministic Client to be used as Sender Authentication Credential and for computing an actual shared secret.
 
